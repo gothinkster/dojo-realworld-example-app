@@ -1,0 +1,51 @@
+{
+  "name": "dojo2-realworld",
+  "version": "1.0.0",
+  "scripts": {
+    "precommit": "lint-staged",
+    "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
+    "test": "dojo test"
+  },
+  "dependencies": {
+    "@dojo/core": "~0.3.0",
+    "@dojo/has": "~0.1.1",
+    "@dojo/i18n": "~0.4.0",
+    "@dojo/routing": "file:deps/dojo-routing.tgz",
+    "@dojo/shim": "~0.2.1",
+    "@dojo/stores": "file:deps/dojo-stores.tgz",
+    "@dojo/widget-core": "~0.5.0"
+  },
+  "devDependencies": {
+    "@dojo/cli-build-webpack": "~0.4.0",
+    "@dojo/cli-test-intern": "~0.3.0",
+    "@dojo/interfaces": "~0.2.0",
+    "@dojo/loader": "~0.1.0",
+    "@dojo/test-extras": "~0.4.0",
+    "@types/glob": "~5.0.0",
+    "@types/grunt": "~0.4.0",
+    "@types/node": "^6.0.46",
+    "@types/sinon": "^1.16.35",
+    "grunt-tslint": "5.0.1",
+    "husky": "0.14.3",
+    "intern": "~4.1.4",
+    "lint-staged": "6.0.0",
+    "prettier": "1.9.2",
+    "sinon": "^2.0.0",
+    "tslint": "5.2.0",
+    "typescript": "~2.6.1"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 4,
+    "useTabs": true,
+    "parser": "typescript",
+    "printWidth": 120,
+    "arrowParens": "always"
+  }
+}
