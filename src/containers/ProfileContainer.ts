@@ -17,10 +17,14 @@ function getProperties(store: Store<any>, properties: ProfileProperties): Profil
 	setArticleTypeProcess(store)(articleType);
 	if (username !== properties.username) {
 		getProfileProcess(store)(properties.username);
-	}
-	if (articleType !== previousArticleType) {
 		if (articleType === 'fav') {
-			getFavoritedArticlesProcess(store)(properties.username);
+			(getFavoritedArticlesProcess(store) as any)(properties.username);
+		} else {
+			getMyArticlesProcess(store)(properties.username);
+		}
+	} else if (articleType !== previousArticleType) {
+		if (articleType === 'fav') {
+			(getFavoritedArticlesProcess(store) as any)(properties.username);
 		} else {
 			getMyArticlesProcess(store)(properties.username);
 		}

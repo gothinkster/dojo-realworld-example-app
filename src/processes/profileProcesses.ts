@@ -19,9 +19,9 @@ const getProfileCommand = commandFactory(async ({ get, path, payload: [username]
 	const json = await response.json();
 
 	return [
-		replace(path('profile', 'image'), json.articles.image),
-		replace(path('profile', 'bio'), json.articles.bio),
-		replace(path('profile', 'email'), json.articles.email)
+		replace(path('profile', 'image'), json.profile.image),
+		replace(path('profile', 'bio'), json.profile.bio),
+		replace(path('profile', 'email'), json.profile.email)
 	];
 });
 
@@ -44,6 +44,6 @@ const getFavoritedCommand = commandFactory(async ({ get, path, payload: [usernam
 });
 
 export const setArticleTypeProcess = createProcess([setArticleTypeCommand]);
-export const getProfileProcess = createProcess([setUserNameCommand, getProfileCommand]);
+export const getProfileProcess = createProcess([clearProfileArticlesCommand, setUserNameCommand, getProfileCommand]);
 export const getMyArticlesProcess = createProcess([clearProfileArticlesCommand, getMyArticlesCommand]);
 export const getFavoritedArticlesProcess = createProcess([clearProfileArticlesCommand, getFavoritedCommand]);
