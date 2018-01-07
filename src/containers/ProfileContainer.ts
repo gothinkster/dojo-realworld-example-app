@@ -18,13 +18,13 @@ function getProperties(store: Store<any>, properties: ProfileProperties): Profil
 	if (username !== properties.username) {
 		getProfileProcess(store)(properties.username);
 		if (articleType === 'fav') {
-			(getFavoritedArticlesProcess(store) as any)(properties.username);
+			getFavoritedArticlesProcess(store)(properties.username);
 		} else {
 			getMyArticlesProcess(store)(properties.username);
 		}
 	} else if (articleType !== previousArticleType) {
 		if (articleType === 'fav') {
-			(getFavoritedArticlesProcess(store) as any)(properties.username);
+			getFavoritedArticlesProcess(store)(properties.username);
 		} else {
 			getMyArticlesProcess(store)(properties.username);
 		}
