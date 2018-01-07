@@ -18,7 +18,7 @@ export class Header extends WidgetBase<HeaderProperties> {
 				])
 			]),
 			v('li', { classes: 'nav-item' }, [
-				v('a', { classes: ['nav-link', route === 'settings' ? 'active' : null], to: 'settings' }, [
+				w(Link, { classes: ['nav-link', route === 'settings' ? 'active' : null], to: 'settings' }, [
 					v('i', { classes: 'ion-gear' }),
 					'Settings'
 				])

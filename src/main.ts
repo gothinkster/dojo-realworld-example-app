@@ -48,6 +48,14 @@ const config = [
 		outlet: 'article'
 	},
 	{
+		path: 'settings',
+		outlet: 'settings'
+	},
+	{
+		path: 'new-post',
+		outlet: 'new-post'
+	},
+	{
 		path: '/',
 		outlet: 'home',
 		defaultRoute: true
