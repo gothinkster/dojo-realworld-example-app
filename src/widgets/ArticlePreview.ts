@@ -12,9 +12,9 @@ export class ArticlePreview extends WidgetBase<FeedsProperties> {
 
 		return v('div', { classes: 'article-preview' }, [
 			v('div', { classes: 'article-meta' }, [
-				w(Link, { to: 'user', params: { id: `@${author.username}` } }, [v('img', { src: author.image })]),
+				w(Link, { to: 'user', params: { id: author.username } }, [v('img', { src: author.image })]),
 				v('div', { classes: 'info' }, [
-					v('a', { classes: 'author', href: '' }, [author.username]),
+					w(Link, { classes: 'author', to: 'user', params: { id: author.username } }, [author.username]),
 					v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
 				]),
 				v('button', { classes: ['btn', 'btn-outline-primary', 'btn-sm', 'pull-xs-right'] }, [

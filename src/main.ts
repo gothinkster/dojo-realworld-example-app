@@ -31,6 +31,16 @@ const config = [
 	},
 	{
 		path: 'user/{id}',
+		outlet: 'user',
+		children: [
+			{
+				path: 'favorites',
+				outlet: 'favorites'
+			}
+		]
+	},
+	{
+		path: 'user/{id}',
 		outlet: 'user'
 	},
 	{
