@@ -6,6 +6,7 @@ import { HomeOutlet } from './outlets/HomeOutlet';
 import { LoginOutlet } from './outlets/LoginOutlet';
 import { ProfileOutlet } from './outlets/ProfileOutlet';
 import { RegisterOutlet } from './outlets/RegisterOutlet';
+import { EditorOutlet } from './outlets/EditorOutlet';
 
 export class App extends WidgetBase {
 	protected render() {
@@ -14,6 +15,7 @@ export class App extends WidgetBase {
 			w(LoginOutlet, {}),
 			w(RegisterOutlet, {}),
 			w(ProfileOutlet, {}),
+			w(EditorOutlet, {}),
 			w(HomeOutlet, {})
 		];
 	}

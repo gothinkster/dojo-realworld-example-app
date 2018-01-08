@@ -44,7 +44,7 @@ const config = [
 		outlet: 'user'
 	},
 	{
-		path: 'article/{id}',
+		path: 'article/{slug}',
 		outlet: 'article'
 	},
 	{
@@ -52,7 +52,11 @@ const config = [
 		outlet: 'settings'
 	},
 	{
-		path: 'new-post',
+		path: 'editor/{slug}',
+		outlet: 'new-post'
+	},
+	{
+		path: 'editor',
 		outlet: 'new-post'
 	},
 	{
@@ -68,7 +72,7 @@ const router = registerRouterInjector(config, registry);
 
 const authenticationToken = global.sessionStorage.getItem('access_jwt');
 
-(changeRouteProcess(store) as any)((router as any)._history.current);
+// (changeRouteProcess(store) as any)((router as any)._history.current);
 getTags(store)();
 
 if (authenticationToken && authenticationToken !== 'undefined') {
@@ -80,15 +84,17 @@ if (authenticationToken && authenticationToken !== 'undefined') {
 	getGlobalArticles(store)();
 }
 
-router.on('navstart', ({ path: fullPath }: any) => {
-	const [path] = fullPath.split('?');
-	(changeRouteProcess(store) as any)(path);
+router.on('nav', ({ path: fullPath, outlet }: any) => {
+	console.log('outlet', outlet);
+	changeRouteProcess(store)(outlet);
 });
 
 store.on('invalidate', () => {
 	const currentRoute = store.get(store.path('route'));
+	const params = store.get(store.path('params'));
 	if (currentRoute) {
-		router.setPath(currentRoute);
+		console.log(currentRoute, params);
+		router.gotoOutlet(currentRoute, params);
 	}
 });
 

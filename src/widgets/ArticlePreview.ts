@@ -21,7 +21,7 @@ export class ArticlePreview extends WidgetBase<FeedsProperties> {
 					v('i', { classes: 'ion-heart' }),
 					v('span', [` ${article.favoritesCount}`])
 				]),
-				w(Link, { classes: 'preview-link', to: 'article', params: { id: article.slug } }, [
+				w(Link, { classes: 'preview-link', to: 'article', params: { slug: article.slug } }, [
 					v('h1', [article.title]),
 					v('p', [article.description]),
 					v('span', ['Read more...'])
