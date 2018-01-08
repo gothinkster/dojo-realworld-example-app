@@ -8,7 +8,7 @@ export interface ArticleProperties {
 
 export class Article extends WidgetBase<ArticleProperties> {
 	protected render() {
-		const { loaded = false, article: { title, image, author = {}, createdAt } } = this.properties;
+		const { loaded = false, article: { title, author = {}, createdAt } } = this.properties;
 
 		if (!loaded) {
 			return null;
@@ -19,7 +19,7 @@ export class Article extends WidgetBase<ArticleProperties> {
 				v('div', { classes: 'container' }, [
 					v('h1', [title]),
 					v('div', { classes: 'article-meta' }, [
-						v('a', { href: '' }, [v('img', { src: image })]),
+						v('a', { href: '' }, [v('img', { src: author.image })]),
 						v('div', { classes: 'info' }, [
 							v('a', { href: '', classes: 'author' }, [author.username]),
 							v('span', { classes: 'date' }, [new Date(createdAt).toDateString()])
