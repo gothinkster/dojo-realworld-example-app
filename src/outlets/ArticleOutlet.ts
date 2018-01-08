@@ -2,7 +2,7 @@ import { Outlet } from '@dojo/routing/Outlet';
 
 const mapParams = ({ params }: any) => {
 	return {
-		id: params.id
+		slug: params.slug
 	};
 };
 

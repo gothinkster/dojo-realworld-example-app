@@ -2,12 +2,18 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 
 export interface ArticleProperties {
-	article: any;
+	article?: any;
+	loaded?: boolean;
 }
 
 export class Article extends WidgetBase<ArticleProperties> {
 	protected render() {
-		const { article: { title, image, author = {}, createdAt } } = this.properties;
+		const { loaded = false, article: { title, image, author = {}, createdAt } } = this.properties;
+
+		if (!loaded) {
+			return null;
+		}
+
 		return v('div', { classes: 'article-page' }, [
 			v('div', { classes: 'banner' }, [
 				v('div', { classes: 'container' }, [

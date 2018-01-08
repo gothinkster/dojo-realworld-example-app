@@ -5,7 +5,8 @@ import { replace } from '@dojo/stores/state/operations';
 const commandFactory = createCommandFactory<any>();
 
 const changeRouteCommand = commandFactory(({ path, get, payload: [outlet] }): PatchOperation[] => {
-	return [replace(path('routing', 'outlet'), outlet)];
+	const previousOutlet = get(path('routing', 'outlet'));
+	return [replace(path('routing', 'outlet'), outlet), replace(path('routing', 'previousOutlet'), previousOutlet)];
 });
 
 export const changeRouteProcess = createProcess([changeRouteCommand]);

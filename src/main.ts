@@ -102,10 +102,10 @@ router.on('nav', ({ path: fullPath, outlet }: any) => {
 });
 
 store.onChange(store.path('routing', 'outlet'), () => {
-	const currentRoute = store.get(store.path('routing', 'outlet'));
+	const outlet = store.get(store.path('routing', 'outlet'));
 	const params = store.get(store.path('routing', 'params'));
-	if (currentRoute) {
-		router.gotoOutlet(currentRoute, params);
+	if (outlet) {
+		router.gotoOutlet(outlet, params);
 	}
 });
 

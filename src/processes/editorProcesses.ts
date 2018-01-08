@@ -82,7 +82,7 @@ const publishArticleCommand = commandFactory(async ({ get, path, payload }): Pro
 	}
 
 	return [
-		replace(path('article'), json.article),
+		replace(path('article', 'article'), json.article),
 		replace(path('editor'), undefined),
 		replace(path('routing', 'outlet'), 'article'),
 		replace(path('routing', 'params'), { slug: json.article.slug })
