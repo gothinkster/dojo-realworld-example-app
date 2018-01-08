@@ -38,10 +38,13 @@ const setArticleTypeCommand = commandFactory(({ get, path, payload: [articleType
 
 const getFavoritedCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<PatchOperation[]> => {
 	const token = get(path('session', 'token'));
-	const headers = new Headers({
-		'Content-Type': 'application/json',
-		Authorization: `Token ${token}`
-	});
+	let headers = {};
+	if (token) {
+		headers = new Headers({
+			'Content-Type': 'application/json',
+			Authorization: `Token ${token}`
+		});
+	}
 	const response = await fetch(`https://conduit.productionready.io/api/articles?favorited=${username}`, { headers });
 	const json = await response.json();
 
