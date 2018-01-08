@@ -10,11 +10,12 @@ export interface ProfileProperties {
 	email: string;
 	articles: any[];
 	articleType: string;
+	onFav: Function;
 }
 
 export class Profile extends WidgetBase<ProfileProperties> {
 	protected render() {
-		const { username, bio, image, articles, articleType } = this.properties;
+		const { username, bio, image, articles, articleType, onFav } = this.properties;
 
 		let articleList = v('div', { classes: 'article-preview' }, ['Loading...']);
 		if (articles && articles.length === 0) {
@@ -23,7 +24,7 @@ export class Profile extends WidgetBase<ProfileProperties> {
 			articleList = v(
 				'div',
 				this.properties.articles.map((article, index) => {
-					return w(ArticlePreview, { key: index, article });
+					return w(ArticlePreview, { key: index, article, onFav, view: 'profile' });
 				})
 			);
 		}

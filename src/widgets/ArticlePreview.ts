@@ -4,11 +4,23 @@ import { Link } from '@dojo/routing/Link';
 
 export interface ArticlePreviewProperties {
 	article: any;
+	onFav: Function;
+	view: string;
 }
 
 export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {
+	private _onFav() {
+		const { view, article: { slug, favorited } } = this.properties;
+		this.properties.onFav(slug, favorited, view);
+	}
+
 	protected render() {
-		const { article, article: { author } } = this.properties;
+		const { article, article: { author, favorited } } = this.properties;
+
+		let buttonClasses = ['btn', 'btn-outline-primary', 'btn-sm', 'pull-xs-right'];
+		if (favorited) {
+			buttonClasses = ['btn', 'btn-primary', 'btn-sm', 'pull-xs-right'];
+		}
 
 		return v('div', { classes: 'article-preview' }, [
 			v('div', { classes: 'article-meta' }, [
@@ -17,7 +29,7 @@ export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {
 					w(Link, { classes: 'author', to: 'user', params: { id: author.username } }, [author.username]),
 					v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
 				]),
-				v('button', { classes: ['btn', 'btn-outline-primary', 'btn-sm', 'pull-xs-right'] }, [
+				v('button', { onclick: this._onFav, classes: buttonClasses }, [
 					v('i', { classes: 'ion-heart' }),
 					v('span', [` ${article.favoritesCount}`])
 				]),

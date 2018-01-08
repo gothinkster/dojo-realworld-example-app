@@ -9,11 +9,12 @@ export interface FeedsProperties {
 	getFeedArticles: any;
 	feedCategory: string;
 	isAuthenticated: boolean;
+	onFav: Function;
 }
 
 export class Feeds extends WidgetBase<FeedsProperties> {
 	protected render() {
-		const { articles, isAuthenticated, feedCategory, getFeedArticles, getGlobalArticles } = this.properties;
+		const { articles, isAuthenticated, feedCategory, getFeedArticles, getGlobalArticles, onFav } = this.properties;
 
 		let articleList = v('div', { classes: 'article-preview' }, ['Loading...']);
 		if (articles && articles.length === 0) {
@@ -22,7 +23,7 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 			articleList = v(
 				'div',
 				this.properties.articles.map((article, index) => {
-					return w(ArticlePreview, { key: index, article });
+					return w(ArticlePreview, { key: index, article, onFav, view: 'feed' });
 				})
 			);
 		}

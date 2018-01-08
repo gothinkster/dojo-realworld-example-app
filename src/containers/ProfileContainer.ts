@@ -7,6 +7,7 @@ import {
 	getMyArticlesProcess,
 	getFavoritedArticlesProcess
 } from './../processes/profileProcesses';
+import { favArticle } from './../processes/articleProcesses';
 
 function getProperties(store: Store<any>, properties: ProfileProperties): ProfileProperties {
 	const { get, path } = store;
@@ -36,7 +37,8 @@ function getProperties(store: Store<any>, properties: ProfileProperties): Profil
 		image: get(path('profile', 'image')),
 		email: get(path('profile', 'email')),
 		articles: get(path('profile', 'articles')),
-		articleType: get(path('profile', 'articleType'))
+		articleType: get(path('profile', 'articleType')),
+		onFav: favArticle(store)
 	};
 }
 
