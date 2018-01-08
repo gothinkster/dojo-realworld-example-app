@@ -14,6 +14,7 @@ function getProperties(store: Store<any>, properties: ProfileProperties): Profil
 	const username = get(path('profile', 'username'));
 	const previousArticleType = get(path('profile', 'articleType'));
 
+	// TODO clean this logic up, using loading/loaded
 	setArticleTypeProcess(store)(articleType);
 	if (username !== properties.username) {
 		getProfileProcess(store)(properties.username);

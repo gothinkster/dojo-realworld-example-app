@@ -45,6 +45,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 
 	protected render() {
 		const {
+			onTagDelete,
 			onPublishPost,
 			title,
 			description,
@@ -103,7 +104,12 @@ export class Editor extends WidgetBase<EditorProperties> {
 										{ classes: 'tag-list' },
 										tags.map((tag) => {
 											return v('span', { classes: ['tag-default', 'tag-pill'] }, [
-												v('i', { classes: 'ion-close-round', onclick: () => {} }),
+												v('i', {
+													classes: 'ion-close-round',
+													onclick: () => {
+														onTagDelete(tag);
+													}
+												}),
 												tag
 											]);
 										})

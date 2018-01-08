@@ -5,14 +5,26 @@ import { replace } from '@dojo/stores/state/operations';
 const commandFactory = createCommandFactory<any>();
 
 const clearArticlesCommand = commandFactory(({ path }): PatchOperation[] => {
-	return [replace(path('articles'), undefined)];
+	return [replace(path('feed', 'articles'), undefined), replace(path('feed', 'loading'), true)];
+});
+
+const setGlobalFeedCategoryCommand = commandFactory(({ path }): PatchOperation[] => {
+	return [replace(path('feed', 'category'), 'global')];
+});
+
+const setUserFeedCategoryCommand = commandFactory(({ path }): PatchOperation[] => {
+	return [replace(path('feed', 'category'), 'user')];
 });
 
 const getGlobalArticlesCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
 	const response = await fetch(`https://conduit.productionready.io/api/articles`);
 	const json = await response.json();
 
-	return [replace(path('articles'), json.articles), replace(path('feedCategory'), 'global')];
+	return [
+		replace(path('feed', 'articles'), json.articles),
+		replace(path('feed', 'loading'), false),
+		replace(path('feed', 'loaded'), true)
+	];
 });
 
 const getFeedArticlesCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
@@ -25,16 +37,19 @@ const getFeedArticlesCommand = commandFactory(async ({ get, path }): Promise<Pat
 	const json = await response.json();
 
 	return [
-		replace(path('view'), json.articles),
-		replace(path('articles'), json.articles),
-		replace(path('feedCategory'), 'user')
+		replace(path('feed', 'articles'), json.articles),
+		replace(path('feed', 'loaded'), true),
+		replace(path('feed', 'loading'), false)
 	];
 });
 
-const setFeedTypeCommand = commandFactory(({ get, path, payload: [cat] }): PatchOperation[] => {
-	return [replace(path('feedCategory'), cat)];
-});
-
-export const getGlobalArticles = createProcess([clearArticlesCommand, getGlobalArticlesCommand]);
-export const getFeedArticles = createProcess([clearArticlesCommand, getFeedArticlesCommand]);
-export const setFeedCategory = createProcess([setFeedTypeCommand]);
+export const getGlobalArticles = createProcess([
+	setGlobalFeedCategoryCommand,
+	clearArticlesCommand,
+	getGlobalArticlesCommand
+]);
+export const getFeedArticles = createProcess([
+	setUserFeedCategoryCommand,
+	clearArticlesCommand,
+	getFeedArticlesCommand
+]);

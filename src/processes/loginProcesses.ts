@@ -88,12 +88,13 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 	global.sessionStorage.setItem('access_jwt', json.user.token);
 
 	return [
-		replace(path('route'), '/'),
+		replace(path('route'), 'home'),
 		replace(path('login', 'inProgress'), false),
 		replace(path('login', 'errors'), undefined),
 		replace(path('session', 'token'), json.user.token),
 		replace(path('session', 'isAuthenticated'), true),
-		replace(path('articles'), undefined)
+		replace(path('feed', 'articles'), undefined),
+		replace(path('feed', 'loaded'), false)
 	];
 });
 
@@ -136,12 +137,13 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 	global.sessionStorage.setItem('access_jwt', json.user.token);
 
 	return [
-		replace(path('route'), '/'),
+		replace(path('route'), 'home'),
 		replace(path('register', 'inProgress'), false),
 		replace(path('register', 'errors'), undefined),
 		replace(path('session', 'token'), json.user.token),
 		replace(path('session', 'isAuthenticated'), true),
-		replace(path('articles'), undefined)
+		replace(path('feed', 'articles'), undefined),
+		replace(path('feed', 'loaded'), false)
 	];
 });
 

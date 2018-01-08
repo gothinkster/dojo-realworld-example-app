@@ -7,7 +7,6 @@ import {
 	registerPasswordInput,
 	registerUsernameInput
 } from './../processes/loginProcesses';
-import { getFeedArticles } from './../processes/feedProcesses';
 
 function getProperties(store: Store<any>, properties: RegisterProperties): RegisterProperties {
 	const { get, path } = store;
@@ -20,14 +19,7 @@ function getProperties(store: Store<any>, properties: RegisterProperties): Regis
 		onEmailInput: registerEmailInput(store),
 		onPasswordInput: registerPasswordInput(store),
 		onUsernameInput: registerUsernameInput(store),
-		onRegister: () => {
-			register(store)().then((result: any) => {
-				const errors = get(path('register', 'errors'));
-				if (!errors) {
-					result.executor(getFeedArticles);
-				}
-			});
-		}
+		onRegister: register(store)
 	};
 }
 

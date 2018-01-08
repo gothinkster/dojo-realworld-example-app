@@ -25,14 +25,14 @@ function getProperties(store: Store<any>, properties: EditorProperties): EditorP
 		content: get(path('editor', 'body')),
 		tag: get(path('editor', 'tag')),
 		tags: get(path('editor', 'tagList')),
+		errors: get(path('editor', 'errors')),
 		onContentInput: contentInput(store),
 		onDescriptionInput: descInput(store),
 		onTagCreate: addTag(store),
 		onTagDelete: removeTag(store),
 		onTagInput: tagInput(store),
 		onTitleInput: titleInput(store),
-		onPublishPost: publishArticle(store),
-		errors: get(path('editor', 'errors'))
+		onPublishPost: publishArticle(store)
 	};
 }
 

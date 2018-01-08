@@ -2,11 +2,11 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 
-export interface FeedsProperties {
+export interface ArticlePreviewProperties {
 	article: any;
 }
 
-export class ArticlePreview extends WidgetBase<FeedsProperties> {
+export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {
 	protected render() {
 		const { article, article: { author } } = this.properties;
 

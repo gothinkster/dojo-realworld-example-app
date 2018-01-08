@@ -1,16 +1,23 @@
 import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
-import { Feeds } from './../widgets/Feeds';
+import { Feeds, FeedsProperties } from './../widgets/Feeds';
 import { getGlobalArticles, getFeedArticles } from './../processes/feedProcesses';
 
-function getProperties(store: Store<any>, properties: any) {
+function getProperties(store: Store<any>, properties: FeedsProperties) {
 	const { get, path } = store;
+	const feedLoaded = get(path('feed', 'loaded'));
+	const feedLoading = get(path('feed', 'loading'));
+	const isAuthenticated = get(path('session', 'isAuthenticated'));
+
+	if (!feedLoaded && !feedLoading) {
+		isAuthenticated ? getFeedArticles(store)() : getGlobalArticles(store)();
+	}
 	return {
-		articles: get(path('articles')),
+		articles: get(path('feed', 'articles')),
+		feedCategory: get(path('feed', 'category')),
+		isAuthenticated: isAuthenticated,
 		getGlobalArticles: getGlobalArticles(store),
-		getFeedArticles: getFeedArticles(store),
-		feedCategory: get(path('feedCategory')),
-		isAuthenticated: get(path('session', 'isAuthenticated'))
+		getFeedArticles: getFeedArticles(store)
 	};
 }
 

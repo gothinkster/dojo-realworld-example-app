@@ -6,7 +6,6 @@ import { Store } from '@dojo/stores/Store';
 import { registerRouterInjector } from '@dojo/routing/RouterInjector';
 
 import { App } from './App';
-import { getGlobalArticles, getFeedArticles, setFeedCategory } from './processes/feedProcesses';
 import { getTags } from './processes/tagProcesses';
 import { setToken } from './processes/loginProcesses';
 import { changeRouteProcess } from './processes/routeProcesses';
@@ -74,14 +73,8 @@ const authenticationToken = global.sessionStorage.getItem('access_jwt');
 
 // (changeRouteProcess(store) as any)((router as any)._history.current);
 getTags(store)();
-
 if (authenticationToken && authenticationToken !== 'undefined') {
 	setToken(store)(authenticationToken);
-	setFeedCategory(store)('user');
-	getFeedArticles(store)();
-} else {
-	setFeedCategory(store)('global');
-	getGlobalArticles(store)();
 }
 
 router.on('nav', ({ path: fullPath, outlet }: any) => {
