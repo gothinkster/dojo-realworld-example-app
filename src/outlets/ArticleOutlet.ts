@@ -1,5 +1,4 @@
 import { Outlet } from '@dojo/routing/Outlet';
-import { ArticleContainer } from './../containers/ArticleContainer';
 
 const mapParams = ({ params }: any) => {
 	return {
@@ -7,4 +6,4 @@ const mapParams = ({ params }: any) => {
 	};
 };
 
-export const ArticleOutlet = Outlet(ArticleContainer, 'article', { mapParams });
+export const ArticleOutlet = Outlet('article', 'article', { mapParams });

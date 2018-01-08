@@ -75,25 +75,28 @@ const publishArticleCommand = commandFactory(async ({ get, path, payload }): Pro
 	const json = await response.json();
 
 	if (!response.ok) {
-		const errorCategories = Object.keys(json.errors);
-		let errorList: any[] = [];
-		for (let i = 0; i < errorCategories.length; i++) {
-			errorList = [
-				...errorList,
-				...json.errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)
-			];
-		}
-
-		return [replace(path('editor', 'inProgress'), false), replace(path('editor', 'errors'), errorList)];
+		return [
+			replace(path('editor', 'inProgress'), false),
+			replace(path('editor', 'errors'), buildErrorList(json.errors))
+		];
 	}
 
 	return [
 		replace(path('article'), json.article),
-		replace(path('route'), 'article'),
 		replace(path('editor'), undefined),
-		replace(path('params'), { slug: json.article.slug })
+		replace(path('routing', 'outlet'), 'article'),
+		replace(path('routing', 'params'), { slug: json.article.slug })
 	];
 });
+
+function buildErrorList(errors: { [index: string]: string[] }) {
+	const errorCategories = Object.keys(errors);
+	let errorList: any[] = [];
+	for (let i = 0; i < errorCategories.length; i++) {
+		errorList = [...errorList, ...errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)];
+	}
+	return errorList;
+}
 
 export const titleInput = createProcess([titleInputCommand]);
 export const descInput = createProcess([descriptionInputCommand]);

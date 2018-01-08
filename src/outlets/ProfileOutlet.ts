@@ -1,5 +1,4 @@
 import { Outlet } from '@dojo/routing/Outlet';
-import { ProfileContainer } from './../containers/ProfileContainer';
 
 const mapParams = ({ params, type }: any) => {
 	return {
@@ -8,4 +7,4 @@ const mapParams = ({ params, type }: any) => {
 	};
 };
 
-export const ProfileOutlet = Outlet(ProfileContainer, 'user', { mapParams });
+export const ProfileOutlet = Outlet('profile', 'user', { mapParams });

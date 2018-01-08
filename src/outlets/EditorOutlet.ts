@@ -1,5 +1,4 @@
 import { Outlet } from '@dojo/routing/Outlet';
-import { EditorContainer } from './../containers/EditorContainer';
 
 const mapParams = ({ params }: any) => {
 	return {
@@ -7,4 +6,4 @@ const mapParams = ({ params }: any) => {
 	};
 };
 
-export const EditorOutlet = Outlet(EditorContainer, 'new-post', { mapParams });
+export const EditorOutlet = Outlet('editor', 'new-post', { mapParams });

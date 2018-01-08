@@ -69,24 +69,42 @@ const registry = new Registry();
 const store = new Store<any>();
 const router = registerRouterInjector(config, registry);
 
+registry.define('editor', async () => {
+	const module = await import('./containers/EditorContainer');
+	return module.EditorContainer;
+});
+registry.define('article', async () => {
+	const module = await import('./containers/ArticleContainer');
+	return module.ArticleContainer;
+});
+registry.define('login', async () => {
+	const module = await import('./containers/LoginContainer');
+	return module.LoginContainer;
+});
+registry.define('register', async () => {
+	const module = await import('./containers/RegisterContainer');
+	return module.RegisterContainer;
+});
+registry.define('profile', async () => {
+	const module = await import('./containers/ProfileContainer');
+	return module.ProfileContainer;
+});
+
 const authenticationToken = global.sessionStorage.getItem('access_jwt');
 
-// (changeRouteProcess(store) as any)((router as any)._history.current);
 getTags(store)();
 if (authenticationToken && authenticationToken !== 'undefined') {
 	setToken(store)(authenticationToken);
 }
 
 router.on('nav', ({ path: fullPath, outlet }: any) => {
-	console.log('outlet', outlet);
 	changeRouteProcess(store)(outlet);
 });
 
-store.on('invalidate', () => {
-	const currentRoute = store.get(store.path('route'));
-	const params = store.get(store.path('params'));
+store.onChange(store.path('routing', 'outlet'), () => {
+	const currentRoute = store.get(store.path('routing', 'outlet'));
+	const params = store.get(store.path('routing', 'params'));
 	if (currentRoute) {
-		console.log(currentRoute, params);
 		router.gotoOutlet(currentRoute, params);
 	}
 });

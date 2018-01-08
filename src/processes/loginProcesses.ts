@@ -68,19 +68,10 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 
 	const json = await response.json();
 	if (!response.ok) {
-		const errorCategories = Object.keys(json.errors);
-		let errorList: any[] = [];
-		for (let i = 0; i < errorCategories.length; i++) {
-			errorList = [
-				...errorList,
-				...json.errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)
-			];
-		}
-
 		return [
 			replace(path('login', 'hasFailed'), true),
 			replace(path('login', 'inProgress'), false),
-			replace(path('login', 'errors'), errorList),
+			replace(path('login', 'errors'), buildErrorList(json.errors)),
 			replace(path('session', 'isAuthenticated'), false)
 		];
 	}
@@ -88,7 +79,7 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 	global.sessionStorage.setItem('access_jwt', json.user.token);
 
 	return [
-		replace(path('route'), 'home'),
+		replace(path('routing', 'outlet'), 'home'),
 		replace(path('login', 'inProgress'), false),
 		replace(path('login', 'errors'), undefined),
 		replace(path('session', 'token'), json.user.token),
@@ -117,19 +108,10 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 	});
 	const json = await response.json();
 	if (!response.ok) {
-		const errorCategories = Object.keys(json.errors);
-		let errorList: any[] = [];
-		for (let i = 0; i < errorCategories.length; i++) {
-			errorList = [
-				...errorList,
-				...json.errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)
-			];
-		}
-
 		return [
 			replace(path('register', 'hasFailed'), true),
 			replace(path('register', 'inProgress'), false),
-			replace(path('register', 'errors'), errorList),
+			replace(path('register', 'errors'), buildErrorList(json.errors)),
 			replace(path('session', 'isAuthenticated'), false)
 		];
 	}
@@ -137,7 +119,7 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 	global.sessionStorage.setItem('access_jwt', json.user.token);
 
 	return [
-		replace(path('route'), 'home'),
+		replace(path('routing', 'outlet'), 'home'),
 		replace(path('register', 'inProgress'), false),
 		replace(path('register', 'errors'), undefined),
 		replace(path('session', 'token'), json.user.token),
@@ -146,6 +128,15 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 		replace(path('feed', 'loaded'), false)
 	];
 });
+
+function buildErrorList(errors: { [index: string]: string[] }) {
+	const errorCategories = Object.keys(errors);
+	let errorList: any[] = [];
+	for (let i = 0; i < errorCategories.length; i++) {
+		errorList = [...errorList, ...errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)];
+	}
+	return errorList;
+}
 
 export const login = createProcess([startLoginCommand, loginCommand, clearLoginInputs]);
 export const register = createProcess([startRegisterCommand, registerCommand, clearRegisterInputs]);
