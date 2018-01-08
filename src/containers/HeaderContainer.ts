@@ -6,7 +6,8 @@ function getProperties(store: Store, properties: any) {
 	const { get, path } = store;
 	return {
 		route: get(path('routing', 'outlet')),
-		isAuthenticated: get(path('session', 'isAuthenticated'))
+		isAuthenticated: get(path('session', 'isAuthenticated')),
+		loggedInUser: get(path('session', 'username'))
 	};
 }
 

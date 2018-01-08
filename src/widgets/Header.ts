@@ -4,12 +4,13 @@ import { Link } from '@dojo/routing/Link';
 
 export interface HeaderProperties {
 	isAuthenticated: boolean;
+	loggedInUser: string;
 	route: string;
 }
 
 export class Header extends WidgetBase<HeaderProperties> {
 	private _authenticatedMenu() {
-		const { route } = this.properties;
+		const { route, loggedInUser } = this.properties;
 		return [
 			v('li', { classes: 'nav-item' }, [
 				w(Link, { classes: ['nav-link', route === 'new-post' ? 'active' : null], to: 'new-post' }, [
@@ -21,6 +22,12 @@ export class Header extends WidgetBase<HeaderProperties> {
 				w(Link, { classes: ['nav-link', route === 'settings' ? 'active' : null], to: 'settings' }, [
 					v('i', { classes: 'ion-gear' }),
 					'Settings'
+				])
+			]),
+			v('li', { classes: 'nav-item' }, [
+				w(Link, { classes: ['nav-link'], to: 'user', params: { id: loggedInUser } }, [
+					v('i', { classes: 'ion-gear' }),
+					loggedInUser
 				])
 			])
 		];
