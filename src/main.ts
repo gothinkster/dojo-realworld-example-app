@@ -7,7 +7,7 @@ import { registerRouterInjector } from '@dojo/routing/RouterInjector';
 
 import { App } from './App';
 import { getTags } from './processes/tagProcesses';
-import { setToken } from './processes/loginProcesses';
+import { setSession } from './processes/loginProcesses';
 import { changeRouteProcess } from './processes/routeProcesses';
 
 class StoreInjector extends Injector {
@@ -90,11 +90,11 @@ registry.define('profile', async () => {
 	return module.ProfileContainer;
 });
 
-const authenticationToken = global.sessionStorage.getItem('access_jwt');
+const session = global.sessionStorage.getItem('conduit-session');
 
 getTags(store)();
-if (authenticationToken && authenticationToken !== 'undefined') {
-	setToken(store)(authenticationToken);
+if (session) {
+	setSession(store)(JSON.parse(session));
 }
 
 router.on('nav', ({ path: fullPath, outlet }: any) => {

@@ -5,7 +5,7 @@ import { Header } from './../widgets/Header';
 function getProperties(store: Store, properties: any) {
 	const { get, path } = store;
 	return {
-		route: get(path('route')),
+		route: get(path('routing', 'outlet')),
 		isAuthenticated: get(path('session', 'isAuthenticated'))
 	};
 }

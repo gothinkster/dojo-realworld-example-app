@@ -17,7 +17,15 @@ const setUserFeedCategoryCommand = commandFactory(({ path }): PatchOperation[] =
 });
 
 const getGlobalArticlesCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
-	const response = await fetch(`https://conduit.productionready.io/api/articles`);
+	const token = get(path('session', 'token'));
+	let headers = {};
+	if (token) {
+		headers = new Headers({
+			'Content-Type': 'application/json',
+			Authorization: `Token ${token}`
+		});
+	}
+	const response = await fetch(`https://conduit.productionready.io/api/articles`, { headers });
 	const json = await response.json();
 
 	return [

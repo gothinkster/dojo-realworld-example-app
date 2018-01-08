@@ -1,7 +1,12 @@
 import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
 import { Article } from './../widgets/Article';
-import { getArticle } from './../processes/articleProcesses';
+import {
+	getArticle,
+	deleteCommentProcess,
+	addCommentProcess,
+	newCommentInputProcess
+} from './../processes/articleProcesses';
 
 function getProperties(store: Store<any>, properties: any) {
 	const { get, path } = store;
@@ -14,7 +19,14 @@ function getProperties(store: Store<any>, properties: any) {
 
 	return {
 		article: get(path('article', 'article')),
-		loaded: get(path('article', 'loaded'))
+		comments: get(path('article', 'comments')),
+		newComment: get(path('article', 'newComment')),
+		loaded: get(path('article', 'loaded')),
+		isAuthenticated: get(path('session', 'isAuthenticated')),
+		loggedInUser: get(path('session', 'username')),
+		deleteComment: deleteCommentProcess(store),
+		addComment: addCommentProcess(store),
+		onNewCommentInput: newCommentInputProcess(store)
 	};
 }
 

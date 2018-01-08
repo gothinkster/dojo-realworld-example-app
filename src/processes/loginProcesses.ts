@@ -45,8 +45,9 @@ const startRegisterCommand = commandFactory(({ path }): PatchOperation[] => {
 	return [replace(path('register', 'inProgress'), true)];
 });
 
-const setTokenCommand = commandFactory(({ path, payload: [token] }): PatchOperation[] => {
-	return [replace(path('session', 'isAuthenticated'), true), replace(path('session', 'token'), token)];
+const setSessionCommand = commandFactory(({ path, payload: [session] }): PatchOperation[] => {
+	session.isAuthenticated = true;
+	return [replace(path('session'), session)];
 });
 
 const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
@@ -76,7 +77,7 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 		];
 	}
 
-	global.sessionStorage.setItem('access_jwt', json.user.token);
+	global.sessionStorage.setItem('conduit-session', JSON.stringify(json.user));
 
 	return [
 		replace(path('routing', 'outlet'), 'home'),
@@ -116,7 +117,7 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 		];
 	}
 
-	global.sessionStorage.setItem('access_jwt', json.user.token);
+	global.sessionStorage.setItem('conduit-session', JSON.stringify(json.user));
 
 	return [
 		replace(path('routing', 'outlet'), 'home'),
@@ -145,4 +146,4 @@ export const loginPasswordInput = createProcess([loginPasswordInputCommand]);
 export const registerEmailInput = createProcess([registerEmailInputCommand]);
 export const registerPasswordInput = createProcess([registerPasswordInputCommand]);
 export const registerUsernameInput = createProcess([registerUsernameInputCommand]);
-export const setToken = createProcess([setTokenCommand]);
+export const setSession = createProcess([setSessionCommand]);
