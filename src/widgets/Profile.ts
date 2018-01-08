@@ -15,15 +15,16 @@ export interface ProfileProperties {
 
 export class Profile extends WidgetBase<ProfileProperties> {
 	protected render() {
-		const { username, bio, image, articles, articleType, onFav } = this.properties;
+		let { username, bio, image, articles, articleType, onFav } = this.properties;
 
 		let articleList = v('div', { classes: 'article-preview' }, ['Loading...']);
+		articles = articles ? articles.filter((article) => article.favorited || articleType === 'my') : articles;
 		if (articles && articles.length === 0) {
 			articleList = v('div', { classes: 'article-preview' }, ['No articles here, yet!']);
 		} else if (articles && articles.length > 0) {
 			articleList = v(
 				'div',
-				this.properties.articles.map((article, index) => {
+				articles.map((article, index) => {
 					return w(ArticlePreview, { key: index, article, onFav, view: 'profile' });
 				})
 			);
