@@ -43,8 +43,6 @@ export class Article extends WidgetBase<ArticleProperties> {
 			return null;
 		}
 
-		console.log(comments);
-
 		return v('div', { classes: 'article-page' }, [
 			v('div', { classes: 'banner' }, [
 				v('div', { classes: 'container' }, [
