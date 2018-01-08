@@ -89,6 +89,10 @@ registry.define('profile', async () => {
 	const module = await import('./containers/ProfileContainer');
 	return module.ProfileContainer;
 });
+registry.define('settings', async () => {
+	const module = await import('./containers/SettingsContainer');
+	return module.SettingsContainer;
+});
 
 const session = global.sessionStorage.getItem('conduit-session');
 

@@ -8,6 +8,7 @@ import { ProfileOutlet } from './outlets/ProfileOutlet';
 import { RegisterOutlet } from './outlets/RegisterOutlet';
 import { EditorOutlet } from './outlets/EditorOutlet';
 import { ArticleOutlet } from './outlets/ArticleOutlet';
+import { SettingsOutlet } from './outlets/SettingsOutlet';
 
 export class App extends WidgetBase {
 	protected render() {
@@ -18,6 +19,7 @@ export class App extends WidgetBase {
 			w(ProfileOutlet, {}),
 			w(EditorOutlet, {}),
 			w(ArticleOutlet, {}),
+			w(SettingsOutlet, {}),
 			w(HomeOutlet, {})
 		];
 	}
