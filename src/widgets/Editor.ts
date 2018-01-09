@@ -11,12 +11,13 @@ export interface EditorProperties {
 	onTagDelete: Function;
 	title: string;
 	description: string;
-	content: string;
+	body: string;
 	tag: string;
-	errors?: string[];
+	errors?: any;
 	inProgress?: boolean;
-	slug?: string;
+	slug: string;
 	tags?: string[];
+	getArticle: Function;
 }
 
 export class Editor extends WidgetBase<EditorProperties> {
@@ -43,15 +44,19 @@ export class Editor extends WidgetBase<EditorProperties> {
 		}
 	}
 
+	onAttach() {
+		this.properties.getArticle(this.properties.slug);
+	}
+
 	protected render() {
 		const {
 			onTagDelete,
 			onPublishPost,
 			title,
 			description,
-			content,
+			body,
 			tag,
-			errors = [],
+			// errors = [],
 			inProgress = false,
 			tags = []
 		} = this.properties;
@@ -59,7 +64,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 			v('div', { classes: ['container', 'page'] }, [
 				v('div', { classes: 'row' }, [
 					v('div', { classes: ['col-md-10', 'offset-md-1', 'col-xs-12'] }, [
-						v('ul', { classes: 'error-messages' }, errors.map((error: any) => v('li', [error]))),
+						// v('ul', { classes: 'error-messages' }, errors.map((error: any) => v('li', [error]))),
 						v('form', [
 							v('fieldset', [
 								v('fieldset', { classes: 'form-group' }, [
@@ -86,7 +91,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 										type: 'text',
 										rows: 8,
 										placeholder: 'Write your article (in markdown)',
-										value: content,
+										value: body,
 										oninput: this._onContentInput
 									})
 								]),

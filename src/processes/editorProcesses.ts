@@ -1,8 +1,9 @@
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
 import { PatchOperation } from '@dojo/stores/state/Patch';
 import { replace, add, remove } from '@dojo/stores/state/operations';
+import { State } from '../interfaces';
 
-const commandFactory = createCommandFactory<any>();
+const commandFactory = createCommandFactory<State>();
 
 const titleInputCommand = commandFactory(({ path, payload: [title] }): PatchOperation[] => {
 	return [replace(path('editor', 'title'), title)];
@@ -45,11 +46,11 @@ const getArticleForEditorCommand = commandFactory(async ({ get, at, path, payloa
 });
 
 const startPublishCommand = commandFactory(({ path }) => {
-	return [replace(path('editor', 'inProgress'), true)];
+	return [replace(path('editor', 'loading'), true)];
 });
 
 const publishArticleCommand = commandFactory(async ({ get, path, payload }): Promise<PatchOperation[]> => {
-	const token = get(path('session', 'token'));
+	const token = get(path('user', 'token'));
 	const slug = get(path('editor', 'slug'));
 	const requestPayload = {
 		article: {
@@ -75,29 +76,17 @@ const publishArticleCommand = commandFactory(async ({ get, path, payload }): Pro
 	const json = await response.json();
 
 	if (!response.ok) {
-		return [
-			replace(path('editor', 'inProgress'), false),
-			replace(path('editor', 'errors'), buildErrorList(json.errors))
-		];
+		return [replace(path('editor', 'loading'), false), replace(path('errors'), json.errors)];
 	}
 
 	return [
-		replace(path('article', 'article'), json.article),
+		replace(path('article', 'item'), json.article),
 		replace(path('article', 'loaded'), true),
 		replace(path('editor'), undefined),
 		replace(path('routing', 'outlet'), 'article'),
 		replace(path('routing', 'params'), { slug: json.article.slug })
 	];
 });
-
-function buildErrorList(errors: { [index: string]: string[] }) {
-	const errorCategories = Object.keys(errors);
-	let errorList: any[] = [];
-	for (let i = 0; i < errorCategories.length; i++) {
-		errorList = [...errorList, ...errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)];
-	}
-	return errorList;
-}
 
 export const titleInput = createProcess([titleInputCommand]);
 export const descInput = createProcess([descriptionInputCommand]);

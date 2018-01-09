@@ -13,6 +13,7 @@ export interface SettingsProperties {
 	password: string;
 	onPasswordInput: Function;
 	onUpdateSettings: any;
+	getUserSettings: Function;
 }
 
 export class Settings extends WidgetBase<SettingsProperties> {
@@ -39,6 +40,10 @@ export class Settings extends WidgetBase<SettingsProperties> {
 
 	private _onPasswordInput(event: any) {
 		this.properties.onPasswordInput(event.target.value);
+	}
+
+	onAttach() {
+		this.properties.getUserSettings();
 	}
 
 	protected render() {

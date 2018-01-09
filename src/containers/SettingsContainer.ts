@@ -14,10 +14,6 @@ import {
 function getProperties(store: Store<any>, properties: SettingsProperties): SettingsProperties {
 	const { get, path } = store;
 
-	if (!get(path('settings', 'loading')) && !get(path('settings', 'loaded'))) {
-		getUserSettings(store)();
-	}
-
 	return {
 		email: get(path('settings', 'email')),
 		password: get(path('settings', 'password')),
@@ -29,7 +25,8 @@ function getProperties(store: Store<any>, properties: SettingsProperties): Setti
 		onUsernameInput: usernameInput(store),
 		onBioInput: bioInput(store),
 		onImageUrlInput: imageUrlInput(store),
-		onUpdateSettings: updateUserSettings(store)
+		onUpdateSettings: updateUserSettings(store),
+		getUserSettings: getUserSettings(store)
 	};
 }
 

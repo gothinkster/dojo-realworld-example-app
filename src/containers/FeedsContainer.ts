@@ -1,25 +1,27 @@
 import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
 import { Feeds, FeedsProperties } from './../widgets/Feeds';
-import { getGlobalArticles, getFeedArticles } from './../processes/feedProcesses';
-import { favArticle } from './../processes/articleProcesses';
+import { fetchFeedProcess, favoriteFeedArticleProcess } from './../processes/feedProcesses';
 
-function getProperties(store: Store<any>, properties: FeedsProperties): FeedsProperties {
+import { State } from './../interfaces';
+
+function getProperties(store: Store<State>, properties: FeedsProperties): FeedsProperties {
 	const { get, path } = store;
-	const feedLoaded = get(path('feed', 'loaded'));
-	const feedLoading = get(path('feed', 'loading'));
-	const isAuthenticated = get(path('session', 'isAuthenticated'));
+	const loading = get(path('feed', 'loading'));
+	const isAuthenticated = !!get(path('user', 'token'));
+	const username = properties.username || get(path('user', 'username'));
+	const type = properties.type
+		? properties.type
+		: isAuthenticated ? get(path('feed', 'category')) || 'feed' : 'global';
 
-	if (!feedLoaded && !feedLoading) {
-		isAuthenticated ? getFeedArticles(store)() : getGlobalArticles(store)();
-	}
 	return {
-		articles: get(path('feed', 'articles')),
-		feedCategory: get(path('feed', 'category')),
-		isAuthenticated: isAuthenticated,
-		getGlobalArticles: getGlobalArticles(store),
-		getFeedArticles: getFeedArticles(store),
-		onFav: favArticle(store)
+		items: get(path('feed', 'items')),
+		type,
+		fetchFeed: fetchFeedProcess(store),
+		loading,
+		username,
+		isAuthenticated,
+		favoriteArticle: favoriteFeedArticleProcess(store)
 	};
 }
 

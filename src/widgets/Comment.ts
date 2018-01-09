@@ -2,8 +2,10 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 
+import { Comment as CommentItem } from './../interfaces';
+
 interface CommentProperties {
-	comment: any;
+	comment: CommentItem;
 	loggedInUser: string;
 	deleteComment: any;
 	slug: string;

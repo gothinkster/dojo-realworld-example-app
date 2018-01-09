@@ -1,7 +1,9 @@
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
+import { State } from '../interfaces';
+import { getHeaders } from './utils';
 
-const commandFactory = createCommandFactory<any>();
+const commandFactory = createCommandFactory<State>();
 
 const emailInputCommand = commandFactory(({ payload: [username], path }) => {
 	return [replace(path('settings', 'email'), username)];
@@ -20,7 +22,7 @@ const bioInputCommand = commandFactory(({ payload: [bio], path }) => {
 });
 
 const imageUrlInputCommand = commandFactory(({ payload: [imageUrl], path }) => {
-	return [replace(path('settings', 'imageUrl'), imageUrl)];
+	return [replace(path('settings', 'image'), imageUrl)];
 });
 
 const startUserSettingsCommand = commandFactory(({ path, get }) => {
@@ -28,31 +30,14 @@ const startUserSettingsCommand = commandFactory(({ path, get }) => {
 });
 
 const getUserSettingsCommand = commandFactory(async ({ path, get }) => {
-	const token = get(path('session', 'token'));
-	const headers = new Headers({
-		'Content-Type': 'application/json',
-		Authorization: `Token ${token}`
-	});
-	const response = await fetch(`https://conduit.productionready.io/api/user`, { headers });
-
-	const json = await response.json();
-	const settings = {
-		...json.user,
-		loaded: true,
-		loading: false
-	};
-
-	return [replace(path('settings'), settings)];
+	return [replace(path('settings'), get(path('user')))];
 });
 
 const updateUserSettingsCommand = commandFactory(async ({ path, get }) => {
-	const token = get(path('session', 'token'));
-	const headers = new Headers({
-		'Content-Type': 'application/json',
-		Authorization: `Token ${token}`
-	});
+	const token = get(path('user', 'token'));
+
 	const requestPayload: any = {
-		imageUrl: get(path('settings', 'imageUrl')),
+		image: get(path('settings', 'image')),
 		bio: get(path('settings', 'bio')),
 		username: get(path('settings', 'username')),
 		email: get(path('settings', 'email'))
@@ -63,21 +48,16 @@ const updateUserSettingsCommand = commandFactory(async ({ path, get }) => {
 	}
 	const response = await fetch(`https://conduit.productionready.io/api/user`, {
 		method: 'put',
-		headers,
+		headers: getHeaders(token),
 		body: JSON.stringify(requestPayload)
 	});
 
 	const json = await response.json();
-	const session = {
-		...get(path('session')),
-		...json.user
-	};
 
 	return [
-		replace(path('session'), session),
+		replace(path('user'), json.user),
 		replace(path('settings'), { loaded: false, loading: false }),
 		replace(path('routing', 'outlet'), 'user'),
-		replace(path('profile'), undefined),
 		replace(path('routing', 'params'), { id: get(path('settings', 'username')) })
 	];
 });

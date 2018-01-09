@@ -3,7 +3,7 @@ import { Outlet } from '@dojo/routing/Outlet';
 const mapParams = ({ params, type }: any) => {
 	return {
 		username: params.id,
-		articleType: type === 'index' ? 'my' : 'fav'
+		type: type === 'index' ? 'user' : 'favorites'
 	};
 };
 

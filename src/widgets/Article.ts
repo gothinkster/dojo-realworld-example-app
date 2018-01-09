@@ -4,56 +4,62 @@ import { Link } from '@dojo/routing/Link';
 import * as marked from 'marked';
 
 import { Comment } from './Comment';
+import { ArticleItem, Comment as CommentItem } from '../interfaces';
 
 export interface ArticleProperties {
-	article?: any;
-	comments: any;
-	loaded?: boolean;
+	article: ArticleItem;
+	comments: CommentItem[];
+	loaded: boolean;
 	isAuthenticated: boolean;
 	loggedInUser: string;
 	addComment: any;
 	deleteComment: any;
 	onNewCommentInput: any;
 	newComment: string;
+	slug: string;
+	getArticle: Function;
 }
 
 export class Article extends WidgetBase<ArticleProperties> {
 	private _addComment(event: any) {
 		event.preventDefault();
-		this.properties.addComment(this.properties.article.slug, this.properties.newComment);
+		if (this.properties.article) {
+			this.properties.addComment(this.properties.article.slug, this.properties.newComment);
+		}
 	}
 
 	private _onNewCommentInput(event: any) {
 		this.properties.onNewCommentInput(event.target.value);
 	}
 
+	onAttach() {
+		this.properties.getArticle(this.properties.slug);
+	}
+
 	protected render() {
-		const {
-			isAuthenticated,
-			newComment,
-			deleteComment,
-			loaded = false,
-			comments,
-			loggedInUser,
-			article,
-			article: { title, author = {}, createdAt }
-		} = this.properties;
+		const { isAuthenticated, newComment, deleteComment, comments, loaded, loggedInUser, article } = this.properties;
 
 		if (!loaded) {
-			return null;
+			return v('div', { classes: 'article-page' }, [
+				v('div', { classes: 'banner' }, [
+					v('div', { classes: 'container' }, [v('h1'), v('div', { classes: 'article-meta' })])
+				])
+			]);
 		}
 
 		return v('div', { classes: 'article-page' }, [
 			v('div', { classes: 'banner' }, [
 				v('div', { classes: 'container' }, [
-					v('h1', [title]),
+					v('h1', [article.title]),
 					v('div', { classes: 'article-meta' }, [
-						w(Link, { to: 'user', params: { id: author.username } }, [v('img', { src: author.image })]),
+						w(Link, { to: 'user', params: { id: article.author.username } }, [
+							v('img', { src: article.author.image })
+						]),
 						v('div', { classes: 'info' }, [
-							w(Link, { to: 'user', classes: 'author', params: { id: author.username } }, [
-								author.username
+							w(Link, { to: 'user', classes: 'author', params: { id: article.author.username } }, [
+								article.author.username
 							]),
-							v('span', { classes: 'date' }, [new Date(createdAt).toDateString()])
+							v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
 						]),
 						isAuthenticated
 							? v(
@@ -62,12 +68,14 @@ export class Article extends WidgetBase<ArticleProperties> {
 										classes: [
 											'btn',
 											'btn-sm',
-											author.following ? 'btn-secondary' : 'btn-outline-secondary'
+											article.author.following ? 'btn-secondary' : 'btn-outline-secondary'
 										]
 									},
 									[
 										v('i', { classes: 'ion-plus-round' }),
-										`${author.following ? ' Unfollow' : ' Follow'} ${author.username}`
+										`${article.author.following ? ' Unfollow' : ' Follow'} ${
+											article.author.username
+										}`
 									]
 								)
 							: null,
@@ -107,10 +115,10 @@ export class Article extends WidgetBase<ArticleProperties> {
 				v('hr'),
 				v('div', { classes: 'article-actions' }, [
 					v('div', { classes: 'article-meta' }, [
-						v('a', { href: '' }, [v('img', { src: author.image })]),
+						v('a', { href: '' }, [v('img', { src: article.author.image })]),
 						v('div', { classes: 'info' }, [
-							v('a', { href: '', classes: 'author' }, [author.username]),
-							v('span', { classes: 'date' }, [new Date(createdAt).toDateString()])
+							v('a', { href: '', classes: 'author' }, [article.author.username]),
+							v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
 						]),
 						isAuthenticated
 							? v(
@@ -119,12 +127,14 @@ export class Article extends WidgetBase<ArticleProperties> {
 										classes: [
 											'btn',
 											'btn-sm',
-											author.following ? 'btn-secondary' : 'btn-outline-secondary'
+											article.author.following ? 'btn-secondary' : 'btn-outline-secondary'
 										]
 									},
 									[
 										v('i', { classes: 'ion-plus-round' }),
-										`${author.following ? ' Unfollow' : ' Follow'} ${author.username}`
+										`${article.author.following ? ' Unfollow' : ' Follow'} ${
+											article.author.username
+										}`
 									]
 								)
 							: null,

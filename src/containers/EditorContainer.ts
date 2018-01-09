@@ -11,28 +11,27 @@ import {
 	titleInput,
 	getArticleForEditor
 } from './../processes/editorProcesses';
+import { State } from '../interfaces';
 
-function getProperties(store: Store<any>, properties: EditorProperties): EditorProperties {
+function getProperties(store: Store<State>, properties: EditorProperties): EditorProperties {
 	const { get, path } = store;
-
-	if (properties.slug && properties.slug !== get(path('editor', 'slug'))) {
-		getArticleForEditor(store)(properties.slug);
-	}
 
 	return {
 		title: get(path('editor', 'title')),
 		description: get(path('editor', 'description')),
-		content: get(path('editor', 'body')),
+		body: get(path('editor', 'body')),
 		tag: get(path('editor', 'tag')),
 		tags: get(path('editor', 'tagList')),
-		errors: get(path('editor', 'errors')),
+		errors: get(path('errors')),
 		onContentInput: contentInput(store),
 		onDescriptionInput: descInput(store),
 		onTagCreate: addTag(store),
 		onTagDelete: removeTag(store),
 		onTagInput: tagInput(store),
 		onTitleInput: titleInput(store),
-		onPublishPost: publishArticle(store)
+		onPublishPost: publishArticle(store),
+		getArticle: getArticleForEditor(store),
+		slug: properties.slug
 	};
 }
 

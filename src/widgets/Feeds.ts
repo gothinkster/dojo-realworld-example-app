@@ -1,63 +1,141 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
+import { DNode } from '@dojo/widget-core/interfaces';
 import { v, w } from '@dojo/widget-core/d';
 
 import { ArticlePreview } from './ArticlePreview';
+import { ArticleItem } from '../interfaces';
 
 export interface FeedsProperties {
-	articles: any[];
-	getGlobalArticles: any;
-	getFeedArticles: any;
-	feedCategory: string;
+	fetchFeed: Function;
+	favoriteArticle: Function;
+	items: ArticleItem[];
+	loading: boolean;
+	type: string;
+	username: string;
 	isAuthenticated: boolean;
-	onFav: Function;
 }
 
 export class Feeds extends WidgetBase<FeedsProperties> {
-	protected render() {
-		const { articles, isAuthenticated, feedCategory, getFeedArticles, getGlobalArticles, onFav } = this.properties;
+	onAttach() {
+		const { type, username } = this.properties;
+		this.properties.fetchFeed(type, username, 1);
+	}
 
-		let articleList = v('div', { classes: 'article-preview' }, ['Loading...']);
-		if (articles && articles.length === 0) {
-			articleList = v('div', { classes: 'article-preview' }, ['No articles here, yet!']);
-		} else if (articles && articles.length > 0) {
-			articleList = v(
-				'div',
-				this.properties.articles.map((article, index) => {
-					return w(ArticlePreview, { key: index, article, onFav, view: 'feed' });
-				})
-			);
-		}
+	private _onGlobalFeedClick() {
+		const { username } = this.properties;
+		this.properties.fetchFeed('global', username, 1);
+	}
+
+	private _onFeedClick() {
+		const { username } = this.properties;
+		this.properties.fetchFeed('feed', username, 1);
+	}
+
+	private _onFavoriteFeedClick() {
+		const { username } = this.properties;
+		this.properties.fetchFeed('favorites', username, 1);
+	}
+
+	private _onUserFeedClick() {
+		const { username } = this.properties;
+		this.properties.fetchFeed('user', username, 1);
+	}
+
+	private _buildTabs(children: DNode): DNode {
+		const { isAuthenticated, type, username } = this.properties;
+		const isProfile = type === 'user' || type === 'favorites';
 
 		return v('div', { classes: 'col-md-9' }, [
 			v('div', { classes: 'feed-toggle' }, [
 				v('ul', { classes: ['nav', 'nav-pills', 'outline-active'] }, [
-					isAuthenticated
+					isAuthenticated && !isProfile
 						? v('li', { classes: 'nav-item' }, [
 								v(
 									'a',
 									{
 										href: '#/',
-										onclick: getFeedArticles,
-										classes: ['nav-link', feedCategory === 'user' ? 'active' : null]
+										onclick: this._onFeedClick,
+										classes: ['nav-link', type === 'feed' ? 'active' : null]
 									},
 									['Your Feeds']
 								)
 							])
 						: null,
-					v('li', { classes: 'nav-item' }, [
-						v(
-							'a',
-							{
-								href: '#/',
-								onclick: getGlobalArticles,
-								classes: ['nav-link', feedCategory === 'global' ? 'active' : null]
-							},
-							['Global Feeds']
-						)
-					])
+					!isProfile
+						? v('li', { classes: 'nav-item' }, [
+								v(
+									'a',
+									{
+										href: '#/',
+										onclick: this._onGlobalFeedClick,
+										classes: ['nav-link', type === 'global' ? 'active' : null]
+									},
+									['Global Feeds']
+								)
+							])
+						: null,
+					type === 'tag'
+						? v('li', { classes: 'nav-item' }, [
+								v(
+									'a',
+									{
+										href: '#/',
+										classes: ['nav-link', 'active']
+									},
+									['Global Feeds']
+								)
+							])
+						: null,
+					isProfile
+						? v('li', { classes: 'nav-item' }, [
+								v(
+									'a',
+									{
+										onclick: this._onUserFeedClick,
+										href: `#user/${username}`,
+										classes: ['nav-link', type === 'user' ? 'active' : null]
+									},
+									['My Articles']
+								)
+							])
+						: null,
+					isProfile
+						? v('li', { classes: 'nav-item' }, [
+								v(
+									'a',
+									{
+										onclick: this._onFavoriteFeedClick,
+										href: `#user/${username}/favorites`,
+										classes: ['nav-link', type === 'favorites' ? 'active' : null]
+									},
+									['Favorited Articles']
+								)
+							])
+						: null
 				])
 			]),
-			articleList
+			children
 		]);
+	}
+
+	protected render() {
+		const { loading = true, items, favoriteArticle } = this.properties;
+
+		if (loading || items === undefined) {
+			return this._buildTabs(v('div', { classes: 'article-preview' }, ['Loading...']));
+		}
+
+		if (items.length === 0) {
+			return this._buildTabs(v('div', { classes: 'article-preview' }, ['No articles here, yet!']));
+		}
+
+		const articleList = v(
+			'div',
+			items.map((article, index) => {
+				return w(ArticlePreview, { key: index, article, favoriteArticle });
+			})
+		);
+
+		return this._buildTabs(articleList);
 	}
 }

@@ -1,39 +1,13 @@
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
 import { remove, replace } from '@dojo/stores/state/operations';
+import { State } from '../interfaces';
+import { getHeaders } from './utils';
 
-const commandFactory = createCommandFactory<any>();
-
-const favArticleCommand = commandFactory(async ({ at, get, path, payload: [slug, favorited, type] }) => {
-	const token = get(path('session', 'token'));
-	const headers = new Headers({
-		'Content-Type': 'application/json',
-		Authorization: `Token ${token}`
-	});
-
-	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
-		method: favorited ? 'delete' : 'post',
-		headers
-	});
-	const json = await response.json();
-
-	const articles = get(path(type, 'articles'));
-	let index = -1;
-	for (let i = 0; i < articles.length; i++) {
-		if (articles[i].slug === slug) {
-			index = i;
-			break;
-		}
-	}
-
-	if (index !== -1) {
-		return [replace(at(path(type, 'articles'), index), json.article)];
-	}
-	return [];
-});
+const commandFactory = createCommandFactory<State>();
 
 const startLoadingArticleCommand = commandFactory(async ({ path }) => {
 	return [
-		replace(path('article', 'article'), undefined),
+		replace(path('article', 'item'), undefined),
 		replace(path('article', 'comments'), undefined),
 		replace(path('article', 'loading'), true),
 		replace(path('article', 'loaded'), false)
@@ -41,45 +15,31 @@ const startLoadingArticleCommand = commandFactory(async ({ path }) => {
 });
 
 const loadArticleCommand = commandFactory(async ({ get, path, payload: [slug] }) => {
-	const token = get(path('session', 'token'));
-	let headers = {};
-	if (token) {
-		headers = new Headers({
-			'Content-Type': 'application/json',
-			Authorization: `Token ${token}`
-		});
-	}
-	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}`, { headers });
+	const token = get(path('user', 'token'));
+	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}`, {
+		headers: getHeaders(token)
+	});
 	const json = await response.json();
 
 	return [
-		replace(path('article', 'article'), json.article),
+		replace(path('article', 'item'), json.article),
 		replace(path('article', 'loading'), false),
 		replace(path('article', 'loaded'), true)
 	];
 });
 
 const loadCommentsCommand = commandFactory(async ({ get, path, payload: [slug] }) => {
-	const token = get(path('session', 'token'));
-	let headers = {};
-	if (token) {
-		headers = new Headers({
-			'Content-Type': 'application/json',
-			Authorization: `Token ${token}`
-		});
-	}
-	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments`, { headers });
+	const token = get(path('user', 'token'));
+	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments`, {
+		headers: getHeaders(token)
+	});
 	const json = await response.json();
 
 	return [replace(path('article', 'comments'), json.comments)];
 });
 
 const addCommentCommand = commandFactory(async ({ at, get, path, payload: [slug, newComment] }) => {
-	const token = get(path('session', 'token'));
-	const headers = new Headers({
-		'Content-Type': 'application/json',
-		Authorization: `Token ${token}`
-	});
+	const token = get(path('user', 'token'));
 	const requestPayload = {
 		comment: {
 			body: newComment
@@ -87,7 +47,7 @@ const addCommentCommand = commandFactory(async ({ at, get, path, payload: [slug,
 	};
 	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments`, {
 		method: 'post',
-		headers,
+		headers: getHeaders(token),
 		body: JSON.stringify(requestPayload)
 	});
 	const json = await response.json();
@@ -100,14 +60,10 @@ const addCommentCommand = commandFactory(async ({ at, get, path, payload: [slug,
 });
 
 const deleteCommentCommand = commandFactory(async ({ at, get, path, payload: [slug, id] }) => {
-	const token = get(path('session', 'token'));
-	const headers = new Headers({
-		'Content-Type': 'application/json',
-		Authorization: `Token ${token}`
-	});
+	const token = get(path('user', 'token'));
 	await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments/${id}`, {
 		method: 'delete',
-		headers
+		headers: getHeaders(token)
 	});
 	const comments = get(path('article', 'comments'));
 	let index = -1;
@@ -128,7 +84,6 @@ const newCommentInputCommand = commandFactory(({ path, payload: [newComment] }) 
 	return [replace(path('article', 'newComment'), newComment)];
 });
 
-export const favArticle = createProcess([favArticleCommand]);
 export const getArticle = createProcess([startLoadingArticleCommand, [loadArticleCommand, loadCommentsCommand]]);
 export const deleteCommentProcess = createProcess([deleteCommentCommand]);
 export const addCommentProcess = createProcess([addCommentCommand]);

@@ -2,8 +2,9 @@ import global from '@dojo/shim/global';
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
 import { PatchOperation } from '@dojo/stores/state/Patch';
 import { replace } from '@dojo/stores/state/operations';
+import { State } from '../interfaces';
 
-const commandFactory = createCommandFactory<any>();
+const commandFactory = createCommandFactory<State>();
 
 const loginEmailInputCommand = commandFactory(({ payload: [username], path }): PatchOperation[] => {
 	return [replace(path('login', 'email'), username)];
@@ -38,16 +39,15 @@ const clearRegisterInputs = commandFactory(({ path }): PatchOperation[] => {
 });
 
 const startLoginCommand = commandFactory(({ path }): PatchOperation[] => {
-	return [replace(path('login', 'inProgress'), true)];
+	return [replace(path('login', 'loading'), true)];
 });
 
 const startRegisterCommand = commandFactory(({ path }): PatchOperation[] => {
-	return [replace(path('register', 'inProgress'), true)];
+	return [replace(path('register', 'loading'), true)];
 });
 
 const setSessionCommand = commandFactory(({ path, payload: [session] }): PatchOperation[] => {
-	session.isAuthenticated = true;
-	return [replace(path('session'), session)];
+	return [replace(path('user'), session)];
 });
 
 const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
@@ -70,10 +70,10 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 	const json = await response.json();
 	if (!response.ok) {
 		return [
-			replace(path('login', 'hasFailed'), true),
-			replace(path('login', 'inProgress'), false),
-			replace(path('login', 'errors'), buildErrorList(json.errors)),
-			replace(path('session', 'isAuthenticated'), false)
+			replace(path('login', 'failed'), true),
+			replace(path('login', 'loading'), false),
+			replace(path('errors'), json.errors),
+			replace(path('user'), {})
 		];
 	}
 
@@ -81,11 +81,10 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 
 	return [
 		replace(path('routing', 'outlet'), 'home'),
-		replace(path('login', 'inProgress'), false),
-		replace(path('login', 'errors'), undefined),
-		replace(path('session', 'token'), json.user.token),
-		replace(path('session', 'isAuthenticated'), true),
-		replace(path('feed', 'articles'), undefined),
+		replace(path('login', 'loading'), false),
+		replace(path('errors'), undefined),
+		replace(path('user'), json.user),
+		replace(path('feed', 'items'), undefined),
 		replace(path('feed', 'loaded'), false)
 	];
 });
@@ -110,10 +109,10 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 	const json = await response.json();
 	if (!response.ok) {
 		return [
-			replace(path('register', 'hasFailed'), true),
-			replace(path('register', 'inProgress'), false),
-			replace(path('register', 'errors'), buildErrorList(json.errors)),
-			replace(path('session', 'isAuthenticated'), false)
+			replace(path('register', 'failed'), true),
+			replace(path('register', 'loading'), false),
+			replace(path('errors'), json.errors),
+			replace(path('user'), {})
 		];
 	}
 
@@ -121,23 +120,13 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 
 	return [
 		replace(path('routing', 'outlet'), 'home'),
-		replace(path('register', 'inProgress'), false),
-		replace(path('register', 'errors'), undefined),
-		replace(path('session', 'token'), json.user.token),
-		replace(path('session', 'isAuthenticated'), true),
-		replace(path('feed', 'articles'), undefined),
+		replace(path('register', 'loading'), false),
+		replace(path('errors'), undefined),
+		replace(path('user'), json.user),
+		replace(path('feed', 'items'), undefined),
 		replace(path('feed', 'loaded'), false)
 	];
 });
-
-function buildErrorList(errors: { [index: string]: string[] }) {
-	const errorCategories = Object.keys(errors);
-	let errorList: any[] = [];
-	for (let i = 0; i < errorCategories.length; i++) {
-		errorList = [...errorList, ...errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)];
-	}
-	return errorList;
-}
 
 export const login = createProcess([startLoginCommand, loginCommand, clearLoginInputs]);
 export const register = createProcess([startRegisterCommand, registerCommand, clearRegisterInputs]);

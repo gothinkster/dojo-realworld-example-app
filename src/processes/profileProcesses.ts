@@ -38,7 +38,7 @@ const setArticleTypeCommand = commandFactory(({ get, path, payload: [articleType
 
 const getFavoritedCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<PatchOperation[]> => {
 	const token = get(path('session', 'token'));
-	let headers = {};
+	let headers: Headers = new Headers();
 	if (token) {
 		headers = new Headers({
 			'Content-Type': 'application/json',

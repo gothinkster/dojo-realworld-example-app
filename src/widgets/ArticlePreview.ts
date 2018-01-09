@@ -1,17 +1,17 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
+import { ArticleItem } from '../interfaces';
 
 export interface ArticlePreviewProperties {
-	article: any;
-	onFav: Function;
-	view: string;
+	article: ArticleItem;
+	favoriteArticle: Function;
 }
 
 export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {
 	private _onFav() {
-		const { view, article: { slug, favorited } } = this.properties;
-		this.properties.onFav(slug, favorited, view);
+		const { favoriteArticle, article: { slug, favorited } } = this.properties;
+		favoriteArticle(slug, favorited);
 	}
 
 	protected render() {
