@@ -10,6 +10,7 @@ import {
 	usernameInput,
 	updateUserSettings
 } from './../processes/settingsProcesses';
+import { logout } from '../processes/loginProcesses';
 
 function getProperties(store: Store<any>, properties: SettingsProperties): SettingsProperties {
 	const { get, path } = store;
@@ -26,7 +27,8 @@ function getProperties(store: Store<any>, properties: SettingsProperties): Setti
 		onBioInput: bioInput(store),
 		onImageUrlInput: imageUrlInput(store),
 		onUpdateSettings: updateUserSettings(store),
-		getUserSettings: getUserSettings(store)
+		getUserSettings: getUserSettings(store),
+		logout: logout(store)
 	};
 }
 

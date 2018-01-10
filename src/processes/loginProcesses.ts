@@ -128,6 +128,11 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 	];
 });
 
+const logoutCommand = commandFactory(({ path, payload: [session] }): PatchOperation[] => {
+	global.sessionStorage.removeItem('conduit-session');
+	return [replace(path('routing', 'outlet'), 'home'), replace(path('user'), {})];
+});
+
 export const login = createProcess([startLoginCommand, loginCommand, clearLoginInputs]);
 export const register = createProcess([startRegisterCommand, registerCommand, clearRegisterInputs]);
 export const loginEmailInput = createProcess([loginEmailInputCommand]);
@@ -136,3 +141,4 @@ export const registerEmailInput = createProcess([registerEmailInputCommand]);
 export const registerPasswordInput = createProcess([registerPasswordInputCommand]);
 export const registerUsernameInput = createProcess([registerUsernameInputCommand]);
 export const setSession = createProcess([setSessionCommand]);
+export const logout = createProcess([logoutCommand]);

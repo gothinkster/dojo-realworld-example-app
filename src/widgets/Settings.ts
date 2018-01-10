@@ -14,6 +14,7 @@ export interface SettingsProperties {
 	onPasswordInput: Function;
 	onUpdateSettings: any;
 	getUserSettings: Function;
+	logout: any;
 }
 
 export class Settings extends WidgetBase<SettingsProperties> {
@@ -47,7 +48,7 @@ export class Settings extends WidgetBase<SettingsProperties> {
 	}
 
 	protected render() {
-		const { email, password, bio, imageUrl, username } = this.properties;
+		const { email, password, bio, imageUrl, username, logout } = this.properties;
 
 		return v('div', { classes: 'settings-page' }, [
 			v('div', { classes: ['container', 'page'] }, [
@@ -111,6 +112,10 @@ export class Settings extends WidgetBase<SettingsProperties> {
 									['Update Settings']
 								)
 							])
+						]),
+						v('hr'),
+						v('button', { onclick: logout, classes: ['btn', 'btn-outline-danger'] }, [
+							'Or click here to logout'
 						])
 					])
 				])
