@@ -9,12 +9,8 @@ import { App } from './App';
 import { getTags } from './processes/tagProcesses';
 import { setSession } from './processes/loginProcesses';
 import { changeRouteProcess } from './processes/routeProcesses';
-import { getProfileProcess } from './processes/profileProcesses';
-import { Params } from '@dojo/routing/interfaces';
 import { State } from './interfaces';
-import { getArticleForEditor } from './processes/editorProcesses';
-import { getArticle } from './processes/articleProcesses';
-import { getUserSettings } from './processes/settingsProcesses';
+import { getRouteConfig } from './routeConfig';
 
 class StoreInjector extends Injector {
 	constructor(payload: Store<State>) {
@@ -28,61 +24,7 @@ class StoreInjector extends Injector {
 const store = new Store<State>();
 const registry = new Registry();
 
-const config = [
-	{
-		path: 'login',
-		outlet: 'login'
-	},
-	{
-		path: 'register',
-		outlet: 'register'
-	},
-	{
-		path: 'user/{username}',
-		outlet: 'user',
-		onEnter: ({ username }: Params) => {
-			getProfileProcess(store)({ username });
-		},
-		children: [
-			{
-				path: 'favorites',
-				outlet: 'favorites'
-			}
-		]
-	},
-	{
-		path: 'article/{slug}',
-		outlet: 'article',
-		onEnter: ({ slug }: Params) => {
-			getArticle(store)({ slug });
-		}
-	},
-	{
-		path: 'settings',
-		outlet: 'settings',
-		onEnter: () => {
-			getUserSettings(store)({});
-		}
-	},
-	{
-		path: 'editor/{slug}',
-		outlet: 'edit-post',
-		onEnter: ({ slug }: Params) => {
-			getArticleForEditor(store)({ slug });
-		}
-	},
-	{
-		path: 'editor',
-		outlet: 'new-post'
-	},
-	{
-		path: '/',
-		outlet: 'home',
-		defaultRoute: true
-	}
-];
-
-const router = registerRouterInjector(config, registry);
+const router = registerRouterInjector(getRouteConfig(store), registry);
 
 registry.define('editor', async () => {
 	const module = await import('./containers/EditorContainer');
