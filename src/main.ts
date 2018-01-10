@@ -13,6 +13,8 @@ import { getProfileProcess } from './processes/profileProcesses';
 import { Params } from '@dojo/routing/interfaces';
 import { State } from './interfaces';
 import { getArticleForEditor } from './processes/editorProcesses';
+import { getArticle } from './processes/articleProcesses';
+import { getUserSettings } from './processes/settingsProcesses';
 
 class StoreInjector extends Injector {
 	constructor(payload: any) {
@@ -36,10 +38,10 @@ const config = [
 		outlet: 'register'
 	},
 	{
-		path: 'user/{id}',
+		path: 'user/{username}',
 		outlet: 'user',
-		onEnter: (params: Params) => {
-			getProfileProcess(store)(params.id as any);
+		onEnter: ({ username }: Params) => {
+			getProfileProcess(store)({ username });
 		},
 		children: [
 			{
@@ -50,17 +52,23 @@ const config = [
 	},
 	{
 		path: 'article/{slug}',
-		outlet: 'article'
+		outlet: 'article',
+		onEnter: ({ slug }: Params) => {
+			getArticle(store)({ slug });
+		}
 	},
 	{
 		path: 'settings',
-		outlet: 'settings'
+		outlet: 'settings',
+		onEnter: () => {
+			getUserSettings(store)({});
+		}
 	},
 	{
 		path: 'editor/{slug}',
 		outlet: 'edit-post',
-		onEnter: (params: Params) => {
-			getArticleForEditor(store)(params.slug as any);
+		onEnter: ({ slug }: Params) => {
+			getArticleForEditor(store)({ slug });
 		}
 	},
 	{
@@ -103,13 +111,13 @@ registry.define('settings', async () => {
 
 const session = global.sessionStorage.getItem('conduit-session');
 
-getTags(store)();
+getTags(store)({});
 if (session) {
-	setSession(store)(JSON.parse(session));
+	setSession(store)({ session: JSON.parse(session) });
 }
 
-router.on('nav', ({ path: fullPath, outlet, context }: any) => {
-	(changeRouteProcess(store) as any)(outlet, context);
+router.on('nav', ({ outlet, context }: any) => {
+	changeRouteProcess(store)({ outlet, context });
 });
 
 function onRouteChange() {

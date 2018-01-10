@@ -4,7 +4,7 @@ import { Login, LoginProperties } from './../widgets/Login';
 import { login, loginEmailInput, loginPasswordInput } from './../processes/loginProcesses';
 import { State } from '../interfaces';
 
-function getProperties(store: Store<State>, properties: LoginProperties): LoginProperties {
+function getProperties(store: Store<State>): LoginProperties {
 	const { get, path } = store;
 	return {
 		email: get(path('login', 'email')),

@@ -10,14 +10,14 @@ export interface ProfileProperties {
 	image: string;
 	type: string;
 	following: boolean;
-	followUser: Function;
 	currentUser: string;
+	followUser: (opts: { username: string; following: boolean }) => void;
 }
 
 export class Profile extends WidgetBase<ProfileProperties> {
 	private _onFollowUser() {
 		const { followUser, following, username } = this.properties;
-		followUser(username, following);
+		followUser({ username, following });
 	}
 
 	protected render() {

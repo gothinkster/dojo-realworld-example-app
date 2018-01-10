@@ -2,7 +2,6 @@ import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
 import { Article, ArticleProperties } from './../widgets/Article';
 import {
-	getArticle,
 	deleteCommentProcess,
 	addCommentProcess,
 	newCommentInputProcess,
@@ -26,11 +25,10 @@ function getProperties(store: Store<State>, properties: ArticleProperties): Arti
 		loaded: get(path('article', 'loaded')),
 		isAuthenticated: !!get(path('user', 'token')),
 		loggedInUser: get(path('user', 'username')),
+		slug: properties.slug,
 		deleteComment: deleteCommentProcess(store),
 		addComment: addCommentProcess(store),
 		onNewCommentInput: newCommentInputProcess(store),
-		slug: properties.slug,
-		getArticle: getArticle(store),
 		favoriteArticle: favoriteArticleProcess(store),
 		followUser: followUserProcess(store),
 		deleteArticle: deleteArticleProcess(store),

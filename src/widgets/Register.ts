@@ -1,37 +1,37 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
-import { Errors } from '../interfaces';
+import { Errors, WithTarget } from '../interfaces';
 import { ErrorList } from './ErrorList';
 
 export interface RegisterProperties {
-	onPasswordInput: Function;
-	onEmailInput: Function;
-	onUsernameInput: Function;
-	onRegister: Function;
 	email: string;
 	password: string;
 	username: string;
 	inProgress?: boolean;
 	errors: Errors;
+	onPasswordInput: (opts: { password: string }) => void;
+	onEmailInput: (opts: { email: string }) => void;
+	onUsernameInput: (opts: { username: string }) => void;
+	onRegister: (opts: object) => void;
 }
 
 export class Register extends WidgetBase<RegisterProperties> {
-	private _onEmailInput(event: any) {
-		this.properties.onEmailInput(event.target.value);
+	private _onEmailInput({ target: { value: email } }: WithTarget) {
+		this.properties.onEmailInput({ email });
 	}
 
-	private _onPasswordInput(event: any) {
-		this.properties.onPasswordInput(event.target.value);
+	private _onPasswordInput({ target: { value: password } }: WithTarget) {
+		this.properties.onPasswordInput({ password });
 	}
 
-	private _onUsernameInput(event: any) {
-		this.properties.onUsernameInput(event.target.value);
+	private _onUsernameInput({ target: { value: username } }: WithTarget) {
+		this.properties.onUsernameInput({ username });
 	}
 
-	private _onRegister(event: any) {
+	private _onRegister(event: Event) {
 		event.preventDefault();
-		this.properties.onRegister();
+		this.properties.onRegister({});
 	}
 
 	protected render() {

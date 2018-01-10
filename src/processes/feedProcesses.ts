@@ -24,13 +24,13 @@ async function fetchFeed(token: string, offset: number, options: any) {
 			url = `${baseUrl}/feed?`;
 			break;
 		case 'favorites':
-			url = `${baseUrl}?favorited=${options.username}&`;
+			url = `${baseUrl}?favorited=${options.filter}&`;
 			break;
 		case 'user':
-			url = `${baseUrl}?author=${options.username}&`;
+			url = `${baseUrl}?author=${options.filter}&`;
 			break;
 		case 'tag':
-			url = `${baseUrl}?tag=${options.tag}&`;
+			url = `${baseUrl}?tag=${options.filter}&`;
 			break;
 		default:
 			url = `${baseUrl}?`;
@@ -40,20 +40,26 @@ async function fetchFeed(token: string, offset: number, options: any) {
 	return await fetch(`${url}limit=10&offset=${offset}`, { headers: getHeaders(token) });
 }
 
-const startFetchingFeedCommand = commandFactory(async ({ get, path, payload: [type, username, page, tag] }) => {
+export interface FetchFeedParams {
+	type: string;
+	filter: string;
+	page: number;
+}
+
+const startFetchingFeedCommand = commandFactory<FetchFeedParams>(async ({ path, payload: { type, filter, page } }) => {
 	return [
 		replace(path('feed', 'loading'), true),
 		replace(path('feed', 'loaded'), false),
 		replace(path('feed', 'category'), type),
-		replace(path('feed', 'tagName'), tag),
+		replace(path('feed', 'tagName'), type === 'tag' ? filter : undefined),
 		replace(path('feed', 'pageNumber'), page)
 	];
 });
 
-const fetchFeedCommand = commandFactory(async ({ get, path, payload: [type, username, page, tag] }) => {
+const fetchFeedCommand = commandFactory<FetchFeedParams>(async ({ get, path, payload: { type, page, filter } }) => {
 	const token = get(path('user', 'token'));
 	const offset = page * 10;
-	const response = await fetchFeed(token, offset, { type, username, tag });
+	const response = await fetchFeed(token, offset, { type, filter });
 	const json = await response.json();
 	return [
 		replace(path('feed', 'items'), json.articles),
@@ -64,20 +70,22 @@ const fetchFeedCommand = commandFactory(async ({ get, path, payload: [type, user
 	];
 });
 
-const favoriteFeedArticleCommand = commandFactory(async ({ at, get, path, payload: [slug, favorited] }) => {
-	const token = get(path('user', 'token'));
-	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
-		method: favorited ? 'delete' : 'post',
-		headers: getHeaders(token)
-	});
-	const json = await response.json();
-	const index = getItemIndex(get(path('feed', 'items')), slug);
+const favoriteFeedArticleCommand = commandFactory<{ slug: string; favorited: boolean }>(
+	async ({ at, get, path, payload: { slug, favorited } }) => {
+		const token = get(path('user', 'token'));
+		const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
+			method: favorited ? 'delete' : 'post',
+			headers: getHeaders(token)
+		});
+		const json = await response.json();
+		const index = getItemIndex(get(path('feed', 'items')), slug);
 
-	if (index !== -1) {
-		return [replace(at(path('feed', 'items'), index), json.article)];
+		if (index !== -1) {
+			return [replace(at(path('feed', 'items'), index), json.article)];
+		}
+		return [];
 	}
-	return [];
-});
+);
 
 export const fetchFeedProcess = createProcess([startFetchingFeedCommand, fetchFeedCommand]);
 export const favoriteFeedArticleProcess = createProcess([favoriteFeedArticleCommand]);

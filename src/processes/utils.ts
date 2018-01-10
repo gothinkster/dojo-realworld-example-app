@@ -1,4 +1,4 @@
-export function getHeaders(token: string): any {
+export function getHeaders(token?: string): any {
 	const headers: any = {
 		'Content-Type': 'application/json'
 	};

@@ -7,14 +7,14 @@ import { ArticleAuthorControls } from './ArticleAuthorControls';
 
 interface ArticleMetaProperties {
 	authorProfile: AuthorProfile;
-	favoriteArticle: Function;
-	followUser: Function;
-	deleteArticle: Function;
 	username: string;
 	favorited: boolean;
 	favoritesCount: number;
 	createdAt: string;
 	slug: string;
+	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
+	followUser: (opts: { username: string; following: boolean }) => void;
+	deleteArticle: (opts: { slug: string }) => void;
 }
 
 export class ArticleMeta extends WidgetBase<ArticleMetaProperties> {
@@ -32,9 +32,11 @@ export class ArticleMeta extends WidgetBase<ArticleMetaProperties> {
 		} = this.properties;
 
 		return v('div', { classes: 'article-meta' }, [
-			w(Link, { to: 'user', params: { id: authorProfile.username } }, [v('img', { src: authorProfile.image })]),
+			w(Link, { to: 'user', params: { username: authorProfile.username } }, [
+				v('img', { src: authorProfile.image })
+			]),
 			v('div', { classes: 'info' }, [
-				w(Link, { to: 'user', classes: 'author', params: { id: authorProfile.username } }, [
+				w(Link, { to: 'user', classes: 'author', params: { username: authorProfile.username } }, [
 					authorProfile.username
 				]),
 				v('span', { classes: 'date' }, [new Date(createdAt).toDateString()])

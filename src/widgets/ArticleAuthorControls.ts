@@ -3,14 +3,14 @@ import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 
 interface ArticleAuthorControlsProperties {
-	deleteArticle: Function;
 	slug: string;
+	deleteArticle: (opts: { slug: string }) => void;
 }
 
 export class ArticleAuthorControls extends WidgetBase<ArticleAuthorControlsProperties> {
 	private _deleteArticle() {
 		const { slug } = this.properties;
-		this.properties.deleteArticle(slug);
+		this.properties.deleteArticle({ slug });
 	}
 
 	protected render() {

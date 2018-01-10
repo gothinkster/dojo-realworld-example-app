@@ -4,7 +4,7 @@ import { Editor, EditorProperties } from './../widgets/Editor';
 import {
 	publishArticle,
 	addTag,
-	contentInput,
+	bodyInput,
 	descInput,
 	removeTag,
 	tagInput,
@@ -21,7 +21,7 @@ function getProperties(store: Store<State>, properties: EditorProperties): Edito
 		tag: get(path('editor', 'tag')),
 		tags: get(path('editor', 'tagList')),
 		errors: get(path('errors')),
-		onContentInput: contentInput(store),
+		onContentInput: bodyInput(store),
 		onDescriptionInput: descInput(store),
 		onTagCreate: addTag(store),
 		onTagDelete: removeTag(store),

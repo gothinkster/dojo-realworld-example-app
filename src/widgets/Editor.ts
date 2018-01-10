@@ -1,16 +1,9 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { ErrorList } from './ErrorList';
-import { Errors } from '../interfaces';
+import { Errors, WithTarget } from '../interfaces';
 
 export interface EditorProperties {
-	onPublishPost: () => void;
-	onTitleInput: Function;
-	onDescriptionInput: Function;
-	onContentInput: Function;
-	onTagInput: Function;
-	onTagCreate: Function;
-	onTagDelete: Function;
 	title: string;
 	description: string;
 	body: string;
@@ -19,44 +12,45 @@ export interface EditorProperties {
 	inProgress?: boolean;
 	slug: string;
 	tags?: string[];
+	onPublishPost: (opts: object) => void;
+	onTitleInput: (opts: { title: string }) => void;
+	onDescriptionInput: (opts: { description: string }) => void;
+	onContentInput: (opts: { body: string }) => void;
+	onTagInput: (opts: { tag: string }) => void;
+	onTagCreate: (opts: { tag: string }) => void;
+	onTagDelete: (opts: { tag: string }) => void;
 }
 
 export class Editor extends WidgetBase<EditorProperties> {
-	private _onTitleInput(event: any) {
-		this.properties.onTitleInput(event.target.value);
+	private _onTitleInput({ target: { value: title } }: WithTarget) {
+		this.properties.onTitleInput({ title });
 	}
 
-	private _onDescriptionInput(event: any) {
-		this.properties.onDescriptionInput(event.target.value);
+	private _onDescriptionInput({ target: { value: description } }: WithTarget) {
+		this.properties.onDescriptionInput({ description });
 	}
 
-	private _onContentInput(event: any) {
-		this.properties.onContentInput(event.target.value);
+	private _onContentInput({ target: { value: body } }: WithTarget) {
+		this.properties.onContentInput({ body });
 	}
 
-	private _onTagInput(event: any) {
-		this.properties.onTagInput(event.target.value);
+	private _onTagInput({ target: { value: tag } }: WithTarget) {
+		this.properties.onTagInput({ tag });
 	}
 
-	private _onTagCreate(event: any) {
+	private _onTagCreate(event: WithTarget<KeyboardEvent>) {
 		if (event.keyCode === 13) {
 			event.preventDefault();
-			this.properties.onTagCreate(event.target.value);
+			this.properties.onTagCreate({ tag: event.target.value });
 		}
 	}
 
+	private _onPublishPost() {
+		this.properties.onPublishPost({});
+	}
+
 	protected render() {
-		const {
-			onTagDelete,
-			onPublishPost,
-			title,
-			description,
-			body,
-			tag,
-			errors,
-			inProgress = false,
-			tags = []
-		} = this.properties;
+		const { onTagDelete, title, description, body, tag, errors, inProgress = false, tags = [] } = this.properties;
 		return v('div', { classes: 'editor-page' }, [
 			v('div', { classes: ['container', 'page'] }, [
 				v('div', { classes: 'row' }, [
@@ -109,7 +103,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 												v('i', {
 													classes: 'ion-close-round',
 													onclick: () => {
-														onTagDelete(tag);
+														onTagDelete({ tag });
 													}
 												}),
 												tag
@@ -123,7 +117,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 										classes: ['btn', 'btn-lg', 'pull-xs-right', 'btn-primary'],
 										type: 'button',
 										disabled: inProgress,
-										onclick: onPublishPost
+										onclick: this._onPublishPost
 									},
 									['Publish Article']
 								)

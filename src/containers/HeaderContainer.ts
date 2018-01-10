@@ -1,9 +1,9 @@
 import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
-import { Header } from './../widgets/Header';
+import { Header, HeaderProperties } from './../widgets/Header';
 import { State } from '../interfaces';
 
-function getProperties(store: Store<State>, properties: any) {
+function getProperties(store: Store<State>): HeaderProperties {
 	const { get, path } = store;
 	return {
 		route: get(path('routing', 'outlet')),

@@ -2,24 +2,24 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 
 interface ArticleControlsProperties {
+	slug: string;
 	favoritesCount: number;
 	authorUsername: string;
 	favorited: boolean;
 	following: boolean;
-	followUser: Function;
-	favoriteArticle: Function;
-	slug: string;
+	followUser: (opts: { username: string; following: boolean }) => void;
+	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
 }
 
 export class ArticleControls extends WidgetBase<ArticleControlsProperties> {
 	private _favoriteArticle() {
 		const { slug, favorited } = this.properties;
-		this.properties.favoriteArticle(slug, favorited);
+		this.properties.favoriteArticle({ slug, favorited });
 	}
 
 	private _followUser() {
-		const { authorUsername, following } = this.properties;
-		this.properties.followUser(authorUsername, following);
+		const { authorUsername: username, following } = this.properties;
+		this.properties.followUser({ username, following });
 	}
 
 	protected render() {

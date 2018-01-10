@@ -7,8 +7,6 @@ import { ArticleItem } from '../interfaces';
 import { FeedPagination } from './FeedPagination';
 
 export interface FeedsProperties {
-	fetchFeed: Function;
-	favoriteArticle: Function;
 	items: ArticleItem[];
 	loading: boolean;
 	type: string;
@@ -17,34 +15,36 @@ export interface FeedsProperties {
 	isAuthenticated: boolean;
 	total: number;
 	currentPage: number;
+	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
+	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
 }
 
 export class Feeds extends WidgetBase<FeedsProperties> {
-	onAttach() {
+	protected onAttach() {
 		const { type, username } = this.properties;
-		this.properties.fetchFeed(type, username, 0);
+		this.properties.fetchFeed({ type, page: 0, filter: username });
 	}
 
 	private _onGlobalFeedClick(event: MouseEvent) {
 		event.preventDefault();
 		const { username } = this.properties;
-		this.properties.fetchFeed('global', username, 0);
+		this.properties.fetchFeed({ type: 'global', page: 0, filter: username });
 	}
 
 	private _onFeedClick(event: MouseEvent) {
 		event.preventDefault();
 		const { username } = this.properties;
-		this.properties.fetchFeed('feed', username, 0);
+		this.properties.fetchFeed({ type: 'feed', page: 0, filter: username });
 	}
 
-	private _onFavoriteFeedClick(event: MouseEvent) {
+	private _onFavoriteFeedClick() {
 		const { username } = this.properties;
-		this.properties.fetchFeed('favorites', username, 0);
+		this.properties.fetchFeed({ type: 'favorites', page: 0, filter: username });
 	}
 
-	private _onUserFeedClick(event: MouseEvent) {
+	private _onUserFeedClick() {
 		const { username } = this.properties;
-		this.properties.fetchFeed('user', username, 0);
+		this.properties.fetchFeed({ type: 'user', page: 0, filter: username });
 	}
 
 	private _buildTabs(children: DNode, showPagination: boolean = true): DNode {

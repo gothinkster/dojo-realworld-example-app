@@ -5,7 +5,6 @@ import {
 	bioInput,
 	emailInput,
 	passwordInput,
-	getUserSettings,
 	imageUrlInput,
 	usernameInput,
 	updateUserSettings
@@ -13,7 +12,7 @@ import {
 import { logout } from '../processes/loginProcesses';
 import { State } from '../interfaces';
 
-function getProperties(store: Store<State>, properties: SettingsProperties): SettingsProperties {
+function getProperties(store: Store<State>): SettingsProperties {
 	const { get, path } = store;
 
 	return {
@@ -28,7 +27,6 @@ function getProperties(store: Store<State>, properties: SettingsProperties): Set
 		onBioInput: bioInput(store),
 		onImageUrlInput: imageUrlInput(store),
 		onUpdateSettings: updateUserSettings(store),
-		getUserSettings: getUserSettings(store),
 		logout: logout(store)
 	};
 }

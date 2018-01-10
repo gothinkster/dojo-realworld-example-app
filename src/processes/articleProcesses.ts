@@ -14,7 +14,7 @@ const startLoadingArticleCommand = commandFactory(async ({ path }) => {
 	];
 });
 
-const loadArticleCommand = commandFactory(async ({ get, path, payload: [slug] }) => {
+const loadArticleCommand = commandFactory<{ slug: string }>(async ({ get, path, payload: { slug } }) => {
 	const token = get(path('user', 'token'));
 	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}`, {
 		headers: getHeaders(token)
@@ -28,31 +28,35 @@ const loadArticleCommand = commandFactory(async ({ get, path, payload: [slug] })
 	];
 });
 
-const favoriteArticleCommand = commandFactory(async ({ at, get, path, payload: [slug, favorited] }) => {
-	const token = get(path('user', 'token'));
-	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
-		method: favorited ? 'delete' : 'post',
-		headers: getHeaders(token)
-	});
-	const json = await response.json();
-	return [replace(path('article', 'item'), json.article)];
-});
+const favoriteArticleCommand = commandFactory<{ slug: string; favorited: boolean }>(
+	async ({ get, path, payload: { slug, favorited } }) => {
+		const token = get(path('user', 'token'));
+		const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
+			method: favorited ? 'delete' : 'post',
+			headers: getHeaders(token)
+		});
+		const json = await response.json();
+		return [replace(path('article', 'item'), json.article)];
+	}
+);
 
-const followUserCommand = commandFactory(async ({ at, get, path, payload: [username, following] }) => {
-	const token = get(path('user', 'token'));
-	const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}/follow`, {
-		method: following ? 'delete' : 'post',
-		headers: getHeaders(token)
-	});
-	const json = await response.json();
-	const article = get(path('article', 'item'));
+const followUserCommand = commandFactory<{ username: string; following: boolean }>(
+	async ({ get, path, payload: { username, following } }) => {
+		const token = get(path('user', 'token'));
+		const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}/follow`, {
+			method: following ? 'delete' : 'post',
+			headers: getHeaders(token)
+		});
+		const json = await response.json();
+		const article = get(path('article', 'item'));
 
-	article.author = json.profile;
+		article.author = json.profile;
 
-	return [replace(path('article', 'item'), article)];
-});
+		return [replace(path('article', 'item'), article)];
+	}
+);
 
-const loadCommentsCommand = commandFactory(async ({ get, path, payload: [slug] }) => {
+const loadCommentsCommand = commandFactory<{ slug: string }>(async ({ get, path, payload: { slug } }) => {
 	const token = get(path('user', 'token'));
 	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments`, {
 		headers: getHeaders(token)
@@ -62,53 +66,57 @@ const loadCommentsCommand = commandFactory(async ({ get, path, payload: [slug] }
 	return [replace(path('article', 'comments'), json.comments)];
 });
 
-const addCommentCommand = commandFactory(async ({ at, get, path, payload: [slug, newComment] }) => {
-	const token = get(path('user', 'token'));
-	const requestPayload = {
-		comment: {
-			body: newComment
-		}
-	};
-	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments`, {
-		method: 'post',
-		headers: getHeaders(token),
-		body: JSON.stringify(requestPayload)
-	});
-	const json = await response.json();
-	const comments = get(path('article', 'comments'));
+const addCommentCommand = commandFactory<{ slug: string; newComment: string }>(
+	async ({ at, get, path, payload: { slug, newComment } }) => {
+		const token = get(path('user', 'token'));
+		const requestPayload = {
+			comment: {
+				body: newComment
+			}
+		};
+		const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments`, {
+			method: 'post',
+			headers: getHeaders(token),
+			body: JSON.stringify(requestPayload)
+		});
+		const json = await response.json();
+		const comments = get(path('article', 'comments'));
 
-	return [
-		replace(at(path('article', 'comments'), comments.length), json.comment),
-		replace(path('article', 'newComment'), '')
-	];
-});
-
-const deleteCommentCommand = commandFactory(async ({ at, get, path, payload: [slug, id] }) => {
-	const token = get(path('user', 'token'));
-	await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments/${id}`, {
-		method: 'delete',
-		headers: getHeaders(token)
-	});
-	const comments = get(path('article', 'comments'));
-	let index = -1;
-	for (let i = 0; i < comments.length; i++) {
-		if (comments[i].id === id) {
-			index = i;
-			break;
-		}
+		return [
+			replace(at(path('article', 'comments'), comments.length), json.comment),
+			replace(path('article', 'newComment'), '')
+		];
 	}
+);
 
-	if (index !== -1) {
-		return [remove(at(path('article', 'comments'), index))];
+const deleteCommentCommand = commandFactory<{ slug: string; id: number }>(
+	async ({ at, get, path, payload: { slug, id } }) => {
+		const token = get(path('user', 'token'));
+		await fetch(`https://conduit.productionready.io/api/articles/${slug}/comments/${id}`, {
+			method: 'delete',
+			headers: getHeaders(token)
+		});
+		const comments = get(path('article', 'comments'));
+		let index = -1;
+		for (let i = 0; i < comments.length; i++) {
+			if (comments[i].id === id) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index !== -1) {
+			return [remove(at(path('article', 'comments'), index))];
+		}
+		return [];
 	}
-	return [];
-});
+);
 
-const newCommentInputCommand = commandFactory(({ path, payload: [newComment] }) => {
+const newCommentInputCommand = commandFactory<{ newComment: string }>(({ path, payload: { newComment } }) => {
 	return [replace(path('article', 'newComment'), newComment)];
 });
 
-const deleteArticleCommand = commandFactory(async ({ get, path, payload: [slug] }) => {
+const deleteArticleCommand = commandFactory<{ slug: string }>(async ({ get, path, payload: { slug } }) => {
 	const token = get(path('user', 'token'));
 	await fetch(`https://conduit.productionready.io/api/articles/${slug}`, {
 		method: 'delete',

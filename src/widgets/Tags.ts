@@ -3,7 +3,7 @@ import { v } from '@dojo/widget-core/d';
 
 export interface TagsProperties {
 	tags?: any[];
-	getFeed: Function;
+	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
 }
 
 export class Tags extends WidgetBase<TagsProperties> {
@@ -22,7 +22,7 @@ export class Tags extends WidgetBase<TagsProperties> {
 								href: '',
 								onclick: (event: MouseEvent) => {
 									event.preventDefault();
-									this.properties.getFeed('tag', undefined, 0, tag);
+									this.properties.fetchFeed({ type: 'tag', page: 0, filter: tag });
 								},
 								key: `${index}`,
 								classes: ['tag-pill', 'tag-default']

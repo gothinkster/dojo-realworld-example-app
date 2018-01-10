@@ -5,10 +5,10 @@ import { DNode } from '@dojo/widget-core/interfaces';
 interface FeedPaginationProperties {
 	type: string;
 	username: string;
-	tag: string;
+	tag?: string;
 	total: number;
 	currentPage: number;
-	fetchFeed: Function;
+	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
 }
 
 export class FeedPagination extends WidgetBase<FeedPaginationProperties> {
@@ -16,17 +16,17 @@ export class FeedPagination extends WidgetBase<FeedPaginationProperties> {
 		const { total, currentPage, fetchFeed, type, username, tag } = this.properties;
 
 		let pageNumbers: DNode[] = [];
-		for (let i = 0; i < Math.ceil(total / 10); i++) {
-			const isActive = currentPage === i;
+		for (let page = 0; page < Math.ceil(total / 10); page++) {
+			const isActive = currentPage === page;
 			const onclick = (event: MouseEvent) => {
 				event.preventDefault();
-				if (i !== currentPage) {
-					fetchFeed(type, username, i, tag);
+				if (page !== currentPage) {
+					fetchFeed({ type, page, filter: tag || username });
 				}
 			};
 			pageNumbers.push(
-				v('li', { key: i, classes: ['page-item', isActive ? 'active' : null] }, [
-					v('a', { href: '', onclick, classes: 'page-link' }, [`${i + 1}`])
+				v('li', { key: page, classes: ['page-item', isActive ? 'active' : null] }, [
+					v('a', { href: '', onclick, classes: 'page-link' }, [`${page + 1}`])
 				])
 			);
 		}

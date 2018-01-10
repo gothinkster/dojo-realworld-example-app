@@ -1,36 +1,36 @@
 import global from '@dojo/shim/global';
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
-import { PatchOperation } from '@dojo/stores/state/Patch';
 import { replace } from '@dojo/stores/state/operations';
-import { State } from '../interfaces';
+import { State, UserProfile } from '../interfaces';
+import { getHeaders } from './utils';
 
 const commandFactory = createCommandFactory<State>();
 
-const loginEmailInputCommand = commandFactory(({ payload: [username], path }): PatchOperation[] => {
-	return [replace(path('login', 'email'), username)];
+const loginEmailInputCommand = commandFactory<{ email: string }>(({ path, payload: { email } }) => {
+	return [replace(path('login', 'email'), email)];
 });
 
-const loginPasswordInputCommand = commandFactory(({ payload: [password], path }): PatchOperation[] => {
+const loginPasswordInputCommand = commandFactory<{ password: string }>(({ path, payload: { password } }) => {
 	return [replace(path('login', 'password'), password)];
 });
 
-const registerEmailInputCommand = commandFactory(({ payload: [username], path }): PatchOperation[] => {
-	return [replace(path('register', 'email'), username)];
+const registerEmailInputCommand = commandFactory<{ email: string }>(({ path, payload: { email } }) => {
+	return [replace(path('register', 'email'), email)];
 });
 
-const registerPasswordInputCommand = commandFactory(({ payload: [password], path }): PatchOperation[] => {
+const registerPasswordInputCommand = commandFactory<{ password: string }>(({ path, payload: { password } }) => {
 	return [replace(path('register', 'password'), password)];
 });
 
-const registerUsernameInputCommand = commandFactory(({ payload: [username], path }): PatchOperation[] => {
+const registerUsernameInputCommand = commandFactory<{ username: string }>(({ path, payload: { username } }) => {
 	return [replace(path('register', 'username'), username)];
 });
 
-const clearLoginInputs = commandFactory(({ path }): PatchOperation[] => {
+const clearLoginInputs = commandFactory(({ path }) => {
 	return [replace(path('login', 'password'), ''), replace(path('login', 'email'), '')];
 });
 
-const clearRegisterInputs = commandFactory(({ path }): PatchOperation[] => {
+const clearRegisterInputs = commandFactory(({ path }) => {
 	return [
 		replace(path('register', 'password'), ''),
 		replace(path('register', 'email'), ''),
@@ -38,33 +38,27 @@ const clearRegisterInputs = commandFactory(({ path }): PatchOperation[] => {
 	];
 });
 
-const startLoginCommand = commandFactory(({ path }): PatchOperation[] => {
+const startLoginCommand = commandFactory(({ path }) => {
 	return [replace(path('login', 'loading'), true)];
 });
 
-const startRegisterCommand = commandFactory(({ path }): PatchOperation[] => {
+const startRegisterCommand = commandFactory(({ path }) => {
 	return [replace(path('register', 'loading'), true)];
 });
 
-const setSessionCommand = commandFactory(({ path, payload: [session] }): PatchOperation[] => {
+const setSessionCommand = commandFactory<{ session: UserProfile }>(({ path, payload: { session } }) => {
 	return [replace(path('user'), session)];
 });
 
-const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
+const loginCommand = commandFactory(async ({ get, path }) => {
 	const requestPayload = {
-		user: {
-			email: get(path('login', 'email')),
-			password: get(path('login', 'password'))
-		}
+		user: get(path('login'))
 	};
-	const headers = new Headers({
-		'Content-Type': 'application/json'
-	});
 
 	const response = await fetch('https://conduit.productionready.io/api/users/login', {
 		method: 'post',
 		body: JSON.stringify(requestPayload),
-		headers
+		headers: getHeaders()
 	});
 
 	const json = await response.json();
@@ -89,22 +83,15 @@ const loginCommand = commandFactory(async ({ get, path }): Promise<PatchOperatio
 	];
 });
 
-const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOperation[]> => {
+const registerCommand = commandFactory(async ({ get, path }) => {
 	const requestPayload = {
-		user: {
-			username: get(path('register', 'username')),
-			email: get(path('register', 'email')),
-			password: get(path('register', 'password'))
-		}
+		user: get(path('register'))
 	};
-	const headers = new Headers({
-		'Content-Type': 'application/json'
-	});
 
 	const response = await fetch('https://conduit.productionready.io/api/users', {
 		method: 'post',
 		body: JSON.stringify(requestPayload),
-		headers
+		headers: getHeaders()
 	});
 	const json = await response.json();
 	if (!response.ok) {
@@ -128,7 +115,7 @@ const registerCommand = commandFactory(async ({ get, path }): Promise<PatchOpera
 	];
 });
 
-const logoutCommand = commandFactory(({ path, payload: [session] }): PatchOperation[] => {
+const logoutCommand = commandFactory(({ path }) => {
 	global.sessionStorage.removeItem('conduit-session');
 	return [replace(path('routing', 'outlet'), 'home'), replace(path('user'), {})];
 });

@@ -4,7 +4,7 @@ import { Link } from '@dojo/routing/Link';
 import * as marked from 'marked';
 
 import { Comment } from './Comment';
-import { ArticleItem, Comment as CommentItem, AuthorProfile } from '../interfaces';
+import { ArticleItem, Comment as CommentItem, AuthorProfile, WithTarget } from '../interfaces';
 import { ArticleMeta } from './ArticleMeta';
 
 export interface ArticleProperties {
@@ -14,32 +14,28 @@ export interface ArticleProperties {
 	loaded: boolean;
 	isAuthenticated: boolean;
 	loggedInUser: string;
-	addComment: any;
-	deleteComment: any;
-	onNewCommentInput: any;
 	newComment: string;
 	slug: string;
-	getArticle: Function;
-	favoriteArticle: Function;
-	followUser: Function;
-	deleteArticle: Function;
 	username: string;
+	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
+	followUser: (opts: { username: string; following: boolean }) => void;
+	deleteArticle: (opts: { slug: string }) => void;
+	deleteComment: (opts: { slug: string; id: number }) => void;
+	onNewCommentInput: (opts: { newComment: string }) => void;
+	addComment: (options: { slug: string; newComment: string }) => void;
 }
 
 export class Article extends WidgetBase<ArticleProperties> {
-	private _addComment(event: any) {
+	private _addComment(event: WithTarget<MouseEvent>) {
 		event.preventDefault();
 		if (this.properties.article) {
-			this.properties.addComment(this.properties.article.slug, this.properties.newComment);
+			const { article: { slug }, newComment } = this.properties;
+			this.properties.addComment({ slug, newComment });
 		}
 	}
 
-	private _onNewCommentInput(event: any) {
-		this.properties.onNewCommentInput(event.target.value);
-	}
-
-	onAttach() {
-		this.properties.getArticle(this.properties.slug);
+	private _onNewCommentInput(event: WithTarget<MouseEvent>) {
+		this.properties.onNewCommentInput({ newComment: event.target.value });
 	}
 
 	protected render() {

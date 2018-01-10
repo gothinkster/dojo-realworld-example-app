@@ -25,7 +25,7 @@ export class Header extends WidgetBase<HeaderProperties> {
 				])
 			]),
 			v('li', { key: 'user', classes: 'nav-item' }, [
-				w(Link, { classes: ['nav-link'], to: 'user', params: { id: loggedInUser } }, [
+				w(Link, { classes: ['nav-link'], to: 'user', params: { username: loggedInUser } }, [
 					v('i', { classes: 'ion-gear' }),
 					loggedInUser
 				])

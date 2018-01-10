@@ -5,13 +5,13 @@ import { ArticleItem } from '../interfaces';
 
 export interface ArticlePreviewProperties {
 	article: ArticleItem;
-	favoriteArticle: Function;
+	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
 }
 
 export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {
 	private _onFav() {
 		const { favoriteArticle, article: { slug, favorited } } = this.properties;
-		favoriteArticle(slug, favorited);
+		favoriteArticle({ slug, favorited });
 	}
 
 	protected render() {
@@ -24,9 +24,11 @@ export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {
 
 		return v('div', { classes: 'article-preview' }, [
 			v('div', { classes: 'article-meta' }, [
-				w(Link, { to: 'user', params: { id: author.username } }, [v('img', { src: author.image })]),
+				w(Link, { to: 'user', params: { username: author.username } }, [v('img', { src: author.image })]),
 				v('div', { classes: 'info' }, [
-					w(Link, { classes: 'author', to: 'user', params: { id: author.username } }, [author.username]),
+					w(Link, { classes: 'author', to: 'user', params: { username: author.username } }, [
+						author.username
+					]),
 					v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
 				]),
 				v('button', { onclick: this._onFav, classes: buttonClasses }, [

@@ -1,54 +1,54 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
+import { WithTarget } from '../interfaces';
 
 export interface SettingsProperties {
 	imageUrl: string;
-	onImageUrlInput: Function;
 	username: string;
-	onUsernameInput: Function;
 	bio: string;
-	onBioInput: Function;
 	email: string;
-	onEmailInput: Function;
 	password: string;
-	onPasswordInput: Function;
-	onUpdateSettings: any;
-	getUserSettings: Function;
-	logout: any;
+	onImageUrlInput: (opts: { imageUrl: string }) => void;
+	onUsernameInput: (opts: { username: string }) => void;
+	onBioInput: (opts: { bio: string }) => void;
+	onEmailInput: (opts: { email: string }) => void;
+	onPasswordInput: (opts: { password: string }) => void;
+	onUpdateSettings: (opts: object) => void;
+	logout: (opts: object) => void;
 }
 
 export class Settings extends WidgetBase<SettingsProperties> {
 	private _onSubmit(event: MouseEvent) {
 		event.preventDefault();
-		this.properties.onUpdateSettings();
+		this.properties.onUpdateSettings({});
 	}
 
-	private _onImageUrlInput(event: any) {
-		this.properties.onImageUrlInput(event.target.value);
+	private _onImageUrlInput({ target: { value: imageUrl } }: WithTarget) {
+		this.properties.onImageUrlInput({ imageUrl });
 	}
 
-	private _onUsernameInput(event: any) {
-		this.properties.onUsernameInput(event.target.value);
+	private _onUsernameInput({ target: { value: username } }: WithTarget) {
+		this.properties.onUsernameInput({ username });
 	}
 
-	private _onBioInput(event: any) {
-		this.properties.onBioInput(event.target.value);
+	private _onBioInput({ target: { value: bio } }: WithTarget) {
+		this.properties.onBioInput({ bio });
 	}
 
-	private _onEmailInput(event: any) {
-		this.properties.onEmailInput(event.target.value);
+	private _onEmailInput({ target: { value: email } }: WithTarget) {
+		this.properties.onEmailInput({ email });
 	}
 
-	private _onPasswordInput(event: any) {
-		this.properties.onPasswordInput(event.target.value);
+	private _onPasswordInput({ target: { value: password } }: WithTarget) {
+		this.properties.onPasswordInput({ password });
 	}
 
-	onAttach() {
-		this.properties.getUserSettings();
+	private _logout() {
+		this.properties.logout({});
 	}
 
 	protected render() {
-		const { email, password, bio, imageUrl, username, logout } = this.properties;
+		const { email, password, bio, imageUrl, username } = this.properties;
 
 		return v('div', { classes: 'settings-page' }, [
 			v('div', { classes: ['container', 'page'] }, [
@@ -114,7 +114,7 @@ export class Settings extends WidgetBase<SettingsProperties> {
 							])
 						]),
 						v('hr'),
-						v('button', { onclick: logout, classes: ['btn', 'btn-outline-danger'] }, [
+						v('button', { onclick: this._logout, classes: ['btn', 'btn-outline-danger'] }, [
 							'Or click here to logout'
 						])
 					])

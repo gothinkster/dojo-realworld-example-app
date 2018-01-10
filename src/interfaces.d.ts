@@ -1,3 +1,5 @@
+export type WithTarget<T extends Event = Event, E extends HTMLElement = HTMLInputElement> = T & { target: E };
+
 export interface ResourceBased {
 	loading: boolean;
 	loaded: boolean;

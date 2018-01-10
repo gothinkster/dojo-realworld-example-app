@@ -23,8 +23,8 @@ describe('tags widget', () => {
 
 	it('with tags', () => {
 		const widget = harness(Tags);
-		const getFeed = stub();
-		widget.setProperties({ tags: ['first', 'second'], getFeed });
+		const fetchFeed = stub();
+		widget.setProperties({ tags: ['first', 'second'], fetchFeed });
 		const expected = v('div', { classes: 'col-md-3' }, [
 			v('div', { classes: 'sidebar' }, [
 				v('p', ['Popular Tags']),
@@ -41,6 +41,6 @@ describe('tags widget', () => {
 
 		widget.expectRender(expected);
 		widget.callListener('onclick', { args: [mockEvent], key: '0' });
-		assert.isTrue(getFeed.calledOnce);
+		assert.isTrue(fetchFeed.calledOnce);
 	});
 });

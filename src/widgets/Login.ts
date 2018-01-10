@@ -1,31 +1,31 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
-import { Errors } from '../interfaces';
+import { Errors, WithTarget } from '../interfaces';
 import { ErrorList } from './ErrorList';
 
 export interface LoginProperties {
-	onPasswordInput: Function;
-	onEmailInput: Function;
-	onLogin: Function;
 	email: string;
 	password: string;
 	inProgress?: boolean;
 	errors: Errors;
+	onPasswordInput: (opts: { password: string }) => void;
+	onEmailInput: (opts: { email: string }) => void;
+	onLogin: (opts: object) => void;
 }
 
 export class Login extends WidgetBase<LoginProperties> {
-	private _onEmailInput(event: any) {
-		this.properties.onEmailInput(event.target.value);
+	private _onEmailInput({ target: { value: email } }: WithTarget) {
+		this.properties.onEmailInput({ email });
 	}
 
-	private _onPasswordInput(event: any) {
-		this.properties.onPasswordInput(event.target.value);
+	private _onPasswordInput({ target: { value: password } }: WithTarget) {
+		this.properties.onPasswordInput({ password });
 	}
 
-	private _onLogin(event: any) {
+	private _onLogin(event: Event) {
 		event.preventDefault();
-		this.properties.onLogin();
+		this.properties.onLogin({});
 	}
 
 	protected render() {

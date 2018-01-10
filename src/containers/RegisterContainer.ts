@@ -9,7 +9,7 @@ import {
 } from './../processes/loginProcesses';
 import { State } from '../interfaces';
 
-function getProperties(store: Store<State>, properties: RegisterProperties): RegisterProperties {
+function getProperties(store: Store<State>): RegisterProperties {
 	const { get, path } = store;
 	return {
 		email: get(path('register', 'email')),
