@@ -1,25 +1,36 @@
-# dojo2-realworld
+# ![RealWorld Example App](logo.svg)
 
-This project was generated with the [Dojo CLI](https://github.com/dojo/cli) & [Dojo CLI create app command](https://github.com/dojo/cli-create-app).
+> ### Dojo 2 codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
-## Build
 
-Run `dojo build` to create a production build for the project. The built artifacts will be stored in the `dist` directory.
+### [Demo](https://agubler.github.io/dojo2-realworld/dist/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
 
-## Development server
 
-Run `dojo build -w` to create a development build and start a development server. By default the server runs on port `9999`, navigate to `http://localhost:9999/`.
+This codebase was created to demonstrate a fully fledged fullstack application built with Dojo 2 including CRUD operations, authentication, routing, pagination, and more.
 
-If port `9999` is already in use, the next available port in the `9990:9999` range (working backwards) will be used. The selected port is output to the console at the start of the `dojo build -w` process. The app will automatically reload if you change any of the source files.
+We've gone to great lengths to adhere to the Dojo 2 community style guides & best practices.
 
-## Running unit tests
+For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
-Run `dojo test` to run the projects unit tests. These tests are located in the `tests/unit` directory.
 
-## Running functional tests
+# How it works
 
-Run `dojo test -f` to run the projects functional tests. These tests are located in the `tests/functional` directory.
+Dojo 2 RealWorld using @dojo/widget-core, @dojo/routing and @dojo/stores
 
-## Further help
+# Getting started
 
-To get help for these commands and more, run `dojo` on the command line.
+You can view a live demo over at https://agubler.github.io/dojo2-realworld/dist/
+
+To get the frontend running locally:
+
+- Clone this repo
+- `npm install` to install all req'd dependencies
+- `dojo build -w` to start the local server ([http:localhost:9999](http:localhost:9999))
+
+Local web server will use port 9999.
+
+For a production build of the application:
+
+- `dojo build` to build the output into the `dist` directory.
+
+To run the tests run `dojo test`
