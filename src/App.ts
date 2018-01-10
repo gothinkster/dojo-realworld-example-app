@@ -6,7 +6,7 @@ import { HomeOutlet } from './outlets/HomeOutlet';
 import { LoginOutlet } from './outlets/LoginOutlet';
 import { ProfileOutlet } from './outlets/ProfileOutlet';
 import { RegisterOutlet } from './outlets/RegisterOutlet';
-import { EditorOutlet } from './outlets/EditorOutlet';
+import { EditorEditOutlet, EditorNewOutlet } from './outlets/EditorOutlet';
 import { ArticleOutlet } from './outlets/ArticleOutlet';
 import { SettingsOutlet } from './outlets/SettingsOutlet';
 
@@ -17,7 +17,8 @@ export class App extends WidgetBase {
 			w(LoginOutlet, {}),
 			w(RegisterOutlet, {}),
 			w(ProfileOutlet, {}),
-			w(EditorOutlet, {}),
+			w(EditorEditOutlet, {}),
+			w(EditorNewOutlet, {}),
 			w(ArticleOutlet, {}),
 			w(SettingsOutlet, {}),
 			w(HomeOutlet, {})

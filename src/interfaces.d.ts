@@ -13,7 +13,7 @@ export interface AuthorProfile extends User {
 	following: boolean;
 }
 
-export interface UserProfile extends User {
+export interface UserProfile extends User, ResourceBased {
 	email: string;
 	token: string;
 }
@@ -39,7 +39,7 @@ export interface ArticleItem {
 	author: AuthorProfile;
 }
 
-export interface Settings extends ResourceBased, UserProfile {
+export interface Settings extends UserProfile {
 	password: string;
 }
 
@@ -98,4 +98,5 @@ export interface State {
 	login: Login;
 	register: Register;
 	editor: Editor;
+	profile: AuthorProfile & ResourceBased;
 }

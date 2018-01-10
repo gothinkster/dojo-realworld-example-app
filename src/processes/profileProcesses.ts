@@ -1,57 +1,40 @@
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
 import { PatchOperation } from '@dojo/stores/state/Patch';
 import { replace } from '@dojo/stores/state/operations';
+import { State } from '../interfaces';
+import { getHeaders } from './utils';
 
-const commandFactory = createCommandFactory<any>();
+const commandFactory = createCommandFactory<State>();
 
-const clearProfileArticlesCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<
-	PatchOperation[]
-> => {
-	return [replace(path('profile', 'articles'), undefined)];
+const startGetProfileCommand = commandFactory(async ({ get, path, payload: [type] }) => {
+	return [replace(path('profile', 'loading'), true), replace(path('profile', 'loaded'), false)];
 });
 
-const setUserNameCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<PatchOperation[]> => {
-	return [replace(path('profile', 'username'), username)];
+const followUserCommand = commandFactory(async ({ at, get, path, payload: [username, following] }) => {
+	const token = get(path('user', 'token'));
+	const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}/follow`, {
+		method: following ? 'delete' : 'post',
+		headers: getHeaders(token)
+	});
+	const json = await response.json();
+
+	return [replace(path('profile'), json.profile)];
 });
 
 const getProfileCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<PatchOperation[]> => {
-	const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}`);
+	const token = get(path('user', 'token'));
+	const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}`, {
+		headers: getHeaders(token)
+	});
 	const json = await response.json();
 
 	return [
 		replace(path('profile', 'image'), json.profile.image),
 		replace(path('profile', 'bio'), json.profile.bio),
-		replace(path('profile', 'email'), json.profile.email)
+		replace(path('profile', 'loading'), false),
+		replace(path('profile', 'loaded'), true)
 	];
 });
 
-const getMyArticlesCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<PatchOperation[]> => {
-	const response = await fetch(`https://conduit.productionready.io/api/articles?author=${username}`);
-	const json = await response.json();
-
-	return [replace(path('profile', 'articles'), json.articles)];
-});
-
-const setArticleTypeCommand = commandFactory(({ get, path, payload: [articleType] }): PatchOperation[] => {
-	return [replace(path('profile', 'articleType'), articleType)];
-});
-
-const getFavoritedCommand = commandFactory(async ({ get, path, payload: [username] }): Promise<PatchOperation[]> => {
-	const token = get(path('session', 'token'));
-	let headers: Headers = new Headers();
-	if (token) {
-		headers = new Headers({
-			'Content-Type': 'application/json',
-			Authorization: `Token ${token}`
-		});
-	}
-	const response = await fetch(`https://conduit.productionready.io/api/articles?favorited=${username}`, { headers });
-	const json = await response.json();
-
-	return [replace(path('profile', 'articles'), json.articles)];
-});
-
-export const setArticleTypeProcess = createProcess([setArticleTypeCommand]);
-export const getProfileProcess = createProcess([clearProfileArticlesCommand, setUserNameCommand, getProfileCommand]);
-export const getMyArticlesProcess = createProcess([clearProfileArticlesCommand, getMyArticlesCommand]);
-export const getFavoritedArticlesProcess = createProcess([clearProfileArticlesCommand, getFavoritedCommand]);
+export const getProfileProcess = createProcess([startGetProfileCommand, getProfileCommand]);
+export const followUserProcess = createProcess([followUserCommand]);

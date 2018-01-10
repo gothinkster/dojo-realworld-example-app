@@ -62,7 +62,7 @@ const fetchFeedCommand = commandFactory(async ({ get, path, payload: [type, user
 	];
 });
 
-const favoriteFeedArticleCommand = commandFactory(async ({ at, get, path, payload: [slug, favorited, type] }) => {
+const favoriteFeedArticleCommand = commandFactory(async ({ at, get, path, payload: [slug, favorited] }) => {
 	const token = get(path('user', 'token'));
 	const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
 		method: favorited ? 'delete' : 'post',

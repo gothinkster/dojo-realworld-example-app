@@ -4,10 +4,12 @@ import { Link } from '@dojo/routing/Link';
 import * as marked from 'marked';
 
 import { Comment } from './Comment';
-import { ArticleItem, Comment as CommentItem } from '../interfaces';
+import { ArticleItem, Comment as CommentItem, AuthorProfile } from '../interfaces';
+import { ArticleMeta } from './ArticleMeta';
 
 export interface ArticleProperties {
 	article: ArticleItem;
+	authorProfile: AuthorProfile;
 	comments: CommentItem[];
 	loaded: boolean;
 	isAuthenticated: boolean;
@@ -18,6 +20,10 @@ export interface ArticleProperties {
 	newComment: string;
 	slug: string;
 	getArticle: Function;
+	favoriteArticle: Function;
+	followUser: Function;
+	deleteArticle: Function;
+	username: string;
 }
 
 export class Article extends WidgetBase<ArticleProperties> {
@@ -37,69 +43,46 @@ export class Article extends WidgetBase<ArticleProperties> {
 	}
 
 	protected render() {
-		const { isAuthenticated, newComment, deleteComment, comments, loaded, loggedInUser, article } = this.properties;
+		const {
+			username,
+			deleteArticle,
+			followUser,
+			favoriteArticle,
+			isAuthenticated,
+			newComment,
+			deleteComment,
+			comments,
+			loaded,
+			loggedInUser,
+			article
+		} = this.properties;
 
 		if (!loaded) {
-			return v('div', { classes: 'article-page' }, [
-				v('div', { classes: 'banner' }, [
-					v('div', { classes: 'container' }, [v('h1'), v('div', { classes: 'article-meta' })])
-				])
-			]);
+			return v('div', { classes: 'article-page' }, [v('div', { key: 'banner', classes: 'banner' })]);
 		}
 
+		const { createdAt, slug, favorited, favoritesCount, author: authorProfile } = article;
+
 		return v('div', { classes: 'article-page' }, [
-			v('div', { classes: 'banner' }, [
+			v('div', { key: 'banner', classes: 'banner' }, [
 				v('div', { classes: 'container' }, [
 					v('h1', [article.title]),
-					v('div', { classes: 'article-meta' }, [
-						w(Link, { to: 'user', params: { id: article.author.username } }, [
-							v('img', { src: article.author.image })
-						]),
-						v('div', { classes: 'info' }, [
-							w(Link, { to: 'user', classes: 'author', params: { id: article.author.username } }, [
-								article.author.username
-							]),
-							v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
-						]),
-						isAuthenticated
-							? v(
-									'button',
-									{
-										classes: [
-											'btn',
-											'btn-sm',
-											article.author.following ? 'btn-secondary' : 'btn-outline-secondary'
-										]
-									},
-									[
-										v('i', { classes: 'ion-plus-round' }),
-										`${article.author.following ? ' Unfollow' : ' Follow'} ${
-											article.author.username
-										}`
-									]
-								)
-							: null,
-						isAuthenticated
-							? v(
-									'button',
-									{
-										classes: [
-											'btn',
-											'btn-sm',
-											article.favorited ? 'btn-primary' : 'btn-outline-primary'
-										]
-									},
-									[
-										v('i', { classes: 'ion-heart' }),
-										`${article.favorited ? ' Unfavorite' : ' Favorite'}`,
-										v('span', { classes: 'counter' }, [`(${article.favoritesCount})`])
-									]
-								)
-							: null
-					])
+					isAuthenticated
+						? w(ArticleMeta, {
+								authorProfile,
+								slug,
+								createdAt,
+								favoriteArticle,
+								followUser,
+								deleteArticle,
+								username,
+								favorited,
+								favoritesCount
+							})
+						: null
 				])
 			]),
-			v('div', { classes: ['container', 'page'] }, [
+			v('div', { key: 'page', classes: ['container', 'page'] }, [
 				v('div', { classes: ['row', 'article-content'] }, [
 					v('div', { classes: 'col-xs-12' }, [
 						v('div', { innerHTML: marked(article.body, { sanitize: true }) }),
@@ -114,48 +97,19 @@ export class Article extends WidgetBase<ArticleProperties> {
 				]),
 				v('hr'),
 				v('div', { classes: 'article-actions' }, [
-					v('div', { classes: 'article-meta' }, [
-						v('a', { href: '' }, [v('img', { src: article.author.image })]),
-						v('div', { classes: 'info' }, [
-							v('a', { href: '', classes: 'author' }, [article.author.username]),
-							v('span', { classes: 'date' }, [new Date(article.createdAt).toDateString()])
-						]),
-						isAuthenticated
-							? v(
-									'button',
-									{
-										classes: [
-											'btn',
-											'btn-sm',
-											article.author.following ? 'btn-secondary' : 'btn-outline-secondary'
-										]
-									},
-									[
-										v('i', { classes: 'ion-plus-round' }),
-										`${article.author.following ? ' Unfollow' : ' Follow'} ${
-											article.author.username
-										}`
-									]
-								)
-							: null,
-						isAuthenticated
-							? v(
-									'button',
-									{
-										classes: [
-											'btn',
-											'btn-sm',
-											article.favorited ? 'btn-primary' : 'btn-outline-primary'
-										]
-									},
-									[
-										v('i', { classes: 'ion-heart' }),
-										`${article.favorited ? ' Unfavorite' : ' Favorite'}`,
-										v('span', { classes: 'counter' }, [`(${article.favoritesCount})`])
-									]
-								)
-							: null
-					])
+					isAuthenticated
+						? w(ArticleMeta, {
+								authorProfile,
+								slug,
+								createdAt,
+								favoriteArticle,
+								followUser,
+								deleteArticle,
+								username,
+								favorited,
+								favoritesCount
+							})
+						: null
 				]),
 				v('div', { classes: 'row' }, [
 					v('div', { classes: ['col-xs-12', 'col-md-8', 'offset-md-2'] }, [

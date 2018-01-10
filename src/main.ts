@@ -52,7 +52,7 @@ const config = [
 	},
 	{
 		path: 'editor/{slug}',
-		outlet: 'new-post'
+		outlet: 'edit-post'
 	},
 	{
 		path: 'editor',
