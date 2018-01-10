@@ -6,7 +6,7 @@ export class Banner extends WidgetBase {
 		return v('div', { classes: 'banner' }, [
 			v('div', { classes: 'container' }, [
 				v('h1', { classes: 'logo-font' }, ['conduit']),
-				v('p', {}, ['A place to share your knowledge.'])
+				v('p', ['A place to share your knowledge.'])
 			])
 		]);
 	}

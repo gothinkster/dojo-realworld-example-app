@@ -25,22 +25,26 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 		this.properties.fetchFeed(type, username, 0);
 	}
 
-	private _onGlobalFeedClick() {
+	private _onGlobalFeedClick(event: MouseEvent) {
+		event.preventDefault();
 		const { username } = this.properties;
 		this.properties.fetchFeed('global', username, 0);
 	}
 
-	private _onFeedClick() {
+	private _onFeedClick(event: MouseEvent) {
+		event.preventDefault();
 		const { username } = this.properties;
 		this.properties.fetchFeed('feed', username, 0);
 	}
 
-	private _onFavoriteFeedClick() {
+	private _onFavoriteFeedClick(event: MouseEvent) {
+		event.preventDefault();
 		const { username } = this.properties;
 		this.properties.fetchFeed('favorites', username, 0);
 	}
 
-	private _onUserFeedClick() {
+	private _onUserFeedClick(event: MouseEvent) {
+		event.preventDefault();
 		const { username } = this.properties;
 		this.properties.fetchFeed('user', username, 0);
 	}
