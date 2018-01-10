@@ -11,6 +11,7 @@ export interface FeedsProperties {
 	items: ArticleItem[];
 	loading: boolean;
 	type: string;
+	tagName: string;
 	username: string;
 	isAuthenticated: boolean;
 }
@@ -42,14 +43,14 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 	}
 
 	private _buildTabs(children: DNode): DNode {
-		const { isAuthenticated, type, username } = this.properties;
+		const { isAuthenticated, type, username, tagName } = this.properties;
 		const isProfile = type === 'user' || type === 'favorites';
 
 		return v('div', { classes: 'col-md-9' }, [
 			v('div', { classes: 'feed-toggle' }, [
 				v('ul', { classes: ['nav', 'nav-pills', 'outline-active'] }, [
 					isAuthenticated && !isProfile
-						? v('li', { classes: 'nav-item' }, [
+						? v('li', { key: 'feeds', classes: 'nav-item' }, [
 								v(
 									'a',
 									{
@@ -62,7 +63,7 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 							])
 						: null,
 					!isProfile
-						? v('li', { classes: 'nav-item' }, [
+						? v('li', { key: 'global', classes: 'nav-item' }, [
 								v(
 									'a',
 									{
@@ -75,19 +76,19 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 							])
 						: null,
 					type === 'tag'
-						? v('li', { classes: 'nav-item' }, [
+						? v('li', { key: 'tags', classes: 'nav-item' }, [
 								v(
 									'a',
 									{
 										href: '#/',
 										classes: ['nav-link', 'active']
 									},
-									['Global Feeds']
+									[`#${tagName}`]
 								)
 							])
 						: null,
 					isProfile
-						? v('li', { classes: 'nav-item' }, [
+						? v('li', { key: 'articles', classes: 'nav-item' }, [
 								v(
 									'a',
 									{
@@ -100,7 +101,7 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 							])
 						: null,
 					isProfile
-						? v('li', { classes: 'nav-item' }, [
+						? v('li', { key: 'favs', classes: 'nav-item' }, [
 								v(
 									'a',
 									{

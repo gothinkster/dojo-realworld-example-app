@@ -3,6 +3,7 @@ import { v } from '@dojo/widget-core/d';
 
 export interface TagsProperties {
 	tags: any[];
+	getFeed: Function;
 }
 
 export class Tags extends WidgetBase<TagsProperties> {
@@ -15,7 +16,18 @@ export class Tags extends WidgetBase<TagsProperties> {
 					'div',
 					{ classes: 'tag-list' },
 					tags.map((tag, index) =>
-						v('a', { key: index, classes: ['tag-pill', 'tag-default'], href: '' }, [tag])
+						v(
+							'a',
+							{
+								href: '#/',
+								onclick: () => {
+									this.properties.getFeed('tag', undefined, 1, tag);
+								},
+								key: index,
+								classes: ['tag-pill', 'tag-default']
+							},
+							[tag]
+						)
 					)
 				)
 			])

@@ -21,6 +21,7 @@ function getProperties(store: Store<State>, properties: FeedsProperties): FeedsP
 		loading,
 		username,
 		isAuthenticated,
+		tagName: get(path('feed', 'tagName')),
 		favoriteArticle: favoriteFeedArticleProcess(store)
 	};
 }

@@ -40,18 +40,19 @@ async function fetchFeed(token: string, offset: number, options: any) {
 	return await fetch(`${url}limit=10&offset=${offset}`, { headers: getHeaders(token) });
 }
 
-const startFetchingFeedCommand = commandFactory(async ({ get, path, payload: [type] }) => {
+const startFetchingFeedCommand = commandFactory(async ({ get, path, payload: [type, username, page, tag] }) => {
 	return [
 		replace(path('feed', 'loading'), true),
 		replace(path('feed', 'loaded'), false),
-		replace(path('feed', 'category'), type)
+		replace(path('feed', 'category'), type),
+		replace(path('feed', 'tagName'), tag)
 	];
 });
 
-const fetchFeedCommand = commandFactory(async ({ get, path, payload: [type, username, page] }) => {
+const fetchFeedCommand = commandFactory(async ({ get, path, payload: [type, username, page, tag] }) => {
 	const token = get(path('user', 'token'));
 	const offset = (page - 1) * 10;
-	const response = await fetchFeed(token, offset, { type, username });
+	const response = await fetchFeed(token, offset, { type, username, tag });
 	const json = await response.json();
 	return [
 		replace(path('feed', 'items'), json.articles),

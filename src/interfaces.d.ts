@@ -51,7 +51,7 @@ export interface Article extends ResourceBased {
 
 export interface Feed extends ResourceBased {
 	category: string;
-	isTagFeed: boolean;
+	tagName: string;
 	items: ArticleItem[];
 	offset: number;
 	total: number;

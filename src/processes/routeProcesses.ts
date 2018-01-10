@@ -1,17 +1,17 @@
 import { createCommandFactory, createProcess } from '@dojo/stores/process';
 import { PatchOperation } from '@dojo/stores/state/Patch';
 import { replace } from '@dojo/stores/state/operations';
+import { State } from '../interfaces';
 
-const commandFactory = createCommandFactory<any>();
+const commandFactory = createCommandFactory<State>();
 
 const changeRouteCommand = commandFactory(({ path, get, payload: [outlet] }): PatchOperation[] => {
-	const previousOutlet = get(path('routing', 'outlet'));
 	return [
 		replace(path('routing', 'outlet'), outlet),
-		replace(path('routing', 'previousOutlet'), previousOutlet),
 		replace(path('settings', 'loaded'), false),
 		replace(path('profile', 'loaded'), false),
 		replace(path('feed', 'loaded'), false),
+		replace(path('feed', 'category'), undefined),
 		replace(path('editor', 'loaded'), false),
 		replace(path('errors'), {})
 	];
