@@ -20,11 +20,6 @@ export interface FeedsProperties {
 }
 
 export class Feeds extends WidgetBase<FeedsProperties> {
-	protected onAttach() {
-		const { type, username } = this.properties;
-		this.properties.fetchFeed({ type, page: 0, filter: username });
-	}
-
 	private _onGlobalFeedClick(event: MouseEvent) {
 		event.preventDefault();
 		const { username } = this.properties;

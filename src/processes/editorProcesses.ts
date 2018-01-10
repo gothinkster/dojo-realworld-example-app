@@ -42,6 +42,10 @@ const getArticleForEditorCommand = commandFactory<{ slug: string }>(async ({ pat
 	return [replace(path('editor'), json.article)];
 });
 
+const clearEditorCommand = commandFactory(({ path }) => {
+	return [replace(path('editor'), {})];
+});
+
 const startPublishCommand = commandFactory(({ path }) => {
 	return [replace(path('editor', 'loading'), true)];
 });
@@ -84,3 +88,4 @@ export const addTag = createProcess([addTagCommand, clearTagInputCommand]);
 export const removeTag = createProcess([removeTagCommand]);
 export const getArticleForEditor = createProcess([getArticleForEditorCommand]);
 export const publishArticle = createProcess([startPublishCommand, publishArticleCommand]);
+export const clearEditorProcess = createProcess([clearEditorCommand]);

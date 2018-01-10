@@ -29,6 +29,7 @@ const getProfileCommand = commandFactory<{ username: string }>(async ({ get, pat
 	return [
 		replace(path('profile', 'image'), json.profile.image),
 		replace(path('profile', 'bio'), json.profile.bio),
+		replace(path('profile', 'following'), json.profile.following),
 		replace(path('profile', 'loading'), false),
 		replace(path('profile', 'loaded'), true)
 	];

@@ -26,7 +26,8 @@ const startFetchingFeedCommand = commandFactory<FetchFeedParams>(async ({ path, 
 		replace(path('feed', 'loaded'), false),
 		replace(path('feed', 'category'), type),
 		replace(path('feed', 'tagName'), type === 'tag' ? filter : undefined),
-		replace(path('feed', 'pageNumber'), page)
+		replace(path('feed', 'pageNumber'), page),
+		replace(path('feed', 'items'), undefined)
 	];
 });
 
