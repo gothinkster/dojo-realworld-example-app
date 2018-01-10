@@ -15,7 +15,9 @@ For more information on how to this works with other frontends/backends, head ov
 
 # How it works
 
-Dojo 2 RealWorld using @dojo/widget-core, @dojo/routing and @dojo/stores
+Dojo 2 RealWorld using @dojo/widget-core, @dojo/routing and @dojo/stores.
+
+For more information on Dojo 2 visit [dojo.io](https://dojo.io)
 
 # Getting started
 
