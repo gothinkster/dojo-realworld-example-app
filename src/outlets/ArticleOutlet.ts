@@ -1,6 +1,7 @@
 import { Outlet } from '@dojo/routing/Outlet';
+import { MapParamsOptions } from '@dojo/routing/interfaces';
 
-const mapParams = ({ params }: any) => {
+const mapParams = ({ params }: MapParamsOptions) => {
 	return {
 		slug: params.slug
 	};

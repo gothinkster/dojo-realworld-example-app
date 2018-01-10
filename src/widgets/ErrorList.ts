@@ -10,15 +10,15 @@ export class ErrorList extends WidgetBase<ErrorListProperties> {
 	protected render() {
 		const { errors } = this.properties;
 		const errorCategories = Object.keys(errors);
-		let errorList: any[] = [];
+		let errorList: string[] = [];
 		for (let i = 0; i < errorCategories.length; i++) {
 			errorList = [
 				...errorList,
-				...errors[errorCategories[i]].map((error: any) => `${errorCategories[i]} ${error}`)
+				...errors[errorCategories[i]].map((error: string) => `${errorCategories[i]} ${error}`)
 			];
 		}
 		errorList;
 
-		return v('ul', { classes: 'error-messages' }, errorList.map((error: any) => v('li', [error])));
+		return v('ul', { classes: 'error-messages' }, errorList.map((error: string) => v('li', [error])));
 	}
 }

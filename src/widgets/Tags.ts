@@ -2,7 +2,7 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 
 export interface TagsProperties {
-	tags?: any[];
+	tags?: string[];
 	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
 }
 

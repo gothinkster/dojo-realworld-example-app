@@ -1,6 +1,7 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
+import { DNode } from '@dojo/widget-core/interfaces';
 
 export interface HeaderProperties {
 	isAuthenticated: boolean;
@@ -33,7 +34,7 @@ export class Header extends WidgetBase<HeaderProperties> {
 		];
 	}
 
-	private _unauthenticatedMenu(): any[] {
+	private _unauthenticatedMenu(): DNode[] {
 		const { route } = this.properties;
 		return [
 			v('li', { key: 'sign-in', classes: 'nav-item' }, [

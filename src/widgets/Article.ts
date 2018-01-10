@@ -137,7 +137,7 @@ export class Article extends WidgetBase<ArticleProperties> {
 								]),
 						v(
 							'div',
-							comments.map((comment: any, index: number) => {
+							comments.map((comment: CommentItem, index: number) => {
 								return w(Comment, {
 									key: index,
 									comment,

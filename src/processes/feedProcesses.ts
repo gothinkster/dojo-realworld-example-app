@@ -16,7 +16,7 @@ function getItemIndex(items: ArticleItem[], id: string) {
 	return index;
 }
 
-async function fetchFeed(token: string, offset: number, options: any) {
+async function fetchFeed(token: string, offset: number, options: { type: string; filter: string }) {
 	const baseUrl = 'https://conduit.productionready.io/api/articles';
 	let url: string;
 	switch (options.type) {

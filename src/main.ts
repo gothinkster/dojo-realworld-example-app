@@ -17,7 +17,7 @@ import { getArticle } from './processes/articleProcesses';
 import { getUserSettings } from './processes/settingsProcesses';
 
 class StoreInjector extends Injector {
-	constructor(payload: any) {
+	constructor(payload: Store<State>) {
 		super(payload);
 		payload.on('invalidate', () => {
 			this.emit({ type: 'invalidate' });
