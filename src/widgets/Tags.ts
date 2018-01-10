@@ -21,7 +21,7 @@ export class Tags extends WidgetBase<TagsProperties> {
 							{
 								href: '#/',
 								onclick: () => {
-									this.properties.getFeed('tag', undefined, 1, tag);
+									this.properties.getFeed('tag', undefined, 0, tag);
 								},
 								key: index,
 								classes: ['tag-pill', 'tag-default']
