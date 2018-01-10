@@ -1,4 +1,4 @@
-# ![RealWorld Example App](logo.png)
+# <img src="logo.png" width="48"> RealWorld Example App
 
 > ### Dojo 2 codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld) spec and API.
 
