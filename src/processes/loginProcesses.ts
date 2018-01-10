@@ -1,10 +1,8 @@
 import global from '@dojo/shim/global';
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
-import { State, UserProfile } from '../interfaces';
-import { getHeaders } from './utils';
-
-const commandFactory = createCommandFactory<State>();
+import { UserProfile } from '../interfaces';
+import { getHeaders, commandFactory } from './utils';
 
 const loginEmailInputCommand = commandFactory<{ email: string }>(({ path, payload: { email } }) => {
 	return [replace(path('login', 'email'), email)];

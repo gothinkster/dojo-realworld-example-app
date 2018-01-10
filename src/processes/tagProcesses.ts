@@ -1,8 +1,6 @@
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
-import { State } from '../interfaces';
-
-const commandFactory = createCommandFactory<State>();
+import { commandFactory } from './utils';
 
 const getTagsCommand = commandFactory(async ({ path }) => {
 	const response = await fetch(`https://conduit.productionready.io/api/tags`);

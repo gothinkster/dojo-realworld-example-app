@@ -1,9 +1,6 @@
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { replace, add, remove } from '@dojo/stores/state/operations';
-import { State } from '../interfaces';
-import { getHeaders } from './utils';
-
-const commandFactory = createCommandFactory<State>();
+import { getHeaders, commandFactory } from './utils';
 
 const titleInputCommand = commandFactory<{ title: string }>(({ path, payload: { title } }) => {
 	return [replace(path('editor', 'title'), title)];

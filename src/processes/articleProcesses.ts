@@ -1,9 +1,6 @@
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { remove, replace } from '@dojo/stores/state/operations';
-import { State } from '../interfaces';
-import { getHeaders } from './utils';
-
-const commandFactory = createCommandFactory<State>();
+import { getHeaders, commandFactory } from './utils';
 
 const startLoadingArticleCommand = commandFactory(async ({ path }) => {
 	return [

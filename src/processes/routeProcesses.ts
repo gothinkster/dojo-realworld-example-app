@@ -1,9 +1,7 @@
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
-import { State } from '../interfaces';
 import { OutletContext } from '@dojo/routing/interfaces';
-
-const commandFactory = createCommandFactory<State>();
+import { commandFactory } from './utils';
 
 const changeRouteCommand = commandFactory<{ outlet: string; context: OutletContext }>(
 	({ path, payload: { outlet, context } }) => {

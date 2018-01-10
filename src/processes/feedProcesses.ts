@@ -1,9 +1,7 @@
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
-import { State, ArticleItem } from './../interfaces';
-import { getHeaders } from './utils';
-
-const commandFactory = createCommandFactory<State>();
+import { ArticleItem } from './../interfaces';
+import { getHeaders, commandFactory } from './utils';
 
 function getItemIndex(items: ArticleItem[], id: string) {
 	let index = -1;

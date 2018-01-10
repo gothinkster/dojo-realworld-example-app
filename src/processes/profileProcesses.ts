@@ -1,9 +1,6 @@
-import { createCommandFactory, createProcess } from '@dojo/stores/process';
+import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
-import { State } from '../interfaces';
-import { getHeaders } from './utils';
-
-const commandFactory = createCommandFactory<State>();
+import { getHeaders, commandFactory } from './utils';
 
 const startGetProfileCommand = commandFactory(async ({ path }) => {
 	return [replace(path('profile', 'loading'), true), replace(path('profile', 'loaded'), false)];
