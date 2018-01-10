@@ -45,13 +45,14 @@ const startFetchingFeedCommand = commandFactory(async ({ get, path, payload: [ty
 		replace(path('feed', 'loading'), true),
 		replace(path('feed', 'loaded'), false),
 		replace(path('feed', 'category'), type),
-		replace(path('feed', 'tagName'), tag)
+		replace(path('feed', 'tagName'), tag),
+		replace(path('feed', 'pageNumber'), page)
 	];
 });
 
 const fetchFeedCommand = commandFactory(async ({ get, path, payload: [type, username, page, tag] }) => {
 	const token = get(path('user', 'token'));
-	const offset = (page - 1) * 10;
+	const offset = page * 10;
 	const response = await fetchFeed(token, offset, { type, username, tag });
 	const json = await response.json();
 	return [

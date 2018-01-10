@@ -4,6 +4,7 @@ import { v, w } from '@dojo/widget-core/d';
 
 import { ArticlePreview } from './ArticlePreview';
 import { ArticleItem } from '../interfaces';
+import { FeedPagination } from './FeedPagination';
 
 export interface FeedsProperties {
 	fetchFeed: Function;
@@ -14,36 +15,38 @@ export interface FeedsProperties {
 	tagName: string;
 	username: string;
 	isAuthenticated: boolean;
+	total: number;
+	currentPage: number;
 }
 
 export class Feeds extends WidgetBase<FeedsProperties> {
 	onAttach() {
 		const { type, username } = this.properties;
-		this.properties.fetchFeed(type, username, 1);
+		this.properties.fetchFeed(type, username, 0);
 	}
 
 	private _onGlobalFeedClick() {
 		const { username } = this.properties;
-		this.properties.fetchFeed('global', username, 1);
+		this.properties.fetchFeed('global', username, 0);
 	}
 
 	private _onFeedClick() {
 		const { username } = this.properties;
-		this.properties.fetchFeed('feed', username, 1);
+		this.properties.fetchFeed('feed', username, 0);
 	}
 
 	private _onFavoriteFeedClick() {
 		const { username } = this.properties;
-		this.properties.fetchFeed('favorites', username, 1);
+		this.properties.fetchFeed('favorites', username, 0);
 	}
 
 	private _onUserFeedClick() {
 		const { username } = this.properties;
-		this.properties.fetchFeed('user', username, 1);
+		this.properties.fetchFeed('user', username, 0);
 	}
 
-	private _buildTabs(children: DNode): DNode {
-		const { isAuthenticated, type, username, tagName } = this.properties;
+	private _buildTabs(children: DNode, showPagination: boolean = true): DNode {
+		const { fetchFeed, total, currentPage, isAuthenticated, type, username, tagName } = this.properties;
 		const isProfile = type === 'user' || type === 'favorites';
 
 		return v('div', { classes: 'col-md-9' }, [
@@ -115,7 +118,8 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 						: null
 				])
 			]),
-			children
+			children,
+			showPagination ? w(FeedPagination, { fetchFeed, total, currentPage, tag: tagName, type, username }) : null
 		]);
 	}
 
@@ -123,11 +127,11 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 		const { loading = true, items, favoriteArticle } = this.properties;
 
 		if (loading || items === undefined) {
-			return this._buildTabs(v('div', { classes: 'article-preview' }, ['Loading...']));
+			return this._buildTabs(v('div', { classes: 'article-preview' }, ['Loading...']), false);
 		}
 
 		if (items.length === 0) {
-			return this._buildTabs(v('div', { classes: 'article-preview' }, ['No articles here, yet!']));
+			return this._buildTabs(v('div', { classes: 'article-preview' }, ['No articles here, yet!']), false);
 		}
 
 		const articleList = v(

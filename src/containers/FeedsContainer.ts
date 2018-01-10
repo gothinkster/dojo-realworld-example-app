@@ -22,7 +22,9 @@ function getProperties(store: Store<State>, properties: FeedsProperties): FeedsP
 		username,
 		isAuthenticated,
 		tagName: get(path('feed', 'tagName')),
-		favoriteArticle: favoriteFeedArticleProcess(store)
+		favoriteArticle: favoriteFeedArticleProcess(store),
+		total: get(path('feed', 'total')),
+		currentPage: get(path('feed', 'pageNumber'))
 	};
 }
 

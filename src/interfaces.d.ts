@@ -54,6 +54,7 @@ export interface Feed extends ResourceBased {
 	tagName: string;
 	items: ArticleItem[];
 	offset: number;
+	pageNumber: number;
 	total: number;
 }
 
