@@ -14,30 +14,6 @@ function getItemIndex(items: ArticleItem[], id: string) {
 	return index;
 }
 
-async function fetchFeed(token: string, offset: number, options: { type: string; filter: string }) {
-	const baseUrl = 'https://conduit.productionready.io/api/articles';
-	let url: string;
-	switch (options.type) {
-		case 'feed':
-			url = `${baseUrl}/feed?`;
-			break;
-		case 'favorites':
-			url = `${baseUrl}?favorited=${options.filter}&`;
-			break;
-		case 'user':
-			url = `${baseUrl}?author=${options.filter}&`;
-			break;
-		case 'tag':
-			url = `${baseUrl}?tag=${options.filter}&`;
-			break;
-		default:
-			url = `${baseUrl}?`;
-			break;
-	}
-
-	return await fetch(`${url}limit=10&offset=${offset}`, { headers: getHeaders(token) });
-}
-
 export interface FetchFeedParams {
 	type: string;
 	filter: string;
@@ -57,7 +33,28 @@ const startFetchingFeedCommand = commandFactory<FetchFeedParams>(async ({ path, 
 const fetchFeedCommand = commandFactory<FetchFeedParams>(async ({ get, path, payload: { type, page, filter } }) => {
 	const token = get(path('user', 'token'));
 	const offset = page * 10;
-	const response = await fetchFeed(token, offset, { type, filter });
+
+	const baseUrl = 'https://conduit.productionready.io/api/articles';
+	let url: string;
+	switch (type) {
+		case 'feed':
+			url = `${baseUrl}/feed?`;
+			break;
+		case 'favorites':
+			url = `${baseUrl}?favorited=${filter}&`;
+			break;
+		case 'user':
+			url = `${baseUrl}?author=${filter}&`;
+			break;
+		case 'tag':
+			url = `${baseUrl}?tag=${filter}&`;
+			break;
+		default:
+			url = `${baseUrl}?`;
+			break;
+	}
+
+	const response = await fetch(`${url}limit=10&offset=${offset}`, { headers: getHeaders(token) });
 	const json = await response.json();
 	return [
 		replace(path('feed', 'items'), json.articles),
