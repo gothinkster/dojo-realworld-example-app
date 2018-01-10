@@ -10,9 +10,8 @@ function getProperties(store: Store<State>, properties: FeedsProperties): FeedsP
 	const loading = get(path('feed', 'loading'));
 	const isAuthenticated = !!get(path('user', 'token'));
 	const username = properties.username || get(path('user', 'username'));
-	const type = properties.type
-		? properties.type
-		: isAuthenticated ? get(path('feed', 'category')) || 'feed' : 'global';
+	const defaultType = isAuthenticated ? 'feed' : 'global';
+	const type = properties.type ? properties.type : get(path('feed', 'category')) || defaultType;
 
 	return {
 		items: get(path('feed', 'items')),

@@ -19,8 +19,9 @@ export class Tags extends WidgetBase<TagsProperties> {
 						v(
 							'a',
 							{
-								href: '#/',
-								onclick: () => {
+								href: '',
+								onclick: (event: MouseEvent) => {
+									event.preventDefault();
 									this.properties.getFeed('tag', undefined, 0, tag);
 								},
 								key: index,

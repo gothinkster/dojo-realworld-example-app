@@ -11,7 +11,7 @@ const changeRouteCommand = commandFactory(({ path, get, payload: [outlet] }): Pa
 		replace(path('settings', 'loaded'), false),
 		replace(path('profile', 'loaded'), false),
 		replace(path('feed', 'loaded'), false),
-		replace(path('feed', 'category'), undefined),
+		replace(path('feed', 'category'), outlet !== 'home' ? undefined : get(path('feed', 'category'))),
 		replace(path('editor', 'loaded'), false),
 		replace(path('errors'), {})
 	];
