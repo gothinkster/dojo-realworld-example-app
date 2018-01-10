@@ -2,13 +2,13 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 
 export interface TagsProperties {
-	tags: any[];
+	tags?: any[];
 	getFeed: Function;
 }
 
 export class Tags extends WidgetBase<TagsProperties> {
 	protected render() {
-		const { tags } = this.properties;
+		const { tags = [] } = this.properties;
 		return v('div', { classes: 'col-md-3' }, [
 			v('div', { classes: 'sidebar' }, [
 				v('p', ['Popular Tags']),
@@ -24,7 +24,7 @@ export class Tags extends WidgetBase<TagsProperties> {
 									event.preventDefault();
 									this.properties.getFeed('tag', undefined, 0, tag);
 								},
-								key: index,
+								key: `${index}`,
 								classes: ['tag-pill', 'tag-default']
 							},
 							[tag]
