@@ -5,9 +5,10 @@ import { State } from '../interfaces';
 
 const commandFactory = createCommandFactory<State>();
 
-const changeRouteCommand = commandFactory(({ path, get, payload: [outlet] }): PatchOperation[] => {
+const changeRouteCommand = commandFactory(({ path, get, payload: [outlet, context] }): PatchOperation[] => {
 	return [
 		replace(path('routing', 'outlet'), outlet),
+		replace(path('routing', 'params'), context.params),
 		replace(path('settings', 'loaded'), false),
 		replace(path('profile', 'loaded'), false),
 		replace(path('feed', 'loaded'), false),

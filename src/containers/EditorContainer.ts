@@ -8,14 +8,12 @@ import {
 	descInput,
 	removeTag,
 	tagInput,
-	titleInput,
-	getArticleForEditor
+	titleInput
 } from './../processes/editorProcesses';
 import { State } from '../interfaces';
 
 function getProperties(store: Store<State>, properties: EditorProperties): EditorProperties {
 	const { get, path } = store;
-
 	return {
 		title: get(path('editor', 'title')),
 		description: get(path('editor', 'description')),
@@ -30,7 +28,6 @@ function getProperties(store: Store<State>, properties: EditorProperties): Edito
 		onTagInput: tagInput(store),
 		onTitleInput: titleInput(store),
 		onPublishPost: publishArticle(store),
-		getArticle: getArticleForEditor(store),
 		slug: properties.slug
 	};
 }

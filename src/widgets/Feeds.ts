@@ -38,13 +38,11 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 	}
 
 	private _onFavoriteFeedClick(event: MouseEvent) {
-		event.preventDefault();
 		const { username } = this.properties;
 		this.properties.fetchFeed('favorites', username, 0);
 	}
 
 	private _onUserFeedClick(event: MouseEvent) {
-		event.preventDefault();
 		const { username } = this.properties;
 		this.properties.fetchFeed('user', username, 0);
 	}

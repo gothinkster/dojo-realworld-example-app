@@ -9,6 +9,10 @@ import { App } from './App';
 import { getTags } from './processes/tagProcesses';
 import { setSession } from './processes/loginProcesses';
 import { changeRouteProcess } from './processes/routeProcesses';
+import { getProfileProcess } from './processes/profileProcesses';
+import { Params } from '@dojo/routing/interfaces';
+import { State } from './interfaces';
+import { getArticleForEditor } from './processes/editorProcesses';
 
 class StoreInjector extends Injector {
 	constructor(payload: any) {
@@ -18,6 +22,9 @@ class StoreInjector extends Injector {
 		});
 	}
 }
+
+const store = new Store<State>();
+const registry = new Registry();
 
 const config = [
 	{
@@ -31,16 +38,15 @@ const config = [
 	{
 		path: 'user/{id}',
 		outlet: 'user',
+		onEnter: (params: Params) => {
+			getProfileProcess(store)(params.id as any);
+		},
 		children: [
 			{
 				path: 'favorites',
 				outlet: 'favorites'
 			}
 		]
-	},
-	{
-		path: 'user/{id}',
-		outlet: 'user'
 	},
 	{
 		path: 'article/{slug}',
@@ -52,7 +58,10 @@ const config = [
 	},
 	{
 		path: 'editor/{slug}',
-		outlet: 'edit-post'
+		outlet: 'edit-post',
+		onEnter: (params: Params) => {
+			getArticleForEditor(store)(params.slug as any);
+		}
 	},
 	{
 		path: 'editor',
@@ -65,8 +74,6 @@ const config = [
 	}
 ];
 
-const registry = new Registry();
-const store = new Store<any>();
 const router = registerRouterInjector(config, registry);
 
 registry.define('editor', async () => {
@@ -101,17 +108,23 @@ if (session) {
 	setSession(store)(JSON.parse(session));
 }
 
-router.on('nav', ({ path: fullPath, outlet }: any) => {
-	changeRouteProcess(store)(outlet);
+router.on('nav', ({ path: fullPath, outlet, context }: any) => {
+	(changeRouteProcess(store) as any)(outlet, context);
 });
 
-store.onChange(store.path('routing', 'outlet'), () => {
+function onRouteChange() {
 	const outlet = store.get(store.path('routing', 'outlet'));
 	const params = store.get(store.path('routing', 'params'));
 	if (outlet) {
-		router.gotoOutlet(outlet, params);
+		const link = router.link(outlet, params);
+		if (link !== undefined) {
+			router.setPath(link);
+		}
 	}
-});
+}
+
+store.onChange(store.path('routing', 'outlet'), onRouteChange);
+store.onChange(store.path('routing', 'params'), onRouteChange);
 
 registry.defineInjector('state', new StoreInjector(store));
 

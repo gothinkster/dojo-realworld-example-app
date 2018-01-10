@@ -19,7 +19,6 @@ export interface EditorProperties {
 	inProgress?: boolean;
 	slug: string;
 	tags?: string[];
-	getArticle: Function;
 }
 
 export class Editor extends WidgetBase<EditorProperties> {
@@ -44,10 +43,6 @@ export class Editor extends WidgetBase<EditorProperties> {
 			event.preventDefault();
 			this.properties.onTagCreate(event.target.value);
 		}
-	}
-
-	onAttach() {
-		this.properties.getArticle(this.properties.slug);
 	}
 
 	protected render() {

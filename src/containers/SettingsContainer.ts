@@ -11,15 +11,16 @@ import {
 	updateUserSettings
 } from './../processes/settingsProcesses';
 import { logout } from '../processes/loginProcesses';
+import { State } from '../interfaces';
 
-function getProperties(store: Store<any>, properties: SettingsProperties): SettingsProperties {
+function getProperties(store: Store<State>, properties: SettingsProperties): SettingsProperties {
 	const { get, path } = store;
 
 	return {
 		email: get(path('settings', 'email')),
 		password: get(path('settings', 'password')),
 		username: get(path('settings', 'username')),
-		imageUrl: get(path('settings', 'imageUrl')),
+		imageUrl: get(path('settings', 'image')),
 		bio: get(path('settings', 'bio')),
 		onEmailInput: emailInput(store),
 		onPasswordInput: passwordInput(store),
