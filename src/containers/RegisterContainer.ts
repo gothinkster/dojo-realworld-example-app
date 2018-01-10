@@ -11,6 +11,7 @@ import { State } from '../interfaces';
 
 function getProperties(store: Store<State>): RegisterProperties {
 	const { get, path } = store;
+
 	return {
 		email: get(path('register', 'email')),
 		password: get(path('register', 'password')),

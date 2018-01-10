@@ -5,6 +5,7 @@ import { State } from '../interfaces';
 
 function getProperties(store: Store<State>): HeaderProperties {
 	const { get, path } = store;
+
 	return {
 		route: get(path('routing', 'outlet')),
 		isAuthenticated: !!get(path('user', 'token')),

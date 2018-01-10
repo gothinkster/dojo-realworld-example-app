@@ -6,6 +6,7 @@ import { State } from '../interfaces';
 
 function getProperties(store: Store<State>): LoginProperties {
 	const { get, path } = store;
+
 	return {
 		email: get(path('login', 'email')),
 		password: get(path('login', 'password')),

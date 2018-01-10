@@ -13,8 +13,8 @@ function getProperties(store: Store<State>, properties: ProfileProperties): Prof
 		image: get(path('profile', 'image')),
 		bio: get(path('profile', 'bio')),
 		following: get(path('profile', 'following')),
-		followUser: followUserProcess(store),
-		currentUser: get(path('user', 'username'))
+		currentUser: get(path('user', 'username')),
+		followUser: followUserProcess(store)
 	};
 }
 

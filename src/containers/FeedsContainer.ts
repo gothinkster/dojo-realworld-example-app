@@ -16,14 +16,14 @@ function getProperties(store: Store<State>, properties: FeedsProperties): FeedsP
 	return {
 		items: get(path('feed', 'items')),
 		type,
-		fetchFeed: fetchFeedProcess(store),
 		loading,
 		username,
 		isAuthenticated,
 		tagName: get(path('feed', 'tagName')),
-		favoriteArticle: favoriteFeedArticleProcess(store),
 		total: get(path('feed', 'total')),
-		currentPage: get(path('feed', 'pageNumber'))
+		currentPage: get(path('feed', 'pageNumber')),
+		fetchFeed: fetchFeedProcess(store),
+		favoriteArticle: favoriteFeedArticleProcess(store)
 	};
 }
 

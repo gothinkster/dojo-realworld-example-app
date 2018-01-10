@@ -14,25 +14,22 @@ import { State } from '../interfaces';
 function getProperties(store: Store<State>, properties: ArticleProperties): ArticleProperties {
 	const { get, path } = store;
 
-	const article = get(path('article', 'item'));
-	const authorProfile = get(path('article', 'item', 'author'));
-
 	return {
-		article,
-		authorProfile,
+		article: get(path('article', 'item')),
+		authorProfile: get(path('article', 'item', 'author')),
 		comments: get(path('article', 'comments')) || [],
 		newComment: get(path('article', 'newComment')),
 		loaded: get(path('article', 'loaded')),
 		isAuthenticated: !!get(path('user', 'token')),
 		loggedInUser: get(path('user', 'username')),
+		username: get(path('user', 'username')),
 		slug: properties.slug,
 		deleteComment: deleteCommentProcess(store),
 		addComment: addCommentProcess(store),
 		onNewCommentInput: newCommentInputProcess(store),
 		favoriteArticle: favoriteArticleProcess(store),
 		followUser: followUserProcess(store),
-		deleteArticle: deleteArticleProcess(store),
-		username: get(path('user', 'username'))
+		deleteArticle: deleteArticleProcess(store)
 	};
 }
 

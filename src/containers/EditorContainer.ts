@@ -14,6 +14,7 @@ import { State } from '../interfaces';
 
 function getProperties(store: Store<State>, properties: EditorProperties): EditorProperties {
 	const { get, path } = store;
+
 	return {
 		title: get(path('editor', 'title')),
 		description: get(path('editor', 'description')),
