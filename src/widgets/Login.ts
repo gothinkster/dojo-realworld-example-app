@@ -1,6 +1,8 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
+import { Errors } from '../interfaces';
+import { ErrorList } from './ErrorList';
 
 export interface LoginProperties {
 	onPasswordInput: Function;
@@ -9,7 +11,7 @@ export interface LoginProperties {
 	email: string;
 	password: string;
 	inProgress?: boolean;
-	errors: any[];
+	errors: Errors;
 }
 
 export class Login extends WidgetBase<LoginProperties> {
@@ -27,7 +29,7 @@ export class Login extends WidgetBase<LoginProperties> {
 	}
 
 	protected render() {
-		const { email, password, inProgress = false, errors = [] } = this.properties;
+		const { errors, email, password, inProgress = false } = this.properties;
 
 		return v('div', { classes: 'auth-page' }, [
 			v('div', { classes: ['container', 'page'] }, [
@@ -35,7 +37,7 @@ export class Login extends WidgetBase<LoginProperties> {
 					v('div', { classes: ['col-md-6', 'offset-md-3', 'col-xs-12'] }, [
 						v('h1', { classes: 'text-xs-center' }, ['Sign In']),
 						v('p', { classes: 'text-xs-center' }, [w(Link, { to: 'register' }, ['Need an account?'])]),
-						v('ul', { classes: 'error-messages' }, errors.map((error: any) => v('li', [error]))),
+						errors ? w(ErrorList, { errors }) : null,
 						v('form', { onsubmit: this._onLogin }, [
 							v('fieldset', [
 								v('fieldset', { classes: 'form-group' }, [

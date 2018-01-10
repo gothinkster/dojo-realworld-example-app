@@ -1,5 +1,7 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
-import { v } from '@dojo/widget-core/d';
+import { v, w } from '@dojo/widget-core/d';
+import { ErrorList } from './ErrorList';
+import { Errors } from '../interfaces';
 
 export interface EditorProperties {
 	onPublishPost: () => void;
@@ -13,7 +15,7 @@ export interface EditorProperties {
 	description: string;
 	body: string;
 	tag: string;
-	errors?: any;
+	errors?: Errors;
 	inProgress?: boolean;
 	slug: string;
 	tags?: string[];
@@ -56,7 +58,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 			description,
 			body,
 			tag,
-			// errors = [],
+			errors,
 			inProgress = false,
 			tags = []
 		} = this.properties;
@@ -64,7 +66,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 			v('div', { classes: ['container', 'page'] }, [
 				v('div', { classes: 'row' }, [
 					v('div', { classes: ['col-md-10', 'offset-md-1', 'col-xs-12'] }, [
-						// v('ul', { classes: 'error-messages' }, errors.map((error: any) => v('li', [error]))),
+						errors ? w(ErrorList, { errors }) : null,
 						v('form', [
 							v('fieldset', [
 								v('fieldset', { classes: 'form-group' }, [

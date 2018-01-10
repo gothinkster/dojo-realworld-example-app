@@ -1,6 +1,8 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
+import { Errors } from '../interfaces';
+import { ErrorList } from './ErrorList';
 
 export interface RegisterProperties {
 	onPasswordInput: Function;
@@ -11,7 +13,7 @@ export interface RegisterProperties {
 	password: string;
 	username: string;
 	inProgress?: boolean;
-	errors: any[];
+	errors: Errors;
 }
 
 export class Register extends WidgetBase<RegisterProperties> {
@@ -33,7 +35,7 @@ export class Register extends WidgetBase<RegisterProperties> {
 	}
 
 	protected render() {
-		const { email, password, username, inProgress = false, errors = [] } = this.properties;
+		const { errors, email, password, username, inProgress = false } = this.properties;
 
 		return v('div', { classes: 'auth-page' }, [
 			v('div', { classes: ['container', 'page'] }, [
@@ -41,7 +43,7 @@ export class Register extends WidgetBase<RegisterProperties> {
 					v('div', { classes: ['col-md-6', 'offset-md-3', 'col-xs-12'] }, [
 						v('h1', { classes: 'text-xs-center' }, ['Sign Up']),
 						v('p', { classes: 'text-xs-center' }, [w(Link, { to: 'login' }, ['Have an account?'])]),
-						v('ul', { classes: 'error-messages' }, errors.map((error: any) => v('li', [error]))),
+						errors ? w(ErrorList, { errors }) : null,
 						v('form', { onsubmit: this._onRegister }, [
 							v('fieldset', [
 								v('fieldset', { classes: 'form-group' }, [
@@ -77,7 +79,7 @@ export class Register extends WidgetBase<RegisterProperties> {
 										disabled: inProgress,
 										type: 'submit'
 									},
-									['Sign In']
+									['Sign Up']
 								)
 							])
 						])

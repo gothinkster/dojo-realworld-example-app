@@ -99,4 +99,5 @@ export interface State {
 	register: Register;
 	editor: Editor;
 	profile: AuthorProfile & ResourceBased;
+	tags: string[];
 }

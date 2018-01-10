@@ -7,15 +7,16 @@ import {
 	registerPasswordInput,
 	registerUsernameInput
 } from './../processes/loginProcesses';
+import { State } from '../interfaces';
 
-function getProperties(store: Store<any>, properties: RegisterProperties): RegisterProperties {
+function getProperties(store: Store<State>, properties: RegisterProperties): RegisterProperties {
 	const { get, path } = store;
 	return {
 		email: get(path('register', 'email')),
 		password: get(path('register', 'password')),
 		username: get(path('register', 'username')),
-		errors: get(path('register', 'errors')),
-		inProgress: get(path('register', 'inProgress')),
+		errors: get(path('errors')),
+		inProgress: get(path('register', 'loading')),
 		onEmailInput: registerEmailInput(store),
 		onPasswordInput: registerPasswordInput(store),
 		onUsernameInput: registerUsernameInput(store),
