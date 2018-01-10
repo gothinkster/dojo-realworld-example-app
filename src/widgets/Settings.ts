@@ -1,6 +1,7 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 import { WithTarget } from '../interfaces';
+import { createInputNode } from '../utils';
 
 export interface SettingsProperties {
 	imageUrl: string;
@@ -57,24 +58,8 @@ export class Settings extends WidgetBase<SettingsProperties> {
 						v('h1', { classes: 'text-xs-center' }, ['Your Settings']),
 						v('form', [
 							v('fieldset', [
-								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										value: imageUrl,
-										classes: 'form-control',
-										type: 'text',
-										placeholder: 'URL of profile picture',
-										oninput: this._onImageUrlInput
-									})
-								]),
-								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										value: username,
-										classes: ['form-control', 'form-control-lg'],
-										type: 'text',
-										placeholder: 'Your Name',
-										oninput: this._onUsernameInput
-									})
-								]),
+								createInputNode(imageUrl, 'URL of profile picture', this._onImageUrlInput),
+								createInputNode(username, 'Your Name', this._onUsernameInput),
 								v('fieldset', { classes: 'form-group' }, [
 									v('textarea', {
 										value: bio,
@@ -84,24 +69,8 @@ export class Settings extends WidgetBase<SettingsProperties> {
 										oninput: this._onBioInput
 									})
 								]),
-								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										value: email,
-										classes: ['form-control', 'form-control-lg'],
-										type: 'email',
-										placeholder: 'Email',
-										oninput: this._onEmailInput
-									})
-								]),
-								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										value: password,
-										classes: ['form-control', 'form-control-lg'],
-										type: 'password',
-										placeholder: 'Password',
-										oninput: this._onPasswordInput
-									})
-								]),
+								createInputNode(email, 'Email', this._onEmailInput),
+								createInputNode(password, 'Password', this._onPasswordInput),
 								v(
 									'button',
 									{

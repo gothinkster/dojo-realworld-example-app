@@ -3,6 +3,7 @@ import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 import { Errors, WithTarget } from '../interfaces';
 import { ErrorList } from './ErrorList';
+import { createInputNode } from '../utils';
 
 export interface RegisterProperties {
 	email: string;
@@ -47,30 +48,13 @@ export class Register extends WidgetBase<RegisterProperties> {
 						v('form', { onsubmit: this._onRegister }, [
 							v('fieldset', [
 								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										classes: ['form-control', 'form-control-lg'],
-										placeholder: 'Username',
-										oninput: this._onUsernameInput,
-										value: username
-									})
+									createInputNode(username, 'Username', this._onUsernameInput)
 								]),
 								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										classes: ['form-control', 'form-control-lg'],
-										type: 'email',
-										placeholder: 'Email',
-										oninput: this._onEmailInput,
-										value: email
-									})
+									createInputNode(email, 'Email', this._onEmailInput)
 								]),
 								v('fieldset', { classes: 'form-group' }, [
-									v('input', {
-										classes: ['form-control', 'form-control-lg'],
-										type: 'password',
-										placeholder: 'Password',
-										oninput: this._onPasswordInput,
-										value: password
-									})
+									createInputNode(password, 'Password', this._onPasswordInput)
 								]),
 								v(
 									'button',
