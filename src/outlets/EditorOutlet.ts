@@ -7,5 +7,5 @@ const mapParams = ({ params }: MapParamsOptions) => {
 	};
 };
 
-export const EditorNewOutlet = Outlet('editor', 'new-post', { mapParams });
+export const EditorNewOutlet = Outlet({ index: 'editor' }, 'new-post', { mapParams });
 export const EditorEditOutlet = Outlet('editor', 'edit-post', { mapParams });
