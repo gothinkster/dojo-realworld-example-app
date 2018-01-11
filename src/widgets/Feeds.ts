@@ -1,10 +1,10 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { DNode } from '@dojo/widget-core/interfaces';
 import { v, w } from '@dojo/widget-core/d';
-
 import { ArticlePreview } from './ArticlePreview';
 import { ArticleItem } from '../interfaces';
 import { FeedPagination } from './FeedPagination';
+import { FetchFeedPayload, FavoriteArticlePayload } from '../processes/interfaces';
 
 export interface FeedsProperties {
 	items: ArticleItem[];
@@ -15,8 +15,8 @@ export interface FeedsProperties {
 	isAuthenticated: boolean;
 	total: number;
 	currentPage: number;
-	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
-	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
+	fetchFeed: (opts: FetchFeedPayload) => void;
+	favoriteArticle: (opts: FavoriteArticlePayload) => void;
 }
 
 export class Feeds extends WidgetBase<FeedsProperties> {

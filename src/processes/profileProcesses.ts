@@ -1,27 +1,27 @@
 import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
 import { getHeaders, commandFactory } from './utils';
+import { baseUrl } from '../config';
+import { FollowUserPayload, UsernamePayload } from './interfaces';
 
-const startGetProfileCommand = commandFactory(async ({ path }) => {
+const startGetProfileCommand = commandFactory(({ path }) => {
 	return [replace(path('profile', 'loading'), true), replace(path('profile', 'loaded'), false)];
 });
 
-const followUserCommand = commandFactory<{ username: string; following: boolean }>(
-	async ({ get, path, payload: { username, following } }) => {
-		const token = get(path('user', 'token'));
-		const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}/follow`, {
-			method: following ? 'delete' : 'post',
-			headers: getHeaders(token)
-		});
-		const json = await response.json();
-
-		return [replace(path('profile'), json.profile)];
-	}
-);
-
-const getProfileCommand = commandFactory<{ username: string }>(async ({ get, path, payload: { username } }) => {
+const followUserCommand = commandFactory<FollowUserPayload>(async ({ get, path, payload: { username, following } }) => {
 	const token = get(path('user', 'token'));
-	const response = await fetch(`https://conduit.productionready.io/api/profiles/${username}`, {
+	const response = await fetch(`${baseUrl}/profiles/${username}/follow`, {
+		method: following ? 'delete' : 'post',
+		headers: getHeaders(token)
+	});
+	const json = await response.json();
+
+	return [replace(path('profile'), json.profile)];
+});
+
+const getProfileCommand = commandFactory<UsernamePayload>(async ({ get, path, payload: { username } }) => {
+	const token = get(path('user', 'token'));
+	const response = await fetch(`${baseUrl}/profiles/${username}`, {
 		headers: getHeaders(token)
 	});
 	const json = await response.json();

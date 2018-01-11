@@ -4,6 +4,7 @@ import { Link } from '@dojo/routing/Link';
 import { Errors, WithTarget } from '../interfaces';
 import { ErrorList } from './ErrorList';
 import { createInputNode } from '../utils';
+import { PasswordPayload, EmailPayload, UsernamePayload } from '../processes/interfaces';
 
 export interface RegisterProperties {
 	email: string;
@@ -11,9 +12,9 @@ export interface RegisterProperties {
 	username: string;
 	inProgress?: boolean;
 	errors: Errors;
-	onPasswordInput: (opts: { password: string }) => void;
-	onEmailInput: (opts: { email: string }) => void;
-	onUsernameInput: (opts: { username: string }) => void;
+	onPasswordInput: (opts: PasswordPayload) => void;
+	onEmailInput: (opts: EmailPayload) => void;
+	onUsernameInput: (opts: UsernamePayload) => void;
 	onRegister: (opts: object) => void;
 }
 

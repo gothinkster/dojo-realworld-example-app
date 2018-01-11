@@ -3,14 +3,15 @@ import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 import { Errors, WithTarget } from '../interfaces';
 import { ErrorList } from './ErrorList';
+import { PasswordPayload, EmailPayload } from '../processes/interfaces';
 
 export interface LoginProperties {
 	email: string;
 	password: string;
 	inProgress?: boolean;
 	errors: Errors;
-	onPasswordInput: (opts: { password: string }) => void;
-	onEmailInput: (opts: { email: string }) => void;
+	onPasswordInput: (opts: PasswordPayload) => void;
+	onEmailInput: (opts: EmailPayload) => void;
 	onLogin: (opts: object) => void;
 }
 

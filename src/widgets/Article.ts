@@ -2,10 +2,17 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 import * as marked from 'marked';
-
 import { Comment } from './Comment';
 import { ArticleItem, Comment as CommentItem, AuthorProfile, WithTarget } from '../interfaces';
 import { ArticleMeta } from './ArticleMeta';
+import {
+	FavoriteArticlePayload,
+	FollowUserPayload,
+	SlugPayload,
+	DeleteCommentPayload,
+	NewCommentPayload,
+	AddCommentPayload
+} from '../processes/interfaces';
 
 export interface ArticleProperties {
 	article: ArticleItem;
@@ -17,12 +24,12 @@ export interface ArticleProperties {
 	newComment: string;
 	slug: string;
 	username: string;
-	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
-	followUser: (opts: { username: string; following: boolean }) => void;
-	deleteArticle: (opts: { slug: string }) => void;
-	deleteComment: (opts: { slug: string; id: number }) => void;
-	onNewCommentInput: (opts: { newComment: string }) => void;
-	addComment: (options: { slug: string; newComment: string }) => void;
+	favoriteArticle: (opts: FavoriteArticlePayload) => void;
+	followUser: (opts: FollowUserPayload) => void;
+	deleteArticle: (opts: SlugPayload) => void;
+	deleteComment: (opts: DeleteCommentPayload) => void;
+	onNewCommentInput: (opts: NewCommentPayload) => void;
+	addComment: (options: AddCommentPayload) => void;
 }
 
 export class Article extends WidgetBase<ArticleProperties> {

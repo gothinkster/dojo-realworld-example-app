@@ -1,6 +1,7 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 import { DNode } from '@dojo/widget-core/interfaces';
+import { FetchFeedPayload } from '../processes/interfaces';
 
 interface FeedPaginationProperties {
 	type: string;
@@ -8,7 +9,7 @@ interface FeedPaginationProperties {
 	tag?: string;
 	total: number;
 	currentPage: number;
-	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
+	fetchFeed: (opts: FetchFeedPayload) => void;
 }
 
 export class FeedPagination extends WidgetBase<FeedPaginationProperties> {

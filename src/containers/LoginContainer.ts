@@ -1,7 +1,7 @@
 import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
 import { Login, LoginProperties } from './../widgets/Login';
-import { login, loginEmailInput, loginPasswordInput } from './../processes/loginProcesses';
+import { loginProcess, loginEmailInputProcess, loginPasswordInputProcess } from './../processes/loginProcesses';
 import { State } from '../interfaces';
 
 function getProperties(store: Store<State>): LoginProperties {
@@ -12,9 +12,9 @@ function getProperties(store: Store<State>): LoginProperties {
 		password: get(path('login', 'password')),
 		errors: get(path('errors')),
 		inProgress: get(path('login', 'loading')),
-		onEmailInput: loginEmailInput(store),
-		onPasswordInput: loginPasswordInput(store),
-		onLogin: login(store)
+		onEmailInput: loginEmailInputProcess(store),
+		onPasswordInput: loginPasswordInputProcess(store),
+		onLogin: loginProcess(store)
 	};
 }
 

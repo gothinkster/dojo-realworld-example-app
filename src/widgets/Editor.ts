@@ -2,6 +2,7 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { ErrorList } from './ErrorList';
 import { Errors, WithTarget } from '../interfaces';
+import { TitlePayload, DescriptionPayload, BodyPayload, TagPayload } from '../processes/interfaces';
 
 export interface EditorProperties {
 	title: string;
@@ -13,12 +14,12 @@ export interface EditorProperties {
 	slug: string;
 	tags?: string[];
 	onPublishPost: (opts: object) => void;
-	onTitleInput: (opts: { title: string }) => void;
-	onDescriptionInput: (opts: { description: string }) => void;
-	onContentInput: (opts: { body: string }) => void;
-	onTagInput: (opts: { tag: string }) => void;
-	onTagCreate: (opts: { tag: string }) => void;
-	onTagDelete: (opts: { tag: string }) => void;
+	onTitleInput: (opts: TitlePayload) => void;
+	onDescriptionInput: (opts: DescriptionPayload) => void;
+	onContentInput: (opts: BodyPayload) => void;
+	onTagInput: (opts: TagPayload) => void;
+	onTagCreate: (opts: TagPayload) => void;
+	onTagDelete: (opts: TagPayload) => void;
 }
 
 export class Editor extends WidgetBase<EditorProperties> {

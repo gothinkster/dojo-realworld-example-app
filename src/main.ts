@@ -6,11 +6,11 @@ import { Store } from '@dojo/stores/Store';
 import { registerRouterInjector } from '@dojo/routing/RouterInjector';
 
 import { App } from './App';
-import { getTags } from './processes/tagProcesses';
-import { setSession } from './processes/loginProcesses';
+import { getTagsProcess } from './processes/tagProcesses';
+import { setSessionProcess } from './processes/loginProcesses';
 import { changeRouteProcess } from './processes/routeProcesses';
 import { State } from './interfaces';
-import { getRouteConfig } from './routeConfig';
+import { getRouteConfig } from './config';
 
 class StoreInjector extends Injector {
 	constructor(payload: Store<State>) {
@@ -53,9 +53,9 @@ registry.define('settings', async () => {
 
 const session = global.sessionStorage.getItem('conduit-session');
 
-getTags(store)({});
+getTagsProcess(store)({});
 if (session) {
-	setSession(store)({ session: JSON.parse(session) });
+	setSessionProcess(store)({ session: JSON.parse(session) });
 }
 
 router.on('nav', ({ outlet, context }: any) => {

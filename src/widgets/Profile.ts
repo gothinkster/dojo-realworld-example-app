@@ -1,8 +1,8 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
-
 import { FeedsContainer } from '../containers/FeedsContainer';
+import { FollowUserPayload } from '../processes/interfaces';
 
 export interface ProfileProperties {
 	username: string;
@@ -11,7 +11,7 @@ export interface ProfileProperties {
 	type: string;
 	following: boolean;
 	currentUser: string;
-	followUser: (opts: { username: string; following: boolean }) => void;
+	followUser: (opts: FollowUserPayload) => void;
 }
 
 export class Profile extends WidgetBase<ProfileProperties> {

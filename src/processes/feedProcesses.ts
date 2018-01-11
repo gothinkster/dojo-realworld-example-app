@@ -2,6 +2,8 @@ import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
 import { ArticleItem } from './../interfaces';
 import { getHeaders, commandFactory } from './utils';
+import { baseUrl } from '../config';
+import { FavoriteArticlePayload, FetchFeedPayload } from './interfaces';
 
 function getItemIndex(items: ArticleItem[], id: string) {
 	let index = -1;
@@ -14,13 +16,7 @@ function getItemIndex(items: ArticleItem[], id: string) {
 	return index;
 }
 
-export interface FetchFeedParams {
-	type: string;
-	filter: string;
-	page: number;
-}
-
-const startFetchingFeedCommand = commandFactory<FetchFeedParams>(async ({ path, payload: { type, filter, page } }) => {
+const startFetchingFeedCommand = commandFactory<FetchFeedPayload>(({ path, payload: { type, filter, page } }) => {
 	return [
 		replace(path('feed', 'loading'), true),
 		replace(path('feed', 'loaded'), false),
@@ -31,27 +27,26 @@ const startFetchingFeedCommand = commandFactory<FetchFeedParams>(async ({ path, 
 	];
 });
 
-const fetchFeedCommand = commandFactory<FetchFeedParams>(async ({ get, path, payload: { type, page, filter } }) => {
+const fetchFeedCommand = commandFactory<FetchFeedPayload>(async ({ get, path, payload: { type, page, filter } }) => {
 	const token = get(path('user', 'token'));
 	const offset = page * 10;
-
-	const baseUrl = 'https://conduit.productionready.io/api/articles';
 	let url: string;
+
 	switch (type) {
 		case 'feed':
-			url = `${baseUrl}/feed?`;
+			url = `${baseUrl}/articles/feed?`;
 			break;
 		case 'favorites':
-			url = `${baseUrl}?favorited=${filter}&`;
+			url = `${baseUrl}/articles?favorited=${filter}&`;
 			break;
 		case 'user':
-			url = `${baseUrl}?author=${filter}&`;
+			url = `${baseUrl}/articles?author=${filter}&`;
 			break;
 		case 'tag':
-			url = `${baseUrl}?tag=${filter}&`;
+			url = `${baseUrl}/articles?tag=${filter}&`;
 			break;
 		default:
-			url = `${baseUrl}?`;
+			url = `${baseUrl}/articles/?`;
 			break;
 	}
 
@@ -66,10 +61,10 @@ const fetchFeedCommand = commandFactory<FetchFeedParams>(async ({ get, path, pay
 	];
 });
 
-const favoriteFeedArticleCommand = commandFactory<{ slug: string; favorited: boolean }>(
+const favoriteFeedArticleCommand = commandFactory<FavoriteArticlePayload>(
 	async ({ at, get, path, payload: { slug, favorited } }) => {
 		const token = get(path('user', 'token'));
-		const response = await fetch(`https://conduit.productionready.io/api/articles/${slug}/favorite`, {
+		const response = await fetch(`${baseUrl}/articles/${slug}/favorite`, {
 			method: favorited ? 'delete' : 'post',
 			headers: getHeaders(token)
 		});

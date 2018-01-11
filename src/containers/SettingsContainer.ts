@@ -2,14 +2,14 @@ import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
 import { Settings, SettingsProperties } from './../widgets/Settings';
 import {
-	bioInput,
-	emailInput,
-	passwordInput,
-	imageUrlInput,
-	usernameInput,
-	updateUserSettings
+	bioInputProcess,
+	emailInputProcess,
+	passwordInputProcess,
+	imageUrlInputProcess,
+	usernameInputProcess,
+	updateUserSettingsProcess
 } from './../processes/settingsProcesses';
-import { logout } from '../processes/loginProcesses';
+import { logoutProcess } from '../processes/loginProcesses';
 import { State } from '../interfaces';
 
 function getProperties(store: Store<State>): SettingsProperties {
@@ -21,13 +21,13 @@ function getProperties(store: Store<State>): SettingsProperties {
 		username: get(path('settings', 'username')),
 		imageUrl: get(path('settings', 'image')),
 		bio: get(path('settings', 'bio')),
-		onEmailInput: emailInput(store),
-		onPasswordInput: passwordInput(store),
-		onUsernameInput: usernameInput(store),
-		onBioInput: bioInput(store),
-		onImageUrlInput: imageUrlInput(store),
-		onUpdateSettings: updateUserSettings(store),
-		logout: logout(store)
+		onEmailInput: emailInputProcess(store),
+		onPasswordInput: passwordInputProcess(store),
+		onUsernameInput: usernameInputProcess(store),
+		onBioInput: bioInputProcess(store),
+		onImageUrlInput: imageUrlInputProcess(store),
+		onUpdateSettings: updateUserSettingsProcess(store),
+		logout: logoutProcess(store)
 	};
 }
 

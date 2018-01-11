@@ -1,10 +1,11 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
+import { SlugPayload } from '../processes/interfaces';
 
 interface ArticleAuthorControlsProperties {
 	slug: string;
-	deleteArticle: (opts: { slug: string }) => void;
+	deleteArticle: (opts: SlugPayload) => void;
 }
 
 export class ArticleAuthorControls extends WidgetBase<ArticleAuthorControlsProperties> {

@@ -1,12 +1,19 @@
 import { Store } from '@dojo/stores/Store';
 import { State } from './interfaces';
 import { Params, MatchType } from '@dojo/routing/interfaces';
-import { getArticleForEditor, clearEditorProcess } from './processes/editorProcesses';
-import { getUserSettings } from './processes/settingsProcesses';
-import { getArticle } from './processes/articleProcesses';
+import { getEditorArticleProcess, clearEditorProcess } from './processes/editorProcesses';
+import { getUserSettingsProcess } from './processes/settingsProcesses';
+import { getArticleProcess } from './processes/articleProcesses';
 import { getProfileProcess } from './processes/profileProcesses';
 import { fetchFeedProcess } from './processes/feedProcesses';
 
+export const baseUrl = 'https://conduit.productionready.io/api';
+
+/**
+ * Returns the route configuration for the application
+ *
+ * @param store The application store used for onEnter and onExit actions
+ */
 export function getRouteConfig(store: Store<State>) {
 	const config = [
 		{
@@ -40,14 +47,14 @@ export function getRouteConfig(store: Store<State>) {
 			path: 'article/{slug}',
 			outlet: 'article',
 			onEnter: ({ slug }: Params) => {
-				getArticle(store)({ slug });
+				getArticleProcess(store)({ slug });
 			}
 		},
 		{
 			path: 'settings',
 			outlet: 'settings',
 			onEnter: () => {
-				getUserSettings(store)({});
+				getUserSettingsProcess(store)({});
 			}
 		},
 		{
@@ -58,7 +65,7 @@ export function getRouteConfig(store: Store<State>) {
 					path: 'editor/{slug}',
 					outlet: 'edit-post',
 					onEnter: ({ slug }: Params) => {
-						getArticleForEditor(store)({ slug });
+						getEditorArticleProcess(store)({ slug });
 					},
 					onExit: () => {
 						clearEditorProcess(store)({});

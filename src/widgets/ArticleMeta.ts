@@ -4,6 +4,7 @@ import { Link } from '@dojo/routing/Link';
 import { AuthorProfile } from '../interfaces';
 import { ArticleControls } from './ArticleControls';
 import { ArticleAuthorControls } from './ArticleAuthorControls';
+import { FavoriteArticlePayload, FollowUserPayload, SlugPayload } from '../processes/interfaces';
 
 interface ArticleMetaProperties {
 	authorProfile: AuthorProfile;
@@ -12,9 +13,9 @@ interface ArticleMetaProperties {
 	favoritesCount: number;
 	createdAt: string;
 	slug: string;
-	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
-	followUser: (opts: { username: string; following: boolean }) => void;
-	deleteArticle: (opts: { slug: string }) => void;
+	favoriteArticle: (opts: FavoriteArticlePayload) => void;
+	followUser: (opts: FollowUserPayload) => void;
+	deleteArticle: (opts: SlugPayload) => void;
 }
 
 export class ArticleMeta extends WidgetBase<ArticleMetaProperties> {

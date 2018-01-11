@@ -2,10 +2,11 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
 import { ArticleItem } from '../interfaces';
+import { FavoriteArticlePayload } from '../processes/interfaces';
 
 export interface ArticlePreviewProperties {
 	article: ArticleItem;
-	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
+	favoriteArticle: (opts: FavoriteArticlePayload) => void;
 }
 
 export class ArticlePreview extends WidgetBase<ArticlePreviewProperties> {

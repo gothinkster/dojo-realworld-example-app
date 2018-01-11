@@ -1,5 +1,6 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
+import { FollowUserPayload, FavoriteArticlePayload } from '../processes/interfaces';
 
 interface ArticleControlsProperties {
 	slug: string;
@@ -7,8 +8,8 @@ interface ArticleControlsProperties {
 	authorUsername: string;
 	favorited: boolean;
 	following: boolean;
-	followUser: (opts: { username: string; following: boolean }) => void;
-	favoriteArticle: (opts: { slug: string; favorited: boolean }) => void;
+	followUser: (opts: FollowUserPayload) => void;
+	favoriteArticle: (opts: FavoriteArticlePayload) => void;
 }
 
 export class ArticleControls extends WidgetBase<ArticleControlsProperties> {

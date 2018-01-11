@@ -2,10 +2,10 @@ import { Container } from '@dojo/widget-core/Container';
 import { Store } from '@dojo/stores/Store';
 import { Register, RegisterProperties } from './../widgets/Register';
 import {
-	register,
-	registerEmailInput,
-	registerPasswordInput,
-	registerUsernameInput
+	registerProcess,
+	registerEmailInputProcess,
+	registerPasswordInputProcess,
+	registerUsernameInputProcess
 } from './../processes/loginProcesses';
 import { State } from '../interfaces';
 
@@ -18,10 +18,10 @@ function getProperties(store: Store<State>): RegisterProperties {
 		username: get(path('register', 'username')),
 		errors: get(path('errors')),
 		inProgress: get(path('register', 'loading')),
-		onEmailInput: registerEmailInput(store),
-		onPasswordInput: registerPasswordInput(store),
-		onUsernameInput: registerUsernameInput(store),
-		onRegister: register(store)
+		onEmailInput: registerEmailInputProcess(store),
+		onPasswordInput: registerPasswordInputProcess(store),
+		onUsernameInput: registerUsernameInputProcess(store),
+		onRegister: registerProcess(store)
 	};
 }
 

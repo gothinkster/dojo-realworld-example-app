@@ -1,24 +1,26 @@
 import { createProcess } from '@dojo/stores/process';
 import { replace, add, remove } from '@dojo/stores/state/operations';
 import { getHeaders, commandFactory } from './utils';
+import { baseUrl } from '../config';
+import { TitlePayload, DescriptionPayload, BodyPayload, TagPayload, SlugPayload } from './interfaces';
 
-const titleInputCommand = commandFactory<{ title: string }>(({ path, payload: { title } }) => {
+const titleInputCommand = commandFactory<TitlePayload>(({ path, payload: { title } }) => {
 	return [replace(path('editor', 'title'), title)];
 });
 
-const descriptionInputCommand = commandFactory<{ description: string }>(({ path, payload: { description } }) => {
+const descriptionInputCommand = commandFactory<DescriptionPayload>(({ path, payload: { description } }) => {
 	return [replace(path('editor', 'description'), description)];
 });
 
-const bodyInputCommand = commandFactory<{ body: string }>(({ path, payload: { body } }) => {
+const bodyInputCommand = commandFactory<BodyPayload>(({ path, payload: { body } }) => {
 	return [replace(path('editor', 'body'), body)];
 });
 
-const tagInputCommand = commandFactory<{ tag: string }>(({ path, payload: { tag } }) => {
+const tagInputCommand = commandFactory<TagPayload>(({ path, payload: { tag } }) => {
 	return [replace(path('editor', 'tag'), tag)];
 });
 
-const addTagCommand = commandFactory<{ tag: string }>(({ get, at, path, payload: { tag } }) => {
+const addTagCommand = commandFactory<TagPayload>(({ get, at, path, payload: { tag } }) => {
 	const length = (get(path('editor', 'tagList')) || []).length;
 	return [add(at(path('editor', 'tagList'), length), tag)];
 });
@@ -27,7 +29,7 @@ const clearTagInputCommand = commandFactory(({ path }) => {
 	return [replace(path('editor', 'tag'), '')];
 });
 
-const removeTagCommand = commandFactory<{ tag: string }>(({ get, at, path, payload: { tag } }) => {
+const removeTagCommand = commandFactory<TagPayload>(({ get, at, path, payload: { tag } }) => {
 	const tags = get(path('editor', 'tagList'));
 	const index = tags.indexOf(tag);
 	if (index !== -1) {
@@ -36,8 +38,8 @@ const removeTagCommand = commandFactory<{ tag: string }>(({ get, at, path, paylo
 	return [];
 });
 
-const getArticleForEditorCommand = commandFactory<{ slug: string }>(async ({ path, payload: { slug } }) => {
-	const response = await fetch(`https://conduit.productionready.io//api/articles/${slug}`);
+const getArticleForEditorCommand = commandFactory<SlugPayload>(async ({ path, payload: { slug } }) => {
+	const response = await fetch(`${baseUrl}/articles/${slug}`);
 	const json = await response.json();
 	return [replace(path('editor'), json.article)];
 });
@@ -57,9 +59,7 @@ const publishArticleCommand = commandFactory(async ({ get, path }) => {
 		article: get(path('editor'))
 	};
 
-	const url = slug
-		? `https://conduit.productionready.io/api/articles/${slug}`
-		: 'https://conduit.productionready.io/api/articles';
+	const url = slug ? `${baseUrl}/articles/${slug}` : `${baseUrl}/articles`;
 	const response = await fetch(url, {
 		method: slug ? 'put' : 'post',
 		headers: getHeaders(token),
@@ -80,12 +80,12 @@ const publishArticleCommand = commandFactory(async ({ get, path }) => {
 	];
 });
 
-export const titleInput = createProcess([titleInputCommand]);
-export const descInput = createProcess([descriptionInputCommand]);
-export const bodyInput = createProcess([bodyInputCommand]);
-export const tagInput = createProcess([tagInputCommand]);
-export const addTag = createProcess([addTagCommand, clearTagInputCommand]);
-export const removeTag = createProcess([removeTagCommand]);
-export const getArticleForEditor = createProcess([getArticleForEditorCommand]);
-export const publishArticle = createProcess([startPublishCommand, publishArticleCommand]);
+export const titleInputProcess = createProcess([titleInputCommand]);
+export const descInputProcess = createProcess([descriptionInputCommand]);
+export const bodyInputProcess = createProcess([bodyInputCommand]);
+export const tagInputProcess = createProcess([tagInputCommand]);
+export const addTagProcess = createProcess([addTagCommand, clearTagInputCommand]);
+export const removeTagProcess = createProcess([removeTagCommand]);
+export const getEditorArticleProcess = createProcess([getArticleForEditorCommand]);
+export const publishArticleProcess = createProcess([startPublishCommand, publishArticleCommand]);
 export const clearEditorProcess = createProcess([clearEditorCommand]);

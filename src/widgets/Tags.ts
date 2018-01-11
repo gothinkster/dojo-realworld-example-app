@@ -1,9 +1,10 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
+import { FetchFeedPayload } from '../processes/interfaces';
 
 export interface TagsProperties {
 	tags?: string[];
-	fetchFeed: (opts: { type: string; page: number; filter: string }) => void;
+	fetchFeed: (opts: FetchFeedPayload) => void;
 }
 
 export class Tags extends WidgetBase<TagsProperties> {

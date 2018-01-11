@@ -2,6 +2,7 @@ import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v } from '@dojo/widget-core/d';
 import { WithTarget } from '../interfaces';
 import { createInputNode } from '../utils';
+import { ImagePayload, UsernamePayload, BioPayload, EmailPayload, PasswordPayload } from '../processes/interfaces';
 
 export interface SettingsProperties {
 	imageUrl: string;
@@ -9,11 +10,11 @@ export interface SettingsProperties {
 	bio: string;
 	email: string;
 	password: string;
-	onImageUrlInput: (opts: { imageUrl: string }) => void;
-	onUsernameInput: (opts: { username: string }) => void;
-	onBioInput: (opts: { bio: string }) => void;
-	onEmailInput: (opts: { email: string }) => void;
-	onPasswordInput: (opts: { password: string }) => void;
+	onImageUrlInput: (opts: ImagePayload) => void;
+	onUsernameInput: (opts: UsernamePayload) => void;
+	onBioInput: (opts: BioPayload) => void;
+	onEmailInput: (opts: EmailPayload) => void;
+	onPasswordInput: (opts: PasswordPayload) => void;
 	onUpdateSettings: (opts: object) => void;
 	logout: (opts: object) => void;
 }

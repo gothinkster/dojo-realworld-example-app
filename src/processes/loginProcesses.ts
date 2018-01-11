@@ -1,26 +1,27 @@
 import global from '@dojo/shim/global';
 import { createProcess } from '@dojo/stores/process';
 import { replace } from '@dojo/stores/state/operations';
-import { UserProfile } from '../interfaces';
 import { getHeaders, commandFactory } from './utils';
+import { baseUrl } from '../config';
+import { EmailPayload, PasswordPayload, UsernamePayload, SetSessionPayload } from './interfaces';
 
-const loginEmailInputCommand = commandFactory<{ email: string }>(({ path, payload: { email } }) => {
+const loginEmailInputCommand = commandFactory<EmailPayload>(({ path, payload: { email } }) => {
 	return [replace(path('login', 'email'), email)];
 });
 
-const loginPasswordInputCommand = commandFactory<{ password: string }>(({ path, payload: { password } }) => {
+const loginPasswordInputCommand = commandFactory<PasswordPayload>(({ path, payload: { password } }) => {
 	return [replace(path('login', 'password'), password)];
 });
 
-const registerEmailInputCommand = commandFactory<{ email: string }>(({ path, payload: { email } }) => {
+const registerEmailInputCommand = commandFactory<EmailPayload>(({ path, payload: { email } }) => {
 	return [replace(path('register', 'email'), email)];
 });
 
-const registerPasswordInputCommand = commandFactory<{ password: string }>(({ path, payload: { password } }) => {
+const registerPasswordInputCommand = commandFactory<PasswordPayload>(({ path, payload: { password } }) => {
 	return [replace(path('register', 'password'), password)];
 });
 
-const registerUsernameInputCommand = commandFactory<{ username: string }>(({ path, payload: { username } }) => {
+const registerUsernameInputCommand = commandFactory<UsernamePayload>(({ path, payload: { username } }) => {
 	return [replace(path('register', 'username'), username)];
 });
 
@@ -44,7 +45,7 @@ const startRegisterCommand = commandFactory(({ path }) => {
 	return [replace(path('register', 'loading'), true)];
 });
 
-const setSessionCommand = commandFactory<{ session: UserProfile }>(({ path, payload: { session } }) => {
+const setSessionCommand = commandFactory<SetSessionPayload>(({ path, payload: { session } }) => {
 	return [replace(path('user'), session)];
 });
 
@@ -53,7 +54,7 @@ const loginCommand = commandFactory(async ({ get, path }) => {
 		user: get(path('login'))
 	};
 
-	const response = await fetch('https://conduit.productionready.io/api/users/login', {
+	const response = await fetch(`${baseUrl}/users/login`, {
 		method: 'post',
 		body: JSON.stringify(requestPayload),
 		headers: getHeaders()
@@ -86,7 +87,7 @@ const registerCommand = commandFactory(async ({ get, path }) => {
 		user: get(path('register'))
 	};
 
-	const response = await fetch('https://conduit.productionready.io/api/users', {
+	const response = await fetch(`${baseUrl}/users`, {
 		method: 'post',
 		body: JSON.stringify(requestPayload),
 		headers: getHeaders()
@@ -118,12 +119,12 @@ const logoutCommand = commandFactory(({ path }) => {
 	return [replace(path('routing', 'outlet'), 'home'), replace(path('user'), {})];
 });
 
-export const login = createProcess([startLoginCommand, loginCommand, clearLoginInputs]);
-export const register = createProcess([startRegisterCommand, registerCommand, clearRegisterInputs]);
-export const loginEmailInput = createProcess([loginEmailInputCommand]);
-export const loginPasswordInput = createProcess([loginPasswordInputCommand]);
-export const registerEmailInput = createProcess([registerEmailInputCommand]);
-export const registerPasswordInput = createProcess([registerPasswordInputCommand]);
-export const registerUsernameInput = createProcess([registerUsernameInputCommand]);
-export const setSession = createProcess([setSessionCommand]);
-export const logout = createProcess([logoutCommand]);
+export const loginProcess = createProcess([startLoginCommand, loginCommand, clearLoginInputs]);
+export const registerProcess = createProcess([startRegisterCommand, registerCommand, clearRegisterInputs]);
+export const loginEmailInputProcess = createProcess([loginEmailInputCommand]);
+export const loginPasswordInputProcess = createProcess([loginPasswordInputCommand]);
+export const registerEmailInputProcess = createProcess([registerEmailInputCommand]);
+export const registerPasswordInputProcess = createProcess([registerPasswordInputCommand]);
+export const registerUsernameInputProcess = createProcess([registerUsernameInputCommand]);
+export const setSessionProcess = createProcess([setSessionCommand]);
+export const logoutProcess = createProcess([logoutCommand]);
