@@ -4,7 +4,9 @@
   "scripts": {
     "precommit": "lint-staged",
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
-    "test": "dojo test"
+    "test": "dojo build -m test && dojo test",
+    "build": "dojo build",
+    "dev": "dojo build -m dev -w memory -s"
   },
   "dependencies": {
     "@dojo/core": "~0.3.0",
@@ -12,13 +14,13 @@
     "@dojo/i18n": "~0.4.0",
     "@dojo/routing": "file:deps/dojo-routing.tgz",
     "@dojo/shim": "~0.2.1",
-    "@dojo/stores": "file:deps/dojo-stores.tgz",
-    "@dojo/widget-core": "file:deps/dojo-widget-core.tgz",
+    "@dojo/stores": "~0.3.0",
+    "@dojo/widget-core": "~0.6.0",
     "marked": "^0.3.9"
   },
   "devDependencies": {
-    "@dojo/cli-build-webpack": "~0.4.0",
-    "@dojo/cli-test-intern": "~0.3.0",
+    "@dojo/cli-build-app": "~0.1.0",
+    "@dojo/cli-test-intern": "~0.4.0",
     "@dojo/interfaces": "~0.2.0",
     "@dojo/loader": "~0.1.0",
     "@dojo/test-extras": "~0.4.0",

@@ -4,3 +4,4 @@ coverage-final.lcov
 _build/
 .vscode/
 dist/
+output/
