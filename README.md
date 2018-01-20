@@ -27,9 +27,9 @@ To get the frontend running locally:
 
 - Clone this repository
 - `npm install` to install all required dependencies
-- `npm run dev` to start the local server ([http:localhost:9999](http:localhost:9999)) with watch and hot reload
+- `npm run dev` to start the [local server](http://localhost:9999) with watch and hot reload
 
-Local web server will use port 9999.
+The local web server uses port 9999.
 
 For a production build of the application:
 
