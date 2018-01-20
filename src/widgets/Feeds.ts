@@ -5,6 +5,7 @@ import { ArticlePreview } from './ArticlePreview';
 import { ArticleItem } from '../interfaces';
 import { FeedPagination } from './FeedPagination';
 import { FetchFeedPayload, FavoriteArticlePayload } from '../processes/interfaces';
+import { Link } from '@dojo/routing/Link';
 
 export interface FeedsProperties {
 	items: ArticleItem[];
@@ -32,16 +33,7 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 		this.properties.fetchFeed({ type: 'feed', page: 0, filter: username });
 	}
 
-	private _onFavoriteFeedClick() {
-		const { username } = this.properties;
-		this.properties.fetchFeed({ type: 'favorites', page: 0, filter: username });
-	}
-
-	private _onUserFeedClick() {
-		const { username } = this.properties;
-		this.properties.fetchFeed({ type: 'user', page: 0, filter: username });
-	}
-
+	// prettier-ignore
 	private _buildTabs(children: DNode, showPagination: boolean = true): DNode {
 		const { fetchFeed, total, currentPage, isAuthenticated, type, username, tagName } = this.properties;
 		const isProfile = type === 'user' || type === 'favorites';
@@ -51,66 +43,50 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 				v('ul', { classes: ['nav', 'nav-pills', 'outline-active'] }, [
 					isAuthenticated && !isProfile
 						? v('li', { key: 'feeds', classes: 'nav-item' }, [
-								v(
-									'a',
-									{
-										href: '#/',
-										onclick: this._onFeedClick,
-										classes: ['nav-link', type === 'feed' ? 'active' : null]
-									},
-									['Your Feeds']
-								)
+								v('a', {
+									href: '#/',
+									onclick: this._onFeedClick,
+									classes: ['nav-link', type === 'feed' ? 'active' : null]
+								}, ['Your Feeds'])
 							])
 						: null,
 					!isProfile
 						? v('li', { key: 'global', classes: 'nav-item' }, [
-								v(
-									'a',
-									{
-										href: '#/',
-										onclick: this._onGlobalFeedClick,
-										classes: ['nav-link', type === 'global' ? 'active' : null]
-									},
-									['Global Feeds']
-								)
+								v('a', {
+									href: '#/',
+									onclick: this._onGlobalFeedClick,
+									classes: ['nav-link', type === 'global' ? 'active' : null]
+								}, ['Global Feeds'])
 							])
 						: null,
 					type === 'tag'
 						? v('li', { key: 'tags', classes: 'nav-item' }, [
-								v(
-									'a',
-									{
-										href: '#/',
-										classes: ['nav-link', 'active']
-									},
-									[`#${tagName}`]
-								)
+								v('a', {
+									href: '#/',
+									classes: ['nav-link', 'active']
+								}, [`#${tagName}`])
 							])
 						: null,
 					isProfile
 						? v('li', { key: 'articles', classes: 'nav-item' }, [
-								v(
-									'a',
-									{
-										onclick: this._onUserFeedClick,
-										href: `#user/${username}`,
-										classes: ['nav-link', type === 'user' ? 'active' : null]
+								w(Link, {
+									to: 'user',
+									params: {
+										username
 									},
-									['My Articles']
-								)
+									classes: ['nav-link', type === 'user' ? 'active' : null]
+								}, ['My Articles'])
 							])
 						: null,
 					isProfile
 						? v('li', { key: 'favs', classes: 'nav-item' }, [
-								v(
-									'a',
-									{
-										onclick: this._onFavoriteFeedClick,
-										href: `#user/${username}/favorites`,
-										classes: ['nav-link', type === 'favorites' ? 'active' : null]
+								w(Link, {
+									to: 'favorites',
+									params: {
+										username
 									},
-									['Favorited Articles']
-								)
+									classes: ['nav-link', type === 'favorites' ? 'active' : null]
+								}, ['Favorited Articles'])
 							])
 						: null
 				])
@@ -120,6 +96,7 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 		]);
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { loading = true, items, favoriteArticle } = this.properties;
 
@@ -131,12 +108,9 @@ export class Feeds extends WidgetBase<FeedsProperties> {
 			return this._buildTabs(v('div', { classes: 'article-preview' }, ['No articles here, yet!']), false);
 		}
 
-		const articleList = v(
-			'div',
-			items.map((article, index) => {
-				return w(ArticlePreview, { key: index, article, favoriteArticle });
-			})
-		);
+		const articleList = v('div', items.map((article, index) => {
+			return w(ArticlePreview, { key: index, article, favoriteArticle });
+		}));
 
 		return this._buildTabs(articleList);
 	}
