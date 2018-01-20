@@ -20,9 +20,35 @@ export class Profile extends WidgetBase<ProfileProperties> {
 		followUser({ username, following });
 	}
 
-	protected render() {
-		let { currentUser, username, bio, image, type, following } = this.properties;
+	private _renderActionButton() {
+		let { currentUser, username, following } = this.properties;
 		const isCurrentUser = currentUser === username;
+
+		let action = null;
+		if (isCurrentUser) {
+			action = w(
+				Link,
+				{
+					to: 'settings',
+					classes: ['btn', 'btn-sm', 'btn-outline-secondary', 'action-btn']
+				},
+				[v('i', { classes: 'ion-edit' }), ' Edit Profile Settings']
+			);
+		} else if (currentUser !== undefined) {
+			action = v(
+				'button',
+				{
+					onclick: this._onFollowUser,
+					classes: ['btn', 'btn-sm', following ? 'btn-secondary' : 'btn-outline-secondary', 'action-btn']
+				},
+				[v('i', { classes: 'ion-plus-round' }), following ? ' UnFollow ' : ' Follow ', username]
+			);
+		}
+		return action;
+	}
+
+	protected render() {
+		let { username, bio, image, type } = this.properties;
 
 		return v('div', { classes: 'profile-page' }, [
 			v('div', { classes: 'user-info' }, [
@@ -32,32 +58,7 @@ export class Profile extends WidgetBase<ProfileProperties> {
 							v('img', { src: image, classes: 'user-img' }),
 							v('h4', [username]),
 							v('p', [bio]),
-							isCurrentUser
-								? w(
-										Link,
-										{
-											to: 'settings',
-											classes: ['btn', 'btn-sm', 'btn-outline-secondary', 'action-btn']
-										},
-										[v('i', { classes: 'ion-edit' }), ' Edit Profile Settings']
-									)
-								: v(
-										'button',
-										{
-											onclick: this._onFollowUser,
-											classes: [
-												'btn',
-												'btn-sm',
-												following ? 'btn-secondary' : 'btn-outline-secondary',
-												'action-btn'
-											]
-										},
-										[
-											v('i', { classes: 'ion-plus-round' }),
-											following ? ' UnFollow ' : ' Follow ',
-											username
-										]
-									)
+							this._renderActionButton()
 						])
 					])
 				])
