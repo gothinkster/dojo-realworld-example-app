@@ -25,14 +25,14 @@ You can view a live demo over at https://agubler.github.io/dojo2-realworld/dist/
 
 To get the frontend running locally:
 
-- Clone this repo
-- `npm install` to install all req'd dependencies
-- `dojo build -w` to start the local server ([http:localhost:9999](http:localhost:9999))
+- Clone this repository
+- `npm install` to install all required dependencies
+- `npm run dev` to start the local server ([http:localhost:9999](http:localhost:9999)) with watch and hot reload
 
 Local web server will use port 9999.
 
 For a production build of the application:
 
-- `dojo build` to build the output into the `dist` directory.
+- `npm run build` to build the output into the `output/dist` directory.
 
-To run the tests run `dojo test`
+To run the tests run `npm run test`
