@@ -24,11 +24,17 @@
 					},
 					{
 						"urlPattern": "https://code.ionicframework.com",
-						"strategy": "cacheFirst"
+						"strategy": "networkFirst",
+						"expiration": {
+							"maxEntries": 25
+						}
 					},
 					{
 						"urlPattern": "https://demo.productionready.io",
-						"strategy": "cacheFirst"
+						"strategy": "networkFirst",
+						"expiration": {
+							"maxEntries": 25
+						}
 					}
 				]
 			}
