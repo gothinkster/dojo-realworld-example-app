@@ -1,9 +1,38 @@
 {
 	"build-app": {
+		"legacy": false,
 		"build-time-render": {
 			"root": "app"
 		},
-		"legecy": "false"
+		"pwa": {
+			"manifest": {
+				"name": "dojo-2-realworld",
+				"short_name": "dojo-2-realworld",
+				"description": "dojo-2-realworld",
+				"background_color": "#ffffff",
+				"theme_color": "#222127"
+			},
+			"serviceWorker": {
+				"clientsClaim": true,
+				"routes": [
+					{
+						"urlPattern": "https://conduit.productionready.io/api",
+						"strategy": "networkFirst",
+						"expiration": {
+							"maxEntries": 25
+						}
+					},
+					{
+						"urlPattern": "http://code.ionicframework.com",
+						"strategy": "cacheFirst"
+					},
+					{
+						"urlPattern": "http://demo.productionready.io",
+						"strategy": "cacheFirst"
+					}
+				]
+			}
+		}
 	},
 	"test-intern": {},
 	"create-app": {},
