@@ -23,11 +23,11 @@
 						}
 					},
 					{
-						"urlPattern": "http://code.ionicframework.com",
+						"urlPattern": "https://code.ionicframework.com",
 						"strategy": "cacheFirst"
 					},
 					{
-						"urlPattern": "http://demo.productionready.io",
+						"urlPattern": "https://demo.productionready.io",
 						"strategy": "cacheFirst"
 					}
 				]
