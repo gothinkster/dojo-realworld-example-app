@@ -1,7 +1,7 @@
 import { WidgetBase } from '@dojo/widget-core/WidgetBase';
 import { v, w } from '@dojo/widget-core/d';
 import { Link } from '@dojo/routing/Link';
-import { FeedsContainer } from '../containers/FeedsContainer';
+import FeedsContainer from '../containers/FeedsContainer';
 import { FollowUserPayload } from '../processes/interfaces';
 
 export interface ProfileProperties {
@@ -20,35 +20,10 @@ export class Profile extends WidgetBase<ProfileProperties> {
 		followUser({ username, following });
 	}
 
-	private _renderActionButton() {
-		let { currentUser, username, following } = this.properties;
-		const isCurrentUser = currentUser === username;
-
-		let action = null;
-		if (isCurrentUser) {
-			action = w(
-				Link,
-				{
-					to: 'settings',
-					classes: ['btn', 'btn-sm', 'btn-outline-secondary', 'action-btn']
-				},
-				[v('i', { classes: 'ion-edit' }), ' Edit Profile Settings']
-			);
-		} else if (currentUser !== undefined) {
-			action = v(
-				'button',
-				{
-					onclick: this._onFollowUser,
-					classes: ['btn', 'btn-sm', following ? 'btn-secondary' : 'btn-outline-secondary', 'action-btn']
-				},
-				[v('i', { classes: 'ion-plus-round' }), following ? ' UnFollow ' : ' Follow ', username]
-			);
-		}
-		return action;
-	}
-
+	// prettier-ignore
 	protected render() {
-		let { username, bio, image, type } = this.properties;
+		let { currentUser, username, bio, image, type, following } = this.properties;
+		const isCurrentUser = currentUser === username;
 
 		return v('div', { classes: 'profile-page' }, [
 			v('div', { classes: 'user-info' }, [
@@ -58,7 +33,24 @@ export class Profile extends WidgetBase<ProfileProperties> {
 							v('img', { src: image, classes: 'user-img' }),
 							v('h4', [username]),
 							v('p', [bio]),
-							this._renderActionButton()
+							isCurrentUser
+								? w(Link, {
+									to: 'settings',
+									classes: ['btn', 'btn-sm', 'btn-outline-secondary', 'action-btn']
+								}, [v('i', { classes: 'ion-edit' }), ' Edit Profile Settings'])
+								: v('button', {
+									onclick: this._onFollowUser,
+									classes: [
+										'btn',
+										'btn-sm',
+										following ? 'btn-secondary' : 'btn-outline-secondary',
+										'action-btn'
+									]
+								}, [
+									v('i', { classes: 'ion-plus-round' }),
+									following ? ' UnFollow ' : ' Follow ',
+									username
+								])
 						])
 					])
 				])

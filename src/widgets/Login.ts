@@ -29,6 +29,7 @@ export class Login extends WidgetBase<LoginProperties> {
 		this.properties.onLogin({});
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { errors, email, password, inProgress = false } = this.properties;
 
@@ -59,15 +60,11 @@ export class Login extends WidgetBase<LoginProperties> {
 										value: password
 									})
 								]),
-								v(
-									'button',
-									{
-										classes: ['btn btn-lg', 'btn-primary', 'pull-xs-right'],
-										disabled: inProgress,
-										type: 'submit'
-									},
-									['Sign In']
-								)
+								v('button', {
+									classes: ['btn btn-lg', 'btn-primary', 'pull-xs-right'],
+									disabled: inProgress,
+									type: 'submit'
+								}, ['Sign In'])
 							])
 						])
 					])

@@ -14,27 +14,20 @@ export class ArticleAuthorControls extends WidgetBase<ArticleAuthorControlsPrope
 		this.properties.deleteArticle({ slug });
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { slug } = this.properties;
 
 		return v('span', [
-			w(
-				Link,
-				{
-					to: 'edit-post',
-					params: { slug },
-					classes: ['btn', 'btn-sm', 'btn-outline-secondary']
-				},
-				[v('i', { classes: 'ion-edit' }), ' Edit Article']
-			),
-			v(
-				'button',
-				{
-					onclick: this._deleteArticle,
-					classes: ['btn', 'btn-sm', 'btn-outline-danger']
-				},
-				[v('i', { classes: 'ion-trash-a' }), ' Delete Article']
-			)
+			w(Link, {
+				to: 'edit-post',
+				params: { slug },
+				classes: ['btn', 'btn-sm', 'btn-outline-secondary']
+			}, [v('i', { classes: 'ion-edit' }), ' Edit Article']),
+			v('button', {
+				onclick: this._deleteArticle,
+				classes: ['btn', 'btn-sm', 'btn-outline-danger']
+			},[v('i', { classes: 'ion-trash-a' }), ' Delete Article'])
 		]);
 	}
 }

@@ -50,6 +50,7 @@ export class Editor extends WidgetBase<EditorProperties> {
 		this.properties.onPublishPost({});
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { onTagDelete, title, description, body, tag, errors, inProgress = false, tags = [] } = this.properties;
 		return v('div', { classes: 'editor-page' }, [
@@ -96,32 +97,24 @@ export class Editor extends WidgetBase<EditorProperties> {
 										oninput: this._onTagInput,
 										onkeyup: this._onTagCreate
 									}),
-									v(
-										'div',
-										{ classes: 'tag-list' },
-										tags.map((tag) => {
-											return v('span', { classes: ['tag-default', 'tag-pill'] }, [
-												v('i', {
-													classes: 'ion-close-round',
-													onclick: () => {
-														onTagDelete({ tag });
-													}
-												}),
-												tag
-											]);
-										})
-									)
+									v('div', { classes: 'tag-list' }, tags.map((tag) => {
+										return v('span', { classes: ['tag-default', 'tag-pill'] }, [
+											v('i', {
+												classes: 'ion-close-round',
+												onclick: () => {
+													onTagDelete({ tag });
+												}
+											}),
+											tag
+										]);
+									}))
 								]),
-								v(
-									'button',
-									{
-										classes: ['btn', 'btn-lg', 'pull-xs-right', 'btn-primary'],
-										type: 'button',
-										disabled: inProgress,
-										onclick: this._onPublishPost
-									},
-									['Publish Article']
-								)
+								v('button', {
+									classes: ['btn', 'btn-lg', 'pull-xs-right', 'btn-primary'],
+									type: 'button',
+									disabled: inProgress,
+									onclick: this._onPublishPost
+								}, ['Publish Article'])
 							])
 						])
 					])

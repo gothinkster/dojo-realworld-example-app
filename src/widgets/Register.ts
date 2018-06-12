@@ -36,6 +36,7 @@ export class Register extends WidgetBase<RegisterProperties> {
 		this.properties.onRegister({});
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { errors, email, password, username, inProgress = false } = this.properties;
 
@@ -57,15 +58,11 @@ export class Register extends WidgetBase<RegisterProperties> {
 								v('fieldset', { classes: 'form-group' }, [
 									createInputNode(password, 'Password', this._onPasswordInput)
 								]),
-								v(
-									'button',
-									{
-										classes: ['btn btn-lg', 'btn-primary', 'pull-xs-right'],
-										disabled: inProgress,
-										type: 'submit'
-									},
-									['Sign Up']
-								)
+								v('button', {
+									classes: ['btn btn-lg', 'btn-primary', 'pull-xs-right'],
+									disabled: inProgress,
+									type: 'submit'
+								}, ['Sign Up'])
 							])
 						])
 					])

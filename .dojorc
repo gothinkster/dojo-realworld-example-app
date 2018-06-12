@@ -1,5 +1,11 @@
 {
-	"build-webpack": {},
+	"build-app": {
+		"build-time-render": {
+			"root": "app"
+		},
+		"legecy": "false"
+	},
 	"test-intern": {},
-	"create-app": {}
+	"create-app": {},
+	"create-widget": {}
 }
