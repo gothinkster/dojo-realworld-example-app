@@ -49,6 +49,7 @@ export class Settings extends WidgetBase<SettingsProperties> {
 		this.properties.logout({});
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { email, password, bio, imageUrl, username } = this.properties;
 
@@ -72,15 +73,11 @@ export class Settings extends WidgetBase<SettingsProperties> {
 								]),
 								createInputNode(email, 'Email', this._onEmailInput),
 								createInputNode(password, 'Password', this._onPasswordInput),
-								v(
-									'button',
-									{
-										onclick: this._onSubmit,
-										type: 'submit',
-										classes: ['btn', 'btn-lg', 'btn-primary', 'pull-xs-right']
-									},
-									['Update Settings']
-								)
+								v('button', {
+									onclick: this._onSubmit,
+									type: 'submit',
+									classes: ['btn', 'btn-lg', 'btn-primary', 'pull-xs-right']
+								}, ['Update Settings'])
 							])
 						]),
 						v('hr'),

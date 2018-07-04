@@ -45,6 +45,7 @@ export class Article extends WidgetBase<ArticleProperties> {
 		this.properties.onNewCommentInput({ newComment: event.target.value });
 	}
 
+	// prettier-ignore
 	protected render() {
 		const {
 			username,
@@ -89,13 +90,9 @@ export class Article extends WidgetBase<ArticleProperties> {
 				v('div', { classes: ['row', 'article-content'] }, [
 					v('div', { classes: 'col-xs-12' }, [
 						v('div', { innerHTML: marked(article.body, { sanitize: true }) }),
-						v(
-							'ul',
-							{ classes: 'tag-list' },
-							article.tagList.map((tag: string) => {
-								return v('li', { classes: ['tag-default', 'tag-pill', 'tag-outline'] }, [tag]);
-							})
-						)
+						v('ul', { classes: 'tag-list' }, article.tagList.map((tag: string) => {
+							return v('li', { classes: ['tag-default', 'tag-pill', 'tag-outline'] }, [tag]);
+						}))
 					])
 				]),
 				v('hr'),
@@ -142,18 +139,15 @@ export class Article extends WidgetBase<ArticleProperties> {
 									w(Link, { to: 'register' }, ['Sign Up']),
 									' to add comments on this article.'
 								]),
-						v(
-							'div',
-							comments.map((comment: CommentItem, index: number) => {
-								return w(Comment, {
-									key: index,
-									comment,
-									loggedInUser,
-									deleteComment,
-									slug: article.slug
-								});
-							})
-						)
+						v('div', comments.map((comment: CommentItem, index: number) => {
+							return w(Comment, {
+								key: index,
+								comment,
+								loggedInUser,
+								deleteComment,
+								slug: article.slug
+							});
+						}))
 					])
 				])
 			])

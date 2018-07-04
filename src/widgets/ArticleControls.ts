@@ -23,30 +23,23 @@ export class ArticleControls extends WidgetBase<ArticleControlsProperties> {
 		this.properties.followUser({ username, following });
 	}
 
+	// prettier-ignore
 	protected render() {
 		const { favoritesCount, favorited, following, authorUsername } = this.properties;
 
 		return v('span', [
-			v(
-				'button',
-				{
-					onclick: this._followUser,
-					classes: ['btn', 'btn-sm', following ? 'btn-secondary' : 'btn-outline-secondary']
-				},
-				[v('i', { classes: 'ion-plus-round' }), `${following ? ' Unfollow' : ' Follow'} ${authorUsername}`]
-			),
-			v(
-				'button',
-				{
-					onclick: this._favoriteArticle,
-					classes: ['btn', 'btn-sm', favorited ? 'btn-primary' : 'btn-outline-primary']
-				},
-				[
-					v('i', { classes: 'ion-heart' }),
-					`${favorited ? ' Unfavorite' : ' Favorite'}`,
-					v('span', { classes: 'counter' }, [`(${favoritesCount})`])
-				]
-			)
+			v('button', {
+				onclick: this._followUser,
+				classes: ['btn', 'btn-sm', following ? 'btn-secondary' : 'btn-outline-secondary']
+			}, [v('i', { classes: 'ion-plus-round' }), `${following ? ' Unfollow' : ' Follow'} ${authorUsername}`]),
+			v('button', {
+				onclick: this._favoriteArticle,
+				classes: ['btn', 'btn-sm', favorited ? 'btn-primary' : 'btn-outline-primary']
+			}, [
+				v('i', { classes: 'ion-heart' }),
+				`${favorited ? ' Unfavorite' : ' Favorite'}`,
+				v('span', { classes: 'counter' }, [`(${favoritesCount})`])
+			])
 		]);
 	}
 }
