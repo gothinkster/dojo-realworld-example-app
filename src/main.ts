@@ -1,9 +1,10 @@
-import has from '@dojo/has/has';
-import global from '@dojo/shim/global';
-import { ProjectorMixin } from '@dojo/widget-core/mixins/Projector';
-import { Registry } from '@dojo/widget-core/Registry';
-import { Store } from '@dojo/stores/Store';
-import { registerRouterInjector } from '@dojo/routing/RouterInjector';
+import has from '@dojo/framework/has/has';
+import global from '@dojo/framework/shim/global';
+import { Registry } from '@dojo/framework/widget-core/Registry';
+import { renderer } from '@dojo/framework/widget-core/vdom';
+import { w } from '@dojo/framework/widget-core/d';
+import { Store } from '@dojo/framework/stores/Store';
+import { registerRouterInjector } from '@dojo/framework/routing/RouterInjector';
 
 import { App } from './App';
 import { getTagsProcess } from './processes/tagProcesses';
@@ -16,13 +17,6 @@ const store = new Store<State>();
 const registry = new Registry();
 
 const router = registerRouterInjector(getRouteConfig(store), registry);
-
-registry.define('editor', () => import('./containers/EditorContainer'));
-registry.define('article', () => import('./containers/ArticleContainer'));
-registry.define('login', () => import('./containers/LoginContainer'));
-registry.define('register', () => import('./containers/RegisterContainer'));
-registry.define('profile', () => import('./containers/ProfileContainer'));
-registry.define('settings', () => import('./containers/SettingsContainer'));
 
 let session;
 
@@ -55,8 +49,5 @@ store.onChange(store.path('routing', 'params'), onRouteChange);
 
 registry.defineInjector('state', () => () => store);
 
-const appRoot = document.getElementById('app')!;
-const Projector = ProjectorMixin(App);
-const projector = new Projector();
-projector.setProperties({ registry });
-projector.merge(appRoot);
+const r = renderer(() => w(App, {}));
+r.mount({ domNode: document.getElementById('app')!, registry });

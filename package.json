@@ -9,20 +9,13 @@
     "dev": "dojo build -m dev -w memory -s"
   },
   "dependencies": {
-    "@dojo/core": "^2.0.0",
-    "@dojo/has": "^2.0.0",
-    "@dojo/i18n": "^2.0.0",
-    "@dojo/routing": "^2.0.0",
-    "@dojo/shim": "^2.0.0",
-    "@dojo/stores": "^2.0.0",
-    "@dojo/widget-core": "^2.0.0",
-    "marked": "^0.3.9"
+    "@dojo/framework": "file:./deps/dojo-framework-3.0.2-pre.tgz",
+    "snarkdown": "^1.2.2"
   },
   "devDependencies": {
-    "@dojo/cli": "^2.0.0",
-    "@dojo/cli-build-app": "^2.0.0",
-    "@dojo/cli-test-intern": "^2.0.0",
-    "@dojo/test-extras": "^2.0.0",
+    "@dojo/cli": "^3.0.0",
+    "@dojo/cli-build-app": "^3.0.0",
+    "@dojo/cli-test-intern": "^3.0.0",
     "@types/glob": "~5.0.0",
     "@types/grunt": "~0.4.0",
     "@types/marked": "^0.3.0",

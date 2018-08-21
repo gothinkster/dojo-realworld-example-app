@@ -1,7 +1,7 @@
-import { WidgetBase } from '@dojo/widget-core/WidgetBase';
-import { v, w } from '@dojo/widget-core/d';
-import { Link } from '@dojo/routing/Link';
-import * as marked from 'marked';
+import { WidgetBase } from '@dojo/framework/widget-core/WidgetBase';
+import { v, w } from '@dojo/framework/widget-core/d';
+import { Link } from '@dojo/framework/routing/Link';
+const snarkdown = require('snarkdown');
 import { Comment } from './Comment';
 import { ArticleItem, Comment as CommentItem, AuthorProfile, WithTarget } from '../interfaces';
 import { ArticleMeta } from './ArticleMeta';
@@ -89,7 +89,7 @@ export class Article extends WidgetBase<ArticleProperties> {
 			v('div', { key: 'page', classes: ['container', 'page'] }, [
 				v('div', { classes: ['row', 'article-content'] }, [
 					v('div', { classes: 'col-xs-12' }, [
-						v('div', { innerHTML: marked(article.body, { sanitize: true }) }),
+						v('div', { innerHTML: snarkdown.default(article.body) }),
 						v('ul', { classes: 'tag-list' }, article.tagList.map((tag: string) => {
 							return v('li', { classes: ['tag-default', 'tag-pill', 'tag-outline'] }, [tag]);
 						}))

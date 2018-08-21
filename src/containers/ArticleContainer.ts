@@ -1,4 +1,4 @@
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { Article, ArticleProperties } from './../widgets/Article';
 import {
 	deleteCommentProcess,
@@ -9,7 +9,7 @@ import {
 	deleteArticleProcess
 } from './../processes/articleProcesses';
 import { State } from '../interfaces';
-import { StoreContainer } from '@dojo/stores/StoreInjector';
+import { StoreContainer } from '@dojo/framework/stores/StoreInjector';
 
 function getProperties(store: Store<State>, properties: ArticleProperties): ArticleProperties {
 	const { get, path } = store;

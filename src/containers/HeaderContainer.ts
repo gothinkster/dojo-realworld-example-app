@@ -1,7 +1,7 @@
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { Header, HeaderProperties } from './../widgets/Header';
 import { State } from '../interfaces';
-import { StoreContainer } from '@dojo/stores/StoreInjector';
+import { StoreContainer } from '@dojo/framework/stores/StoreInjector';
 
 function getProperties(store: Store<State>): HeaderProperties {
 	const { get, path } = store;

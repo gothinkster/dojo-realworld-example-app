@@ -1,8 +1,8 @@
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { Tags, TagsProperties } from './../widgets/Tags';
 import { fetchFeedProcess } from '../processes/feedProcesses';
 import { State } from '../interfaces';
-import { StoreContainer } from '@dojo/stores/StoreInjector';
+import { StoreContainer } from '@dojo/framework/stores/StoreInjector';
 
 function getProperties(store: Store<State>): TagsProperties {
 	const { get, path } = store;

@@ -1,6 +1,5 @@
 {
 	"build-app": {
-		"legacy": false,
 		"build-time-render": {
 			"root": "app"
 		},

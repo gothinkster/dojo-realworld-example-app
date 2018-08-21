@@ -1,4 +1,4 @@
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { Editor, EditorProperties } from './../widgets/Editor';
 import {
 	publishArticleProcess,
@@ -10,7 +10,7 @@ import {
 	titleInputProcess
 } from './../processes/editorProcesses';
 import { State } from '../interfaces';
-import { StoreContainer } from '@dojo/stores/StoreInjector';
+import { StoreContainer } from '@dojo/framework/stores/StoreInjector';
 
 function getProperties(store: Store<State>, properties: EditorProperties): EditorProperties {
 	const { get, path } = store;
