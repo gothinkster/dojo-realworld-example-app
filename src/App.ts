@@ -10,6 +10,7 @@ import ProfileContainer from './containers/ProfileContainer';
 import EditorContainer from './containers/EditorContainer';
 import ArticleContainer from './containers/ArticleContainer';
 import { Home } from './widgets/Home';
+import { Footer } from './widgets/Footer';
 
 export class App extends WidgetBase {
 	protected render() {
@@ -74,7 +75,8 @@ export class App extends WidgetBase {
 						return w(Home, {});
 					}
 				}
-			})
+			}),
+			w(Footer, {})
 		]);
 	}
 }
