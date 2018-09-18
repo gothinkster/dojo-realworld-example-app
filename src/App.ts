@@ -11,6 +11,7 @@ import EditorContainer from './containers/EditorContainer';
 import ArticleContainer from './containers/ArticleContainer';
 import { Home } from './widgets/Home';
 import { Footer } from './widgets/Footer';
+import { MatchDetails } from '@dojo/framework/routing/interfaces';
 
 export class App extends WidgetBase {
 	protected render() {
@@ -30,7 +31,7 @@ export class App extends WidgetBase {
 			}),
 			w(Outlet, {
 				id: 'user',
-				renderer: (details: any) => {
+				renderer: (details: MatchDetails) => {
 					if (details.isExact()) {
 						return w(ProfileContainer, { type: 'user', username: details.params.username });
 					}
@@ -38,19 +39,19 @@ export class App extends WidgetBase {
 			}),
 			w(Outlet, {
 				id: 'favorites',
-				renderer: (details: any) => {
+				renderer: (details: MatchDetails) => {
 					return w(ProfileContainer, { type: 'favorites', username: details.params.username });
 				}
 			}),
 			w(Outlet, {
 				id: 'edit-post',
-				renderer: (details: any) => {
+				renderer: (details: MatchDetails) => {
 					return w(EditorContainer, { slug: details.params.slug });
 				}
 			}),
 			w(Outlet, {
 				id: 'new-post',
-				renderer: (details: any) => {
+				renderer: (details: MatchDetails) => {
 					if (details.isExact()) {
 						return w(EditorContainer, { slug: details.params.slug });
 					}
@@ -58,7 +59,7 @@ export class App extends WidgetBase {
 			}),
 			w(Outlet, {
 				id: 'article',
-				renderer: (details: any) => {
+				renderer: (details: MatchDetails) => {
 					return w(ArticleContainer, { slug: details.params.slug });
 				}
 			}),
@@ -70,7 +71,7 @@ export class App extends WidgetBase {
 			}),
 			w(Outlet, {
 				id: 'home',
-				renderer: (details: any) => {
+				renderer: (details: MatchDetails) => {
 					if (details.isExact()) {
 						return w(Home, {});
 					}

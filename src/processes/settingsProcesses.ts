@@ -43,12 +43,7 @@ const updateUserSettingsCommand = commandFactory(async ({ path, get }) => {
 
 	const json = await response.json();
 
-	return [
-		replace(path('user'), json.user),
-		replace(path('settings'), { loaded: false, loading: false }),
-		replace(path('routing', 'outlet'), 'user'),
-		replace(path('routing', 'params'), { username: get(path('settings', 'username')) })
-	];
+	return [replace(path('user'), json.user), replace(path('settings'), { loaded: false, loading: false })];
 });
 
 export const getUserSettingsProcess = createProcess('user-settings', [
