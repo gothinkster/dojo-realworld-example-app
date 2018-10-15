@@ -1,5 +1,5 @@
 {
-  "name": "dojo2-realworld",
+  "name": "dojo-realworld",
   "version": "1.0.0",
   "scripts": {
     "precommit": "lint-staged",
@@ -9,31 +9,18 @@
     "dev": "dojo build -m dev -w memory -s"
   },
   "dependencies": {
-    "@dojo/core": "^2.0.0",
-    "@dojo/has": "^2.0.0",
-    "@dojo/i18n": "^2.0.0",
-    "@dojo/routing": "^2.0.0",
-    "@dojo/shim": "^2.0.0",
-    "@dojo/stores": "^2.0.0",
-    "@dojo/widget-core": "^2.0.0",
-    "marked": "^0.3.9"
+    "@dojo/framework": "^4.0.0",
+    "snarkdown": "^1.2.2"
   },
   "devDependencies": {
-    "@dojo/cli": "^2.0.0",
-    "@dojo/cli-build-app": "^2.0.0",
-    "@dojo/cli-test-intern": "^2.0.0",
-    "@dojo/test-extras": "^2.0.0",
-    "@types/glob": "~5.0.0",
-    "@types/grunt": "~0.4.0",
-    "@types/marked": "^0.3.0",
-    "@types/node": "^6.0.46",
+    "@dojo/cli": "^4.0.0",
+    "@dojo/cli-build-app": "^4.0.0",
+    "@dojo/cli-test-intern": "^4.0.0",
     "@types/sinon": "^1.16.35",
-    "grunt-tslint": "5.0.1",
     "husky": "0.14.3",
     "lint-staged": "6.0.0",
     "prettier": "1.9.2",
     "sinon": "^2.0.0",
-    "tslint": "5.2.0",
     "typescript": "~2.6.1"
   },
   "lint-staged": {

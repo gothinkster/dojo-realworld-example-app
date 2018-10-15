@@ -1,5 +1,5 @@
-import { createProcess } from '@dojo/stores/process';
-import { remove, replace } from '@dojo/stores/state/operations';
+import { createProcess } from '@dojo/framework/stores/process';
+import { remove, replace } from '@dojo/framework/stores/state/operations';
 import { getHeaders, commandFactory } from './utils';
 import { baseUrl } from '../config';
 import {
@@ -124,8 +124,7 @@ const deleteArticleCommand = commandFactory<SlugPayload>(async ({ get, path, pay
 		method: 'delete',
 		headers: getHeaders(token)
 	});
-
-	return [replace(path('routing', 'outlet'), 'home')];
+	return [];
 });
 
 export const getArticleProcess = createProcess('get-article', [

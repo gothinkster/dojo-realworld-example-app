@@ -1,4 +1,4 @@
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { Settings, SettingsProperties } from './../widgets/Settings';
 import {
 	bioInputProcess,
@@ -10,7 +10,7 @@ import {
 } from './../processes/settingsProcesses';
 import { logoutProcess } from '../processes/loginProcesses';
 import { State } from '../interfaces';
-import { StoreContainer } from '@dojo/stores/StoreInjector';
+import { StoreContainer } from '@dojo/framework/stores/StoreInjector';
 
 function getProperties(store: Store<State>): SettingsProperties {
 	const { get, path } = store;

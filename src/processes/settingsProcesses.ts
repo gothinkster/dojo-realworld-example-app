@@ -1,5 +1,5 @@
-import { createProcess } from '@dojo/stores/process';
-import { replace } from '@dojo/stores/state/operations';
+import { createProcess } from '@dojo/framework/stores/process';
+import { replace } from '@dojo/framework/stores/state/operations';
 import { getHeaders, commandFactory } from './utils';
 import { baseUrl } from '../config';
 import { EmailPayload, PasswordPayload, UsernamePayload, ImagePayload, BioPayload } from './interfaces';
@@ -43,12 +43,7 @@ const updateUserSettingsCommand = commandFactory(async ({ path, get }) => {
 
 	const json = await response.json();
 
-	return [
-		replace(path('user'), json.user),
-		replace(path('settings'), { loaded: false, loading: false }),
-		replace(path('routing', 'outlet'), 'user'),
-		replace(path('routing', 'params'), { username: get(path('settings', 'username')) })
-	];
+	return [replace(path('user'), json.user), replace(path('settings'), { loaded: false, loading: false })];
 });
 
 export const getUserSettingsProcess = createProcess('user-settings', [

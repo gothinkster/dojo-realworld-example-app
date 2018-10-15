@@ -1,29 +1,35 @@
 {
 	"build-app": {
-		"legacy": false,
-		"build-time-render": {
-			"root": "app"
-		},
 		"pwa": {
 			"manifest": {
-				"name": "dojo-2-realworld",
-				"short_name": "dojo-2-realworld",
-				"description": "dojo-2-realworld",
+				"name": "dojo-realworld",
+				"short_name": "dojo-realworld",
+				"description": "dojo-realworld",
 				"background_color": "#ffffff",
-				"theme_color": "#222127"
+				"theme_color": "#222127",
+				"icons": [
+					{
+						"src": "src/logo.png",
+						"sizes": [
+							128,
+							256,
+							512
+						]
+					}
+				]
 			},
 			"serviceWorker": {
 				"clientsClaim": true,
 				"routes": [
 					{
-						"urlPattern": "https://conduit.productionready.io/api",
+						"urlPattern": "https://fonts.googleapis.com/css",
 						"strategy": "networkFirst",
 						"expiration": {
 							"maxEntries": 25
 						}
 					},
 					{
-						"urlPattern": "https://code.ionicframework.com",
+						"urlPattern": "https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css",
 						"strategy": "networkFirst",
 						"expiration": {
 							"maxEntries": 25
@@ -35,10 +41,18 @@
 						"expiration": {
 							"maxEntries": 25
 						}
+					},
+					{
+						"urlPattern": "https://conduit.productionready.io/api",
+						"strategy": "networkFirst",
+						"expiration": {
+							"maxEntries": 25
+						}
 					}
 				]
 			}
-		}
+		},
+		"legacy": false
 	},
 	"test-intern": {},
 	"create-app": {},

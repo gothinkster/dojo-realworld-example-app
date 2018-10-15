@@ -1,12 +1,12 @@
 const { describe, it, beforeEach } = intern.getInterface('bdd');
 const { assert } = intern.getPlugin('chai');
-import global from '@dojo/shim/global';
+import global from '@dojo/framework/shim/global';
 import { stub } from 'sinon';
 
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { fetchFeedCommand } from './../../../src/processes/feedProcesses';
-import { Pointer } from '@dojo/stores/state/Pointer';
-import { OperationType } from '@dojo/stores/state/Patch';
+import { Pointer } from '@dojo/framework/stores/state/Pointer';
+import { OperationType } from '@dojo/framework/stores/state/Patch';
 
 const fetchStub = stub();
 global.fetch = fetchStub;

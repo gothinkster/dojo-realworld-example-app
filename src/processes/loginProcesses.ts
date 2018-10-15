@@ -1,6 +1,6 @@
-import global from '@dojo/shim/global';
-import { createProcess } from '@dojo/stores/process';
-import { replace } from '@dojo/stores/state/operations';
+import global from '@dojo/framework/shim/global';
+import { createProcess } from '@dojo/framework/stores/process';
+import { replace } from '@dojo/framework/stores/state/operations';
 import { getHeaders, commandFactory } from './utils';
 import { baseUrl } from '../config';
 import { EmailPayload, PasswordPayload, UsernamePayload, SetSessionPayload } from './interfaces';
@@ -73,7 +73,6 @@ const loginCommand = commandFactory(async ({ get, path }) => {
 	global.sessionStorage.setItem('conduit-session', JSON.stringify(json.user));
 
 	return [
-		replace(path('routing', 'outlet'), 'home'),
 		replace(path('login', 'loading'), false),
 		replace(path('errors'), undefined),
 		replace(path('user'), json.user),
@@ -105,7 +104,6 @@ const registerCommand = commandFactory(async ({ get, path }) => {
 	global.sessionStorage.setItem('conduit-session', JSON.stringify(json.user));
 
 	return [
-		replace(path('routing', 'outlet'), 'home'),
 		replace(path('register', 'loading'), false),
 		replace(path('errors'), undefined),
 		replace(path('user'), json.user),
@@ -116,7 +114,7 @@ const registerCommand = commandFactory(async ({ get, path }) => {
 
 const logoutCommand = commandFactory(({ path }) => {
 	global.sessionStorage.removeItem('conduit-session');
-	return [replace(path('routing', 'outlet'), 'home'), replace(path('user'), {})];
+	return [replace(path('user'), {})];
 });
 
 export const loginProcess = createProcess('login', [startLoginCommand, loginCommand, clearLoginInputs]);

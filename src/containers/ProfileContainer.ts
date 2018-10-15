@@ -1,8 +1,8 @@
-import { Store } from '@dojo/stores/Store';
+import { Store } from '@dojo/framework/stores/Store';
 import { Profile, ProfileProperties } from './../widgets/Profile';
 import { State } from '../interfaces';
 import { followUserProcess } from './../processes/profileProcesses';
-import { StoreContainer } from '@dojo/stores/StoreInjector';
+import { StoreContainer } from '@dojo/framework/stores/StoreInjector';
 
 function getProperties(store: Store<State>, properties: ProfileProperties): ProfileProperties {
 	const { get, path } = store;
