@@ -53,8 +53,5 @@
 			}
 		},
 		"legacy": false
-	},
-	"test-intern": {},
-	"create-app": {},
-	"create-widget": {}
+	}
 }

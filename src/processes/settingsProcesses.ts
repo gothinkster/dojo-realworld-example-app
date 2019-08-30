@@ -25,15 +25,15 @@ const imageUrlInputCommand = commandFactory<ImagePayload>(({ payload: { imageUrl
 });
 
 const startUserSettingsCommand = commandFactory(({ path }) => {
-	return [replace(path('settings'), { loaded: false, loading: true })];
+	return [replace(path('settings'), { isLoaded: false, isLoading: false })];
 });
 
 const getUserSettingsCommand = commandFactory(({ path, get }) => {
-	return [replace(path('settings'), get(path('user')))];
+	return [replace(path('settings'), get(path('session')))];
 });
 
 const updateUserSettingsCommand = commandFactory(async ({ path, get }) => {
-	const token = get(path('user', 'token'));
+	const token = get(path('session', 'token'));
 	const requestPayload = get(path('settings'));
 	const response = await fetch(`${baseUrl}/user`, {
 		method: 'put',
@@ -44,8 +44,8 @@ const updateUserSettingsCommand = commandFactory(async ({ path, get }) => {
 	const json = await response.json();
 
 	return [
-		replace(path('user'), json.user),
-		replace(path('settings'), { loaded: false, loading: false }),
+		replace(path('session'), json.user),
+		replace(path('settings'), undefined),
 		replace(path('routing', 'outlet'), 'user'),
 		replace(path('routing', 'params'), { username: get(path('settings', 'username')) })
 	];

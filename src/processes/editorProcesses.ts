@@ -49,11 +49,11 @@ const clearEditorCommand = commandFactory(({ path }) => {
 });
 
 const startPublishCommand = commandFactory(({ path }) => {
-	return [replace(path('editor', 'loading'), true)];
+	return [replace(path('editor', 'isLoading'), true)];
 });
 
 const publishArticleCommand = commandFactory(async ({ get, path }) => {
-	const token = get(path('user', 'token'));
+	const token = get(path('session', 'token'));
 	const slug = get(path('editor', 'slug'));
 	const requestPayload = {
 		article: get(path('editor'))
@@ -68,12 +68,12 @@ const publishArticleCommand = commandFactory(async ({ get, path }) => {
 	const json = await response.json();
 
 	if (!response.ok) {
-		return [replace(path('editor', 'loading'), false), replace(path('errors'), json.errors)];
+		return [replace(path('editor', 'isLoading'), false), replace(path('errors'), json.errors)];
 	}
 
 	return [
-		replace(path('article', 'item'), json.article),
-		replace(path('article', 'loaded'), true),
+		replace(path('article', slug, 'item'), json.article),
+		replace(path('article', slug, 'isLoading'), true),
 		replace(path('editor'), undefined)
 	];
 });
