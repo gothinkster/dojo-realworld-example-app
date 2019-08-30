@@ -6,22 +6,23 @@
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
     "test": "dojo build -m test && dojo test",
     "build": "dojo build",
-    "dev": "dojo build -m dev -w memory -s"
+    "dev": "dojo build -m dev -w -s"
   },
   "dependencies": {
-    "@dojo/framework": "^4.0.0",
-    "snarkdown": "^1.2.2"
+    "@dojo/framework": "^6.0.0",
+    "snarkdown": "^1.2.2",
+    "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@dojo/cli": "^4.0.0",
-    "@dojo/cli-build-app": "^4.0.0",
-    "@dojo/cli-test-intern": "^4.0.0",
+    "@dojo/cli": "^6.0.0",
+    "@dojo/cli-build-app": "^6.0.0",
+    "@dojo/cli-test-intern": "^6.0.0",
     "@types/sinon": "^1.16.35",
     "husky": "0.14.3",
     "lint-staged": "6.0.0",
     "prettier": "1.9.2",
     "sinon": "^2.0.0",
-    "typescript": "~2.6.1"
+    "typescript": "~3.4.5"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

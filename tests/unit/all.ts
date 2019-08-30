@@ -1,2 +1,1 @@
-import './widgets/all';
-import './processes/all';
+import "./widgets/all";
