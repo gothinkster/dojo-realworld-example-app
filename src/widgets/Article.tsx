@@ -1,133 +1,196 @@
-import { create, tsx } from "@dojo/framework/core/vdom";
-const snarkdown = require("snarkdown");
-import store from "../store";
-import { Comment } from "./Comment";
-import { ArticleMeta } from "./ArticleMeta";
-import {
-	getArticleProcess,
-	favoriteArticleProcess,
-	followUserProcess,
-	deleteArticleProcess,
-	addCommentProcess,
-	newCommentInputProcess,
-	deleteCommentProcess
-} from "../processes/articleProcesses";
+import { create, tsx } from '@dojo/framework/core/vdom';
+import { createICacheMiddleware } from '@dojo/framework/core/middleware/icache';
+import { Comment } from './Comment';
+import { ArticleMeta } from './ArticleMeta';
+import { getHeaders } from '../utils';
+import { baseUrl } from '../config';
+import session from '../session';
+import routing from '../routing';
+
+const snarkdown = require('snarkdown');
 
 export interface ArticleProperties {
 	slug: string;
 }
 
-const factory = create({ store }).properties<ArticleProperties>();
+interface ArticleState {
+	article: any;
+	comment: string;
+	comments: any[];
+}
 
-export const Article = factory(function Article({ middleware: { store }, properties }) {
-	const { get, path, executor } = store;
+const icache = createICacheMiddleware<ArticleState>();
+
+const factory = create({ icache, session, routing })
+	.properties<ArticleProperties>()
+	.key('slug');
+
+export const Article = factory(function Article({ middleware: { icache, session, routing }, properties }) {
 	const { slug } = properties();
-	const article = get(path("article", slug, "item"));
-	const comments = get(path("article", slug, "comments")) || [];
-	const newComment = get(path("article", slug, "newComment"));
-	const isLoaded = get(path("article", slug, "isLoaded"));
-	const isLoading = get(path("article", slug, "isLoading"));
-	const isAuthenticated = !!get(path("session", "token"));
-	const loggedInUser = get(path("session", "username"));
-	const username = get(path("session", "username"));
-
-	if (!article && !isLoading) {
-		executor(getArticleProcess)({ slug });
-	}
-
-	if (!isLoaded) {
+	const article = icache.getOrSet('article', async () => {
+		const { slug } = properties();
+		const response = await fetch(`${baseUrl}/articles/${slug}`, {
+			headers: getHeaders(session.token())
+		});
+		const json = await response.json();
+		return json.article;
+	});
+	const comments = icache.getOrSet('comments', async () => {
+		const { slug } = properties();
+		const response = await fetch(`${baseUrl}/articles/${slug}/comments`, {
+			headers: getHeaders(session.token())
+		});
+		const json = await response.json();
+		return json.comments;
+	});
+	const comment = icache.getOrSet('comment', '');
+	if (!article || !comments) {
 		return (
-			<div classes={["article-page"]}>
-				<div classes={["banner"]}></div>
+			<div classes={['article-page']}>
+				<div classes={['banner']} />
 			</div>
 		);
 	}
 
-	const { favorited } = article;
-
 	const articleMeta = (
 		<ArticleMeta
 			article={article}
-			isAuthenticated={isAuthenticated}
-			currentUser={username}
+			isAuthenticated={session.isAuthenticated()}
+			currentUser={session.username()}
 			favoriteArticle={() => {
-				executor(favoriteArticleProcess)({ favorited, slug });
+				fetch(`${baseUrl}/articles/${slug}/favorite`, {
+					method: article.favorited ? 'delete' : 'post',
+					headers: getHeaders(session.token())
+				}).then((response) => {
+					if (response.ok) {
+						icache.set('article', {
+							...article,
+							favorited: !article.favorited,
+							favoritesCount: article.favorited ? article.favoritesCount - 1 : article.favoritesCount + 1
+						});
+					}
+				});
 			}}
 			followUser={() => {
-				executor(followUserProcess)({
-					slug,
-					username: article.author.username,
-					following: article.author.following
+				fetch(`${baseUrl}/profiles/${article.author.username}/follow`, {
+					method: article.author.following ? 'delete' : 'post',
+					headers: getHeaders(session.token())
+				}).then((response) => {
+					if (response.ok) {
+						icache.set('article', {
+							...article,
+							author: { ...article.author, following: !article.author.following }
+						});
+					}
 				});
 			}}
 			deleteArticle={() => {
-				executor(deleteArticleProcess)({ slug });
+				fetch(`${baseUrl}/articles/${slug}`, {
+					method: 'delete',
+					headers: getHeaders(session.token())
+				}).then((response) => {
+					if (response.ok) {
+						routing.goto('home');
+					}
+				});
 			}}
 		/>
 	);
 
 	return (
-		<div classes={["article-page"]}>
-			<div key="banner" classes={["banner"]}>
-				<div classes={["container"]}>
+		<div classes={['article-page']}>
+			<div key="banner" classes={['banner']}>
+				<div classes={['container']}>
 					<h1>{article.title}</h1>
 					{articleMeta}
 				</div>
 			</div>
-			<div key="page" classes={["container", "page"]}>
-				<div classes={["row", "article-content"]}>
-					<div classes={["col-xs-12"]}>
+			<div key="page" classes={['container', 'page']}>
+				<div classes={['row', 'article-content']}>
+					<div classes={['col-xs-12']}>
 						<div innerHTML={snarkdown.default(article.body)} />
-						<ul classes={["tag-list"]}>
-							{article.tagList.map((tag) => (
-								<li classes={["tag-default", "tag-pill", "tag-outline"]}>{tag}</li>
+						<ul classes={['tag-list']}>
+							{article.tagList.map((tag: string) => (
+								<li classes={['tag-default', 'tag-pill', 'tag-outline']}>{tag}</li>
 							))}
 						</ul>
 					</div>
 				</div>
 				<hr />
-				<div key="actions" classes={["article-actions"]}>
+				<div key="actions" classes={['article-actions']}>
 					{articleMeta}
 				</div>
-				<div key="row" classes={["row"]}>
-					<div classes={["col-xs-12", "col-md-8", "offset-md-2"]}>
-						{isAuthenticated ? (
-							<form classes={["card", "comment-form"]}>
-								<div classes={["card-block"]}>
+				<div key="row" classes={['row']}>
+					<div classes={['col-xs-12', 'col-md-8', 'offset-md-2']}>
+						{session.isAuthenticated() ? (
+							<form classes={['card', 'comment-form']}>
+								<div classes={['card-block']}>
 									<textarea
-										value={newComment}
-										classes={["form-control"]}
+										value={comment}
+										classes={['form-control']}
 										placeholder="Write a comment..."
 										rows={3}
-										oninput={(event: KeyboardEvent) => {
+										oninput={(event) => {
 											const target = event.target as HTMLInputElement;
-											executor(newCommentInputProcess)({ slug, newComment: target.value });
+											icache.set('comment', target.value);
 										}}
 									/>
 								</div>
-								<div classes={["card-footer"]}>
-									<img classes={["comment-author-img"]} src="" />
+								<div classes={['card-footer']}>
+									<img classes={['comment-author-img']} src="" />
 									<button
-										onclick={() => {
-											executor(addCommentProcess)({ slug, newComment });
+										onclick={(event) => {
+											event.preventDefault();
+											const comment = icache.getOrSet('comment', '');
+											fetch(`${baseUrl}/articles/${slug}/comments`, {
+												method: 'post',
+												headers: getHeaders(session.token()),
+												body: JSON.stringify({
+													comment: {
+														body: comment
+													}
+												})
+											}).then(async (response) => {
+												if (response.ok) {
+													const comments = icache.getOrSet('comments', []);
+													const json = await response.json();
+													icache.set('comment', '');
+													icache.set('comments', [json.comment, ...comments]);
+												}
+											});
 										}}
-										classes={["btn", "btn-sm", "btn-primary"]}
+										classes={['btn', 'btn-sm', 'btn-primary']}
+										disabled={!comment}
 									>
 										Post Comment
 									</button>
 								</div>
 							</form>
 						) : (
-							<p></p>
+							<p />
 						)}
 						<div>
-							{comments.map((comment, i) => (
+							{comments.map((comment: any) => (
 								<Comment
-									key={i}
+									key={comment.id}
 									comment={comment}
-									loggedInUser={loggedInUser}
+									loggedInUser={session.username()}
 									deleteComment={() => {
-										executor(deleteCommentProcess)({ slug, id: comment.id });
+										fetch(`${baseUrl}/articles/${slug}/comments/${comment.id}`, {
+											method: 'delete',
+											headers: getHeaders(session.token())
+										}).then((response) => {
+											if (response.ok) {
+												const comments = [...icache.getOrSet('comments', [])];
+												const index = comments.findIndex(
+													(existingComment) => existingComment.id === comment.id
+												);
+												if (index !== -1) {
+													comments.splice(index, 1);
+													icache.set('comments', comments);
+												}
+											}
+										});
 									}}
 									slug={slug}
 								/>

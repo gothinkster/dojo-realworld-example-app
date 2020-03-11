@@ -24,14 +24,8 @@ export default [
 		outlet: 'settings'
 	},
 	{
-		path: 'editor',
-		outlet: 'new-post',
-		children: [
-			{
-				path: 'editor/{slug}',
-				outlet: 'edit-post'
-			}
-		]
+		path: 'editor/{slug}',
+		outlet: 'editor'
 	},
 	{
 		path: 'home',
