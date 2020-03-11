@@ -18,6 +18,9 @@ export default factory(function session() {
 		set(session: any) {
 			global.sessionStorage.setItem('conduit-session', JSON.stringify(session));
 		},
+		remove() {
+			global.sessionStorage.removeItem('conduit-session');
+		},
 		isAuthenticated() {
 			let session = getSession();
 			return !!session;
