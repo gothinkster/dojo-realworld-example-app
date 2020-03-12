@@ -27,8 +27,8 @@ const factory = create({ icache, routing, session }).properties<LoginProperties>
 export const Register = factory(function Register({ properties, middleware: { icache, routing, session } }) {
 	const { onRegister } = properties();
 	const email = icache.getOrSet('email', '');
-    const password = icache.getOrSet('password', '');
-    const username = icache.getOrSet('username', '');
+	const password = icache.getOrSet('password', '');
+	const username = icache.getOrSet('username', '');
 	const inProgress = icache.getOrSet('registerInProgress', false);
 	const errors = icache.get('errors');
 
@@ -66,7 +66,7 @@ export const Register = factory(function Register({ properties, middleware: { ic
 							}}
 						>
 							<fieldset>
-                            <fieldset classes={['form-group']}>
+								<fieldset classes={['form-group']}>
 									<input
 										autocomplete="username"
 										value={username}

@@ -3,9 +3,9 @@ import { Outlet } from '@dojo/framework/routing/Outlet';
 import { createICacheMiddleware } from '@dojo/framework/core/middleware/icache';
 
 import Header from './widgets/Header';
-import Settings from "./widgets/Settings";
+import Settings from './widgets/Settings';
 import Login from './widgets/Login';
-import Register from "./widgets/Register";
+import Register from './widgets/Register';
 import Profile from './widgets/Profile';
 import Editor from './widgets/Editor';
 import Article from './widgets/Article';
@@ -40,9 +40,16 @@ export const App = factory(function App({ middleware: { icache, session } }) {
 					);
 				}}
 			/>
-			<Outlet id="register" renderer={() => <Register 							onRegister={() => {
-								icache.set('feedType', 'feed');
-							}} />} />
+			<Outlet
+				id="register"
+				renderer={() => (
+					<Register
+						onRegister={() => {
+							icache.set('feedType', 'feed');
+						}}
+					/>
+				)}
+			/>
 			<Outlet
 				id="home"
 				renderer={() => {
@@ -76,9 +83,16 @@ export const App = factory(function App({ middleware: { icache, session } }) {
 				id="favorites"
 				renderer={(details) => <Profile type="favorites" username={details.params.username} />}
 			/>
-			<Outlet id="settings" renderer={() => <Settings onLogout={() => {
-				icache.set('feedType', 'global');
-			}}/>} />
+			<Outlet
+				id="settings"
+				renderer={() => (
+					<Settings
+						onLogout={() => {
+							icache.set('feedType', 'global');
+						}}
+					/>
+				)}
+			/>
 			<Outlet id="article" renderer={(details) => <Article slug={details.params.slug} />} />
 			<Footer />
 		</div>

@@ -13,12 +13,12 @@ const icache = createICacheMiddleware<SettingState>();
 const factory = create({ session, routing, icache }).properties<{ onLogout: () => void }>();
 
 export const Settings = factory(function Settings({ properties, middleware: { session, routing, icache } }) {
-    const { onLogout } = properties();
-    const settings = icache.getOrSet('settings', session.get());
-    if (!settings) {
-        routing.goto('login');
-        return null;
-    }
+	const { onLogout } = properties();
+	const settings = icache.getOrSet('settings', session.get());
+	if (!settings) {
+		routing.goto('login');
+		return null;
+	}
 
 	return (
 		<div classes={['editor-page']}>
@@ -32,8 +32,11 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 									<input
 										value={settings.image}
 										oninput={(event: KeyboardEvent) => {
-                                            const target = event.target as HTMLInputElement;
-                                            icache.set('settings', { ...icache.get('settings'), imageUrl: target.value });
+											const target = event.target as HTMLInputElement;
+											icache.set('settings', {
+												...icache.get('settings'),
+												imageUrl: target.value
+											});
 										}}
 										placeholder=""
 										classes={['form-control', 'form-control-lg']}
@@ -44,7 +47,10 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										value={settings.username}
 										oninput={(event: KeyboardEvent) => {
 											const target = event.target as HTMLInputElement;
-											icache.set('settings', { ...icache.get('settings'), username: target.value });
+											icache.set('settings', {
+												...icache.get('settings'),
+												username: target.value
+											});
 										}}
 										placeholder="Your Name"
 										classes={['form-control', 'form-control-lg']}
@@ -55,8 +61,8 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										rows={8}
 										value={settings.bio}
 										oninput={(event: KeyboardEvent) => {
-                                            const target = event.target as HTMLTextAreaElement;
-                                            icache.set('settings', { ...icache.get('settings'), bio: target.value });
+											const target = event.target as HTMLTextAreaElement;
+											icache.set('settings', { ...icache.get('settings'), bio: target.value });
 										}}
 										placeholder="Short bio about you"
 										classes={['form-control', 'form-control-lg']}
@@ -66,8 +72,8 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 									<input
 										value={settings.email}
 										oninput={(event: KeyboardEvent) => {
-                                            const target = event.target as HTMLInputElement;
-                                            icache.set('settings', { ...icache.get('settings'), email: target.value });
+											const target = event.target as HTMLInputElement;
+											icache.set('settings', { ...icache.get('settings'), email: target.value });
 										}}
 										placeholder="Email"
 										classes={['form-control', 'form-control-lg']}
@@ -78,8 +84,11 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										value={settings.password}
 										type="password"
 										oninput={(event: KeyboardEvent) => {
-                                            const target = event.target as HTMLInputElement;
-                                            icache.set('settings', { ...icache.get('settings'), password: target.value });
+											const target = event.target as HTMLInputElement;
+											icache.set('settings', {
+												...icache.get('settings'),
+												password: target.value
+											});
 										}}
 										placeholder="Password"
 										classes={['form-control', 'form-control-lg']}
@@ -87,8 +96,8 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 								</fieldset>
 								<button
 									onclick={(event: MouseEvent) => {
-                                        event.preventDefault();
-                                        session.set(icache.get('settings'));
+										event.preventDefault();
+										session.set(icache.get('settings'));
 									}}
 									type="submit"
 									classes={['btn', 'btn-lg', 'btn-primary', 'pull-xs-right']}
@@ -100,9 +109,9 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 						<hr />
 						<button
 							onclick={() => {
-                                session.remove();
-                                onLogout();
-                                routing.goto('home');
+								session.remove();
+								onLogout();
+								routing.goto('home');
 							}}
 							classes={['btn', 'btn-outline-danger']}
 						>
