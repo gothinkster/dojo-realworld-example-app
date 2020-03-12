@@ -1,25 +1,23 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
-import { FollowUserPayload, FavoriteArticlePayload } from '../interfaces';
 
 interface ArticleControlsProperties {
-	slug: string;
 	favoritesCount: number;
 	authorUsername: string;
 	favorited: boolean;
 	following: boolean;
-	followUser: (opts: FollowUserPayload) => void;
-	favoriteArticle: (opts: FavoriteArticlePayload) => void;
+	followUser: () => void;
+	favoriteArticle: () => void;
 }
 
 const factory = create({}).properties<ArticleControlsProperties>();
 
 export const ArticleControls = factory(function ArticleControls({ properties }) {
-	const { favoritesCount, slug, favoriteArticle, favorited, following, authorUsername, followUser } = properties();
+	const { favoritesCount, favoriteArticle, favorited, following, authorUsername, followUser } = properties();
 	return (
 		<span>
 			<button
 				onclick={() => {
-					followUser({ username: authorUsername, following });
+					followUser();
 				}}
 				classes={['btn', 'btn-sm', following ? 'btn-secondary' : 'btn-outline-secondary']}
 			>
@@ -28,7 +26,7 @@ export const ArticleControls = factory(function ArticleControls({ properties }) 
 			</button>
 			<button
 				onclick={() => {
-					favoriteArticle({ slug, favorited });
+					favoriteArticle();
 				}}
 				classes={['btn', 'btn-sm', favorited ? 'btn-primary' : 'btn-outline-primary']}
 			>

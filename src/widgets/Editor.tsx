@@ -5,15 +5,16 @@ import { baseUrl } from '../config';
 import session from '../session';
 import routing from '../routing';
 import { getHeaders } from '../utils';
+import { ArticleItem, Errors } from '../interfaces';
 
 export interface EditorProperties {
 	slug: string;
 }
 
 interface EditorState {
-	article: any;
+	article: Partial<ArticleItem>;
 	tag: any;
-	errors: any;
+	errors: Errors;
 }
 
 const icache = createICacheMiddleware<EditorState>();
@@ -26,21 +27,17 @@ export const Editor = factory(function Editor({ middleware: { icache, session, r
 	const { slug } = properties();
 	const errors = icache.get('errors');
 	const tag = icache.getOrSet('tag', '');
-	const article = icache.getOrSet('article', () => {
+	const article = icache.getOrSet('article', async () => {
 		if (slug !== 'new') {
-			return fetch(`${baseUrl}/articles/${slug}`)
-				.then((response) => {
-					return response.json();
-				})
-				.then((json) => {
-					return json.article;
-				});
+			const response = await fetch(`${baseUrl}/articles/${slug}`);
+			const json = await response.json();
+			return json.article as ArticleItem;
 		}
 		return {
 			tagList: []
 		};
 	});
-	if (slug !== 'new' && !article) {
+	if (!article) {
 		return null;
 	}
 
@@ -94,7 +91,9 @@ export const Editor = factory(function Editor({ middleware: { icache, session, r
 												const target = event.target as HTMLInputElement;
 												icache.set('article', {
 													...article,
-													tagList: [...article.tagList, target.value]
+													tagList: article.tagList
+														? [...article.tagList, target.value]
+														: [target.value]
 												});
 												icache.set('tag', '');
 											}
@@ -113,7 +112,7 @@ export const Editor = factory(function Editor({ middleware: { icache, session, r
 												<span key={`${i}-${tag}`} classes={['tag-default', 'tag-pill']}>
 													<i
 														onclick={() => {
-															const tagList = [...article.tagList];
+															const tagList = article.tagList ? [...article.tagList] : [];
 															tagList.splice(i, 1);
 															icache.set('article', { ...article, tagList });
 														}}
@@ -125,7 +124,6 @@ export const Editor = factory(function Editor({ middleware: { icache, session, r
 									</div>
 								</fieldset>
 								<button
-									disabled={article.isLoaded && article.isLoading}
 									onclick={(event: MouseEvent) => {
 										event.preventDefault();
 										const { slug } = properties();

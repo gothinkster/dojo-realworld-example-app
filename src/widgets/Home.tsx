@@ -7,6 +7,7 @@ import { FeedPagination } from './FeedPagination';
 import { baseUrl } from '../config';
 import { getHeaders } from '../utils';
 import session from '../session';
+import { ArticleItem } from '../interfaces';
 
 interface HomeProperties {
 	isAuthenticated: boolean;
@@ -15,7 +16,7 @@ interface HomeProperties {
 }
 
 interface HomeState {
-	articles: any;
+	articles: ArticleItem[];
 	pageNumber: number;
 	total: number;
 }

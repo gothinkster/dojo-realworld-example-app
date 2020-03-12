@@ -6,6 +6,7 @@ import { getHeaders } from '../utils';
 import { baseUrl } from '../config';
 import session from '../session';
 import routing from '../routing';
+import { ArticleItem, Comment as CommentItem } from '../interfaces';
 
 const snarkdown = require('snarkdown');
 
@@ -14,9 +15,9 @@ export interface ArticleProperties {
 }
 
 interface ArticleState {
-	article: any;
+	article: ArticleItem;
 	comment: string;
-	comments: any[];
+	comments: CommentItem[];
 }
 
 const icache = createICacheMiddleware<ArticleState>();
@@ -192,7 +193,6 @@ export const Article = factory(function Article({ middleware: { icache, session,
 											}
 										});
 									}}
-									slug={slug}
 								/>
 							))}
 						</div>

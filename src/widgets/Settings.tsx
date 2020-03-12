@@ -3,9 +3,10 @@ import { createICacheMiddleware } from '@dojo/framework/core/middleware/icache';
 
 import session from '../session';
 import routing from '../routing';
+import { Settings as SettingsInterface } from '../interfaces';
 
 interface SettingState {
-	settings: any;
+	settings: SettingsInterface;
 }
 
 const icache = createICacheMiddleware<SettingState>();
@@ -34,8 +35,8 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										oninput={(event: KeyboardEvent) => {
 											const target = event.target as HTMLInputElement;
 											icache.set('settings', {
-												...icache.get('settings'),
-												imageUrl: target.value
+												...icache.get('settings')!,
+												image: target.value
 											});
 										}}
 										placeholder=""
@@ -48,7 +49,7 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										oninput={(event: KeyboardEvent) => {
 											const target = event.target as HTMLInputElement;
 											icache.set('settings', {
-												...icache.get('settings'),
+												...icache.get('settings')!,
 												username: target.value
 											});
 										}}
@@ -62,7 +63,7 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										value={settings.bio}
 										oninput={(event: KeyboardEvent) => {
 											const target = event.target as HTMLTextAreaElement;
-											icache.set('settings', { ...icache.get('settings'), bio: target.value });
+											icache.set('settings', { ...icache.get('settings')!, bio: target.value });
 										}}
 										placeholder="Short bio about you"
 										classes={['form-control', 'form-control-lg']}
@@ -73,7 +74,7 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										value={settings.email}
 										oninput={(event: KeyboardEvent) => {
 											const target = event.target as HTMLInputElement;
-											icache.set('settings', { ...icache.get('settings'), email: target.value });
+											icache.set('settings', { ...icache.get('settings')!, email: target.value });
 										}}
 										placeholder="Email"
 										classes={['form-control', 'form-control-lg']}
@@ -86,7 +87,7 @@ export const Settings = factory(function Settings({ properties, middleware: { se
 										oninput={(event: KeyboardEvent) => {
 											const target = event.target as HTMLInputElement;
 											icache.set('settings', {
-												...icache.get('settings'),
+												...icache.get('settings')!,
 												password: target.value
 											});
 										}}

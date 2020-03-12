@@ -7,6 +7,7 @@ import { FeedPagination } from './FeedPagination';
 import session from '../session';
 import { baseUrl } from '../config';
 import { getHeaders } from '../utils';
+import { ArticleItem, Profile as ProfileInterface } from '../interfaces';
 
 export interface ProfileProperties {
 	username: string;
@@ -14,8 +15,8 @@ export interface ProfileProperties {
 }
 
 interface ProfileState {
-	articles: any;
-	profile: any;
+	articles: ArticleItem[];
+	profile: ProfileInterface;
 	pageNumber: number;
 	total: number;
 }
@@ -30,9 +31,6 @@ export const Profile = factory(function Profile({ middleware: { icache, session 
 	const currentUser = session.username();
 	const pageNumber = icache.getOrSet('pageNumber', 0);
 	const total = icache.getOrSet('total', 0);
-	// const isLoading = get(path('profile', 'user', 'isLoading'));
-	// const profileUser = get(path('profile', 'user', 'username'));
-	// const feed = get(path('profile', 'feed'));
 	const { username, type } = properties();
 
 	const articles = icache.getOrSet('articles', async () => {
@@ -53,12 +51,6 @@ export const Profile = factory(function Profile({ middleware: { icache, session 
 		return json.articles;
 	});
 
-	// if (username !== profileUser && !isLoading) {
-	// 	executor(getProfileProcess)({ username, type, page: 0 });
-	// 	return null;
-	// } else if (type !== feed.category && !feed.isLoading) {
-	// 	executor(getProfileFeedProcess)({ username, type, page: 0 });
-	// }
 	const isCurrentUser = currentUser === username;
 	const image = '';
 	const bio = '';

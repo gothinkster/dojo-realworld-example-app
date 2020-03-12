@@ -7,7 +7,7 @@ interface TagsProperties {
 }
 
 interface TagsState {
-	tags: any[];
+	tags: string[];
 }
 
 const icache = createICacheMiddleware<TagsState>();

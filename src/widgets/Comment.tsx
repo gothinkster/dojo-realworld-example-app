@@ -1,18 +1,17 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
 import Link from '@dojo/framework/routing/Link';
-import { Comment as CommentItem, DeleteCommentPayload } from '../interfaces';
+import { Comment as CommentItem } from '../interfaces';
 
 interface CommentProperties {
-	slug: string;
 	comment: CommentItem;
 	loggedInUser: string;
-	deleteComment: (opts: DeleteCommentPayload) => void;
+	deleteComment: () => void;
 }
 
 const factory = create({}).properties<CommentProperties>();
 
 export const Comment = factory(function Comment({ properties }) {
-	const { slug, comment, loggedInUser, deleteComment } = properties();
+	const { comment, loggedInUser, deleteComment } = properties();
 	return (
 		<div classes={['card']}>
 			<div classes={['card-block']}>
@@ -30,7 +29,7 @@ export const Comment = factory(function Comment({ properties }) {
 					<div classes={['mod-options']}>
 						<i
 							onclick={() => {
-								deleteComment({ slug, id: comment.id });
+								deleteComment();
 							}}
 							classes={['ion-trash-a']}
 						/>

@@ -2,15 +2,15 @@ import { create, tsx } from '@dojo/framework/core/vdom';
 import { Link } from '@dojo/framework/routing/Link';
 import { ArticleControls } from './ArticleControls';
 import { ArticleAuthorControls } from './ArticleAuthorControls';
-import { ArticleItem, FavoriteArticlePayload, FollowUserPayload, SlugPayload } from '../interfaces';
+import { ArticleItem } from '../interfaces';
 
 interface ArticleMetaProperties {
 	currentUser: string;
 	article: ArticleItem;
 	isAuthenticated: boolean;
-	favoriteArticle: (opts: FavoriteArticlePayload) => void;
-	followUser: (opts: FollowUserPayload) => void;
-	deleteArticle: (opts: SlugPayload) => void;
+	favoriteArticle: () => void;
+	followUser: () => void;
+	deleteArticle: () => void;
 }
 
 const factory = create({}).properties<ArticleMetaProperties>();
@@ -39,7 +39,6 @@ export const ArticleMeta = factory(function ArticleMeta({ properties }) {
 						followUser={followUser}
 						favoriteArticle={favoriteArticle}
 						favoritesCount={favoritesCount}
-						slug={slug}
 						following={author.following}
 						authorUsername={author.username}
 					/>

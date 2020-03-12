@@ -1,10 +1,9 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
 import { Link } from '@dojo/framework/routing/Link';
-import { SlugPayload } from '../interfaces';
 
 interface ArticleAuthorControlsProperties {
 	slug: string;
-	deleteArticle: (opts: SlugPayload) => void;
+	deleteArticle: () => void;
 }
 
 const factory = create({}).properties<ArticleAuthorControlsProperties>();
@@ -19,7 +18,7 @@ export const ArticleAuthorControls = factory(function ArticleAuthorControls({ pr
 			<button
 				classes={['btn', 'btn-sm', 'btn-outline-danger']}
 				onclick={() => {
-					deleteArticle({ slug });
+					deleteArticle();
 				}}
 			>
 				<i classes={['ion-trash-a']} /> Delete Article
