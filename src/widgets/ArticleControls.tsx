@@ -1,5 +1,5 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
-import { FollowUserPayload, FavoriteArticlePayload } from '../processes/interfaces';
+import { FollowUserPayload, FavoriteArticlePayload } from '../interfaces';
 
 interface ArticleControlsProperties {
 	slug: string;

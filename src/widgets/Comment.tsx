@@ -1,7 +1,6 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
 import Link from '@dojo/framework/routing/Link';
-import { DeleteCommentPayload } from '../processes/interfaces';
-import { Comment as CommentItem } from './../interfaces';
+import { Comment as CommentItem, DeleteCommentPayload } from '../interfaces';
 
 interface CommentProperties {
 	slug: string;

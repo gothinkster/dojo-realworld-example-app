@@ -1,9 +1,8 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
 import { Link } from '@dojo/framework/routing/Link';
-import { ArticleItem } from '../interfaces';
 import { ArticleControls } from './ArticleControls';
 import { ArticleAuthorControls } from './ArticleAuthorControls';
-import { FavoriteArticlePayload, FollowUserPayload, SlugPayload } from '../processes/interfaces';
+import { ArticleItem, FavoriteArticlePayload, FollowUserPayload, SlugPayload } from '../interfaces';
 
 interface ArticleMetaProperties {
 	currentUser: string;

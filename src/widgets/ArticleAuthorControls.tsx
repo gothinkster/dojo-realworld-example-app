@@ -1,6 +1,6 @@
 import { create, tsx } from '@dojo/framework/core/vdom';
 import { Link } from '@dojo/framework/routing/Link';
-import { SlugPayload } from '../processes/interfaces';
+import { SlugPayload } from '../interfaces';
 
 interface ArticleAuthorControlsProperties {
 	slug: string;
