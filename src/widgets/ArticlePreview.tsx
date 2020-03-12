@@ -22,7 +22,7 @@ export const ArticlePreview = factory(function ArticlePreview({ properties }) {
 		<div classes={['article-preview']}>
 			<div classes={['article-meta']}>
 				<Link to="user" params={{ username: author.username }}>
-					<img src={author.image} />
+					<img loading="lazy" src={author.image} />
 				</Link>
 				<div classes={['info']}>
 					<Link classes={['author']} to="user" params={{ username: author.username }}>

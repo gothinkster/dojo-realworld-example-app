@@ -22,7 +22,7 @@ export const ArticleMeta = factory(function ArticleMeta({ properties }) {
 	return (
 		<div classes={['article-meta']}>
 			<Link to="user" params={{ username: author.username }}>
-				<img src={author.image} />
+				<img loading="lazy" src={author.image} />
 			</Link>
 			<div classes={['info']}>
 				<Link to="user" params={{ username: author.username }} classes={['author']}>

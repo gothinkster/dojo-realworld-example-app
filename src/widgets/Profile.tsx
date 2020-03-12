@@ -62,7 +62,7 @@ export const Profile = factory(function Profile({ middleware: { icache, session 
 				<div classes={['container']}>
 					<div classes={['row']}>
 						<div classes={['col-xs-12', 'col-md-10', 'offset-md-1']}>
-							<img src={image} classes={['user-img']} />
+							<img loading="lazy" src={image} classes={['user-img']} />
 							<h4>{username}</h4>
 							<p>{bio}</p>
 							{isCurrentUser ? (

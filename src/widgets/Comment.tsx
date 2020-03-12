@@ -19,7 +19,7 @@ export const Comment = factory(function Comment({ properties }) {
 			</div>
 			<div classes={['card-footer']}>
 				<Link to="user" classes={['comment-author']} params={{ username: comment.author.username }}>
-					<img src={comment.author.image} classes={['comment-author-img']} />
+					<img loading="lazy" src={comment.author.image} classes={['comment-author-img']} />
 				</Link>
 				<Link to="user" classes={['comment-author']} params={{ username: comment.author.username }}>
 					{` ${comment.author.username}`}
