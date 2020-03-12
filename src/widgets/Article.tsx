@@ -58,42 +58,39 @@ export const Article = factory(function Article({ middleware: { icache, session,
 			article={article}
 			isAuthenticated={session.isAuthenticated()}
 			currentUser={session.username()}
-			favoriteArticle={() => {
-				fetch(`${baseUrl}/articles/${slug}/favorite`, {
+			favoriteArticle={async () => {
+				const response = await fetch(`${baseUrl}/articles/${slug}/favorite`, {
 					method: article.favorited ? 'delete' : 'post',
 					headers: getHeaders(session.token())
-				}).then((response) => {
-					if (response.ok) {
-						icache.set('article', {
-							...article,
-							favorited: !article.favorited,
-							favoritesCount: article.favorited ? article.favoritesCount - 1 : article.favoritesCount + 1
-						});
-					}
 				});
+				if (response.ok) {
+					icache.set('article', {
+						...article,
+						favorited: !article.favorited,
+						favoritesCount: article.favorited ? article.favoritesCount - 1 : article.favoritesCount + 1
+					});
+				}
 			}}
-			followUser={() => {
-				fetch(`${baseUrl}/profiles/${article.author.username}/follow`, {
+			followUser={async () => {
+				const response = await fetch(`${baseUrl}/profiles/${article.author.username}/follow`, {
 					method: article.author.following ? 'delete' : 'post',
 					headers: getHeaders(session.token())
-				}).then((response) => {
-					if (response.ok) {
-						icache.set('article', {
-							...article,
-							author: { ...article.author, following: !article.author.following }
-						});
-					}
 				});
+				if (response.ok) {
+					icache.set('article', {
+						...article,
+						author: { ...article.author, following: !article.author.following }
+					});
+				}
 			}}
-			deleteArticle={() => {
-				fetch(`${baseUrl}/articles/${slug}`, {
+			deleteArticle={async () => {
+				const response = await fetch(`${baseUrl}/articles/${slug}`, {
 					method: 'delete',
 					headers: getHeaders(session.token())
-				}).then((response) => {
-					if (response.ok) {
-						routing.goto('home');
-					}
 				});
+				if (response.ok) {
+					routing.goto('home');
+				}
 			}}
 		/>
 	);

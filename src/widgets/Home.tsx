@@ -99,7 +99,29 @@ export const Home = factory(function Home({ properties, middleware: { icache, se
 							{!articles ? (
 								<div classes={['article-preview']}>Loading... </div>
 							) : (
-								<FeedList type={feedType} articles={articles} />
+								<FeedList
+									articles={articles}
+									favoriteArticle={async (slug) => {
+										const articleIndex = articles.findIndex((article) => article.slug === slug);
+										let article = articles[articleIndex];
+										const response = await fetch(`${baseUrl}/articles/${slug}/favorite`, {
+											method: article.favorited ? 'delete' : 'post',
+											headers: getHeaders(session.token())
+										});
+										if (response.ok) {
+											article = {
+												...article,
+												favorited: !article.favorited,
+												favoritesCount: article.favorited
+													? article.favoritesCount - 1
+													: article.favoritesCount + 1
+											};
+											const updatedArticles = [...articles];
+											updatedArticles[articleIndex] = article;
+											icache.set('articles', updatedArticles);
+										}
+									}}
+								/>
 							)}
 						</div>
 						{articles && (

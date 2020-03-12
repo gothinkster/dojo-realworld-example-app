@@ -4,14 +4,14 @@ import { ArticlePreview } from './ArticlePreview';
 import { ArticleItem } from '../interfaces';
 
 interface FeedListProperties {
-	type: string;
 	articles: ArticleItem[];
+	favoriteArticle: (slug: string) => Promise<void>;
 }
 
 const factory = create().properties<FeedListProperties>();
 
 export const FeedList = factory(function Tab({ properties }) {
-	const { articles } = properties();
+	const { articles, favoriteArticle } = properties();
 	if (articles.length) {
 		return (
 			<div>
@@ -20,7 +20,7 @@ export const FeedList = factory(function Tab({ properties }) {
 						key={article.slug}
 						article={article}
 						favoriteArticle={() => {
-							// need this
+							favoriteArticle(article.slug);
 						}}
 					/>
 				))}

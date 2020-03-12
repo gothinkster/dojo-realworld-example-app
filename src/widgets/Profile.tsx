@@ -125,7 +125,33 @@ export const Profile = factory(function Profile({ middleware: { icache, session 
 							{!articles ? (
 								<div classes={['article-preview']}>Loading... </div>
 							) : (
-								<FeedList type={type} articles={articles} />
+								<FeedList
+									articles={articles}
+									favoriteArticle={async (slug) => {
+										const articleIndex = articles.findIndex((article) => article.slug === slug);
+										let article = articles[articleIndex];
+										const response = await fetch(`${baseUrl}/articles/${slug}/favorite`, {
+											method: article.favorited ? 'delete' : 'post',
+											headers: getHeaders(session.token())
+										});
+										if (response.ok) {
+											const updatedArticles = [...articles];
+											if (type === 'user') {
+												article = {
+													...article,
+													favorited: !article.favorited,
+													favoritesCount: article.favorited
+														? article.favoritesCount - 1
+														: article.favoritesCount + 1
+												};
+												updatedArticles[articleIndex] = article;
+											} else {
+												updatedArticles.splice(articleIndex, 1);
+											}
+											icache.set('articles', updatedArticles);
+										}
+									}}
+								/>
 							)}
 						</div>
 						{articles && (
