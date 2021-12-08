@@ -35,23 +35,23 @@ jobs:
             Hi @${{ github.event.pull_request.user.login }}, thanks for being part of the community :heart:
             We'll review your contribution as soon as possible!
   prettier:
-    uses: kerhub/workflows/.github/workflows/node-job.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/node-job.yml@main
     with:
       command: npm run prettier --check \"**\"
   linter:
-    uses: kerhub/workflows/.github/workflows/node-job.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/node-job.yml@main
     with:
       command: npx eslint --fix src/**/*.ts
   unit_tests:
     name: 'unit tests'
-    uses: kerhub/workflows/.github/workflows/node-job.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/node-job.yml@main
     with:
       command: npm run test
   deploy_preview:
     name: 'deploy preview'
     if: github.event_name == 'pull_request'
     needs: [prettier, linter, unit_tests]
-    uses: kerhub/workflows/.github/workflows/netlify-preview-deploy.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/netlify-preview-deploy.yml@main
     with:
       build_directory: './output/dist'
     secrets:
@@ -62,7 +62,7 @@ jobs:
     name: 'deploy live'
     if: github.event_name == 'push'
     needs: [prettier, linter, unit_tests]
-    uses: kerhub/workflows/.github/workflows/netlify-live-deploy.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/netlify-live-deploy.yml@main
     with:
       build_directory: './output/dist'
     secrets:
@@ -71,7 +71,7 @@ jobs:
   lighthouse_preview:
     name: 'lighthouse preview'
     needs: deploy_preview
-    uses: kerhub/workflows/.github/workflows/lighthouse-preview.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/lighthouse-preview.yml@main
     with:
       siteName: 'dojo-realworld'
     secrets:
@@ -79,6 +79,6 @@ jobs:
   lighthouse_live:
     name: 'lighthouse live'
     needs: deploy_live
-    uses: kerhub/workflows/.github/workflows/lighthouse-live.yml@main
+    uses: kerhub/reusable-workflows/.github/workflows/lighthouse-live.yml@main
     with:
       siteUrl: 'https://dojo-realworld.netlify.app/'
