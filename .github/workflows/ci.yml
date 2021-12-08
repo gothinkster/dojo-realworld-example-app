@@ -10,10 +10,12 @@ on:
 
 jobs:
   first_interaction:
-    uses: actions/first-interaction@v1
-    with:
-      repo-token: ${{ secrets.GITHUB_TOKEN }}
-      pr-message: 'Message that will be displayed on users' first pr. Look, a `code block` for markdown.'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        pr-message: 'Adding this new user to Contributors...'
   contribution-guidelines-reminder:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
