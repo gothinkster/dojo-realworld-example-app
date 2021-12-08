@@ -26,11 +26,11 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           reply: 'Hi @${{ github.event.pull_request.user.login }}, thanks for contributing to this project!'  
   prettier:
-    uses: kerhub/workflows/workflows/node-job.yml@main
+    uses: kerhub/workflows/.github/workflows/node-job.yml@main
     with:
       command: npm run prettier --check \"**\"
   tests:
-    uses: kerhub/workflows/workflows/node-job.yml@main
+    uses: kerhub/workflows/.github/workflows/node-job.yml@main
     with:
       command: npm run test
   contribution-greetings:
