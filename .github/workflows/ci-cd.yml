@@ -1,0 +1,85 @@
+name: CI - CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  first_interaction:
+    if: github.event_name == 'pull_request'
+    name: 'first interaction'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          pr-message: |
+            Thanks for your first pull request on this project!
+
+            This is a kindly reminder to read the following resources:
+            - [code of conduct]()
+            - [contribution guidelines]()
+
+            It'll help us to review your contribution and to ensure it's aligned with our standards.
+  greetings:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kerhub/saved-replies@v1.0.0
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          reply: |
+            Hi @${{ github.event.pull_request.user.login }}, thanks for being part of the community :heart:
+            We'll review your contribution as soon as possible!
+  prettier:
+    uses: kerhub/workflows/.github/workflows/node-job.yml@main
+    with:
+      command: npm run prettier --check \"**\"
+  linter:
+    uses: kerhub/workflows/.github/workflows/node-job.yml@main
+    with:
+      command: npx eslint --fix src/**/*.ts
+  unit_tests:
+    name: 'unit tests'
+    uses: kerhub/workflows/.github/workflows/node-job.yml@main
+    with:
+      command: npm run test
+  deploy_preview:
+    name: 'deploy preview'
+    if: github.event_name == 'pull_request'
+    needs: [prettier, linter, unit_tests]
+    uses: kerhub/workflows/.github/workflows/netlify-preview-deploy.yml@main
+    with:
+      build_directory: './output/dist'
+    secrets:
+      netlifyAuthToken: "${{ secrets.NETLIFY_AUTH_TOKEN }}"
+      netlifySiteId: "${{ secrets.NETLIFY_SITE_ID }}"
+      repoToken: "${{ secrets.GITHUB_TOKEN }}"
+  deploy_live:
+    name: 'deploy live'
+    if: github.event_name == 'push'
+    needs: [prettier, linter, unit_tests]
+    uses: kerhub/workflows/.github/workflows/netlify-live-deploy.yml@main
+    with:
+      build_directory: './output/dist'
+    secrets:
+      netlifyAuthToken: "${{ secrets.NETLIFY_AUTH_TOKEN }}"
+      netlifySiteId: "${{ secrets.NETLIFY_SITE_ID }}"
+  lighthouse_preview:
+    name: 'lighthouse preview'
+    needs: deploy_preview
+    uses: kerhub/workflows/.github/workflows/lighthouse-preview.yml@main
+    with:
+      siteName: 'dojo-realworld'
+    secrets:
+      netlifyAuthToken: "${{ secrets.NETLIFY_AUTH_TOKEN }}"
+  lighthouse_live:
+    name: 'lighthouse live'
+    needs: deploy_live
+    uses: kerhub/workflows/.github/workflows/lighthouse-live.yml@main
+    with:
+      siteUrl: 'https://dojo-realworld.netlify.app/'
