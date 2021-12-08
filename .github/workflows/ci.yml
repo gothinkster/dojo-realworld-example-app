@@ -1,0 +1,44 @@
+name: CI / CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+jobs:
+  first_interaction:
+    uses: actions/first-interaction@v1
+    with:
+      repo-token: ${{ secrets.GITHUB_TOKEN }}
+      pr-message: 'Message that will be displayed on users' first pr. Look, a `code block` for markdown.'
+  contribution-guidelines-reminder:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: greminds contribution guidelines
+        uses: kerhub/saved-replies@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reply: 'Hi @${{ github.event.pull_request.user.login }}, thanks for contributing to this project!'  
+  prettier:
+    uses: geromegrignon/node-express-prisma-official-app/.github/workflows/npm-job.yml@main
+    with:
+      command: npm run prettier --check \"**\"
+  tests:
+    uses: geromegrignon/node-express-prisma-official-app/.github/workflows/npm-job.yml@main
+    with:
+      command: npm run test
+  contribution-greetings:
+    if: github.event.pull_request.merged == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: greet the author
+        uses: kerhub/saved-replies@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          reply: 'Hi @${{ github.event.pull_request.user.login }}, thanks for contributing to this project!'
+
+
