@@ -20,17 +20,17 @@ jobs:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: greminds contribution guidelines
+      - name: reminds contribution guidelines
         uses: kerhub/saved-replies@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           reply: 'Hi @${{ github.event.pull_request.user.login }}, thanks for contributing to this project!'  
   prettier:
-    uses: geromegrignon/node-express-prisma-official-app/.github/workflows/npm-job.yml@main
+    uses: kerhub/workflows/workflows/node-job.yml@main
     with:
       command: npm run prettier --check \"**\"
   tests:
-    uses: geromegrignon/node-express-prisma-official-app/.github/workflows/npm-job.yml@main
+    uses: kerhub/workflows/workflows/node-job.yml@main
     with:
       command: npm run test
   contribution-greetings:
