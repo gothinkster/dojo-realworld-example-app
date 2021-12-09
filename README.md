@@ -2,7 +2,7 @@
 
 > ### Dojo codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://dojo-2-realworld.firebaseapp.com) spec and API.
 
-### [Demo](https://dojo-2-realworld.firebaseapp.com)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+### [Demo](https://dojo-realworld.netlify.app)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
 
 This codebase was created to demonstrate a fully fledged full-stack progressive web application built with Dojo including automatic code splitting by route, CRUD operations, authentication, routing, pagination, build time rendering and more.
 
